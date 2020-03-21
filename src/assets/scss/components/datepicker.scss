@@ -1,0 +1,227 @@
+.fe-datepicker {
+    @apply leading-normal;
+    @apply block;
+
+    .datepicker-calendar {
+        min-width: 12rem;
+        @apply p-3;
+        @apply block;
+        @apply z-20;
+
+        &.opened {
+            @apply mt-1;
+            @apply bg-white;
+            @apply rounded;
+            @apply border;
+            @apply border-gray-400;
+            @apply shadow;
+        }
+
+        &.has-header {
+            .datepicker {
+                @apply border-t;
+            }
+        }
+
+        &.has-footer {
+            .datepicker {
+                @apply border-b;
+            }
+        }
+    }
+
+    .datepicker-header {
+        @apply flex;
+        @apply justify-between;
+        @apply pb-4;
+        .header-control {
+            @apply w-full;
+            button {
+                @apply h-full;
+                padding-right: 0.7rem;
+                padding-left: 0.7rem;
+            }
+
+            &:first-child, &:last-child {
+                @apply flex-none;
+            }
+
+            &:not(:first-child):not(:last-child) {
+                @apply flex-1;
+            }
+        }
+    }
+
+    .datepicker-footer {
+        @apply flex;
+        @apply justify-between;
+        @apply pt-4;
+        .footer-control {
+            @apply text-gray-500;
+        }
+    }
+
+    .datepicker {
+        @apply w-full;
+        @apply bg-white;
+
+        .day-container, .week-label-container {
+            @apply flex;
+        }
+
+        .week-label {
+            @apply font-medium;
+        }
+
+        .day {
+            @apply font-hairline;
+            @apply border;
+            @apply border-white;
+            @apply rounded;
+            font-feature-settings: "tnum";
+
+            &:hover:not(.selected):not(.unselectable):not(.today) {
+                @apply bg-gray-300;
+                @apply cursor-pointer;
+                @apply border-gray-300;
+            }
+
+            &.today:not(.selected) {
+                @apply border-blue-400;
+                &:hover:not(.unselectable) {
+                    @apply bg-gray-300;
+                    @apply cursor-pointer;
+                }
+            }
+
+            &.selected {
+                @apply bg-blue-600;
+                @apply text-white;
+                @apply cursor-pointer;
+                @apply border-blue-600;
+            }
+
+            &.unselectable {
+                &:not(.selected) {
+                    @apply text-gray-500;
+                }
+            }
+        }
+
+        .week-label, .day {
+            @apply flex-1;
+            @apply text-center;
+            @apply align-middle;
+        }
+    }
+
+    &.is-xs {
+        .datepicker-calendar {
+            @apply p-2;
+            &.opened {
+                margin-top: 0.15rem;
+            }
+        }
+
+        .datepicker {
+            min-height: 13rem;
+            .week-label, .day {
+                @apply text-xs;
+                @apply py-1;
+                @apply px-2;
+            }
+        }
+
+        .datepicker-header {
+            .header-control {
+                button {
+                    padding-right: 0.35rem;
+                    padding-left: 0.35rem;
+                }
+            }
+        }
+    }
+
+    &.is-sm {
+        .datepicker-calendar {
+            @apply p-2;
+            &.opened {
+                margin-top: 0.20rem;
+            }
+        }
+        .datepicker {
+            min-height: 14rem;
+            .week-label, .day {
+                @apply text-sm;
+                @apply py-1;
+                @apply px-2;
+            }
+        }
+
+        .datepicker-header {
+            .header-control {
+                button {
+                    padding-right: 0.45rem;
+                    padding-left: 0.45rem;
+                }
+            }
+        }
+    }
+
+    &.is-md {
+        .datepicker {
+            min-height: 19rem;
+            .week-label, .day {
+                @apply text-base;
+                @apply py-2;
+                @apply px-3;
+            }
+        }
+    }
+
+    &.is-lg {
+        .datepicker-calendar {
+            @apply p-2;
+        }
+        .datepicker {
+            min-height: 20rem;
+            .week-label, .day {
+                @apply text-lg;
+                @apply py-2;
+                @apply px-3;
+            }
+        }
+
+        .datepicker-header {
+            .header-control {
+                button {
+                    padding-right: 0.45rem;
+                    padding-left: 0.45rem;
+                }
+            }
+        }
+    }
+
+    @responsive {
+        .white-backdrop {
+            @apply opacity-0;
+        }
+
+        .gray-backdrop {
+            background-color: hsla(0, 0%, 8%, .90);
+        }
+
+        .normal-position {
+            @apply absolute;
+            @apply inset-auto;
+            transform: none;
+        }
+
+        .center-position {
+            @apply fixed;
+            transform: translate3d(-50%, -25%, 0);
+            top: 25%;
+            left: 50%;
+        }
+    }
+}

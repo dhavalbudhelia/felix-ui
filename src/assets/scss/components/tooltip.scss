@@ -1,0 +1,81 @@
+.fe-tooltip-container {
+    @apply inline-flex;
+}
+
+.fe-tooltip {
+    @apply absolute;
+    @apply block;
+    @apply bg-black;
+    @apply text-white;
+    @apply text-center;
+    @apply shadow;
+    @apply px-2;
+    @apply py-1;
+    @apply rounded;
+    @apply w-auto;
+    @apply z-20;
+    @apply whitespace-normal;
+    opacity: .8;
+
+    &:not(.wrap) {
+        @apply whitespace-no-wrap;
+    }
+    //Sizes
+    &.is-xs {
+        width: 80px;
+    }
+    &.is-sm {
+        width: 120px;
+    }
+    &.is-md {
+        width: 180px;
+    }
+    &.is-lg {
+        width: 240px;
+    }
+
+    //Triangle
+    &:before {
+        @apply absolute;
+        @apply block;
+        content: '';
+        border: 5px solid transparent;
+        @apply top-auto;
+        @apply right-auto;
+        @apply bottom-auto;
+        @apply left-auto;
+    }
+
+    //Position triangle
+    &.is-left:before {
+        border-left: 5px solid black;
+        top: calc(50% - 5px);
+        left: calc(100%);
+    }
+
+    &.is-right:before {
+        border-right: 5px solid black;
+        top: calc(50% - 5px);
+        right: calc(100%);
+    }
+
+    &.is-bottom:before {
+        border-bottom: 5px solid black;
+        bottom: calc(100%);
+        left: 50%;
+    }
+
+    &.is-top:before {
+        border-top: 5px solid black;
+        top: calc(100%);
+        left: 50%;
+    }
+}
+
+.tooltip-fade-enter-active, .tooltip-fade-leave-active {
+    transition: opacity .5s;
+}
+
+.tooltip-fade-enter, .tooltip-fade-leave-to {
+    opacity: 0;
+}

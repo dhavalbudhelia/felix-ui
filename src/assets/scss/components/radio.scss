@@ -1,0 +1,147 @@
+.fe-radio {
+    @apply outline-none;
+    @apply items-center;
+    @apply align-middle;
+    @apply select-none;
+
+    &.is-vertical {
+        @apply flex;
+    }
+
+    &.is-xs {
+        @apply text-xs;
+        input[type=radio] {
+            + .check {
+                width: 14px;
+                height: 14px;
+            }
+            &:checked + .check {
+                border-width: 4px;
+            }
+        }
+    }
+
+    &.is-sm {
+        @apply text-sm;
+        input[type=radio] {
+            + .check {
+                width: 16px;
+                height: 16px;
+            }
+            &:checked + .check {
+                border-width: 5px;
+            }
+        }
+    }
+
+    &.is-md {
+        @apply text-base;
+        input[type=radio] {
+            + .check {
+                width: 18px;
+                height: 18px;
+            }
+            &:checked + .check {
+                border-width: 6px;
+            }
+        }
+    }
+
+    &.is-lg {
+        @apply text-lg;
+        input[type=radio] {
+            + .check {
+                width: 20px;
+                height: 20px;
+            }
+            &:checked + .check {
+                border-width: 7px;
+            }
+        }
+    }
+
+    &:not(.is-vertical) {
+        @apply inline-flex;
+    }
+
+    & + .fe-radio:not(.is-vertical) {
+        @apply ml-8;
+    }
+
+    & + .fe-radio.is-vertical {
+        @apply pt-2;
+    }
+
+    input[type=radio] {
+        @apply hidden;
+        + .check {
+            @apply flex;
+            @apply items-center;
+            @apply justify-center;
+            @apply flex-shrink-0;
+            border-width: 2px;
+            @apply border-solid;
+            @apply border-gray-500;
+            @apply rounded-full;
+            transition: border-width .15s ease-out;
+
+            &:before {
+                content: "";
+                @apply rounded-full;
+                border: none;
+                transform: scale(0);
+                transition: border-width .15s ease-out;
+            }
+        }
+
+        &:checked + .check {
+            @apply border-solid;
+            @apply border-blue-600;
+            &:before {
+                transform: scale(1);
+            }
+        }
+    }
+
+    .control-label {
+        @apply pl-2;
+    }
+
+    &[disabled] {
+        @apply opacity-50;
+    }
+
+    &:hover {
+        @apply cursor-pointer;
+        input[type=radio] + .check {
+            @apply border-blue-600;
+        }
+    }
+
+    &:focus {
+        input[type=radio] + .check {
+            box-shadow: 0 0 0.5em theme('colors.gray.500');
+        }
+
+        input[type=radio]:checked + .check {
+            box-shadow: 0 0 0.3em theme('colors.blue.600');
+        }
+    }
+}
+
+// Disabled radio label style
+label.fe-radio {
+    @apply m-0;
+    &[disabled] {
+        &:hover {
+            @apply cursor-not-allowed;
+            input[type=radio] + .check {
+                @apply border-gray-500;
+            }
+
+            input[type=radio]:checked + .check {
+                @apply border-blue-600;
+            }
+        }
+    }
+}

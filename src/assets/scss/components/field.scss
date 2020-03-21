@@ -1,0 +1,26 @@
+.fe-field {
+    &.has-addons {
+        @apply flex;
+        @apply justify-center;
+        @apply items-center;
+        .fe-select, .fe-button {
+            &:focus, &:hover {
+                z-index: 3;
+            }
+
+            &:not(:last-child) {
+                margin-right: -1px;
+
+                &, select {
+                    @apply rounded-r-none;
+                }
+            }
+
+            &:not(:only-child):not(:first-child) {
+                &, select {
+                    @apply rounded-l-none;
+                }
+            }
+        }
+    }
+}

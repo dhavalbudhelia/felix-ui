@@ -1,0 +1,96 @@
+.fe-modal {
+    @apply hidden;
+    @apply inset-0;
+
+    &.opened {
+        @apply flex;
+        @apply flex-col;
+        @apply items-center;
+        @apply justify-center;
+        @apply overflow-hidden;
+        @apply fixed;
+        @apply z-40;
+
+        div.backdrop {
+            @apply absolute;
+            @apply inset-0;
+            background-color: hsla(0, 0%, 8%, .90);
+        }
+    }
+
+    @responsive {
+        .is-xs {
+            @apply w-2/5;//40%
+            @apply text-xs;
+        }
+
+        .is-sm {
+            @apply w-1/2;//50%
+            @apply text-sm;
+        }
+
+        .is-md {
+            @apply w-3/5;//60%
+            @apply text-base;
+        }
+
+        .is-lg {
+            @apply w-4/5;//80%
+            @apply text-base;
+        }
+    }
+
+    .fe-modal-container {
+        @apply border;
+        @apply rounded-lg;
+        @apply shadow-lg;
+        @apply overflow-auto;
+        @apply relative;
+        @apply z-50;
+        @apply w-5/6;
+    }
+
+    .fe-modal-header {
+        @apply flex;
+        @apply border-b;
+        @apply border-gray-400;
+        @apply bg-gray-200;
+        @apply p-4;
+        min-height: 3rem;
+
+        .header {
+            @apply flex-grow;
+        }
+
+        .close {
+            @apply flex-grow-0;
+            @apply cursor-pointer;
+            @apply text-gray-500;
+            &:hover {
+                @apply text-gray-600;
+            }
+        }
+    }
+
+    .fe-modal-body {
+        @apply border-b;
+        @apply border-gray-400;
+        @apply bg-white;
+        @apply p-4;
+    }
+
+    .fe-modal-footer {
+        @apply bg-gray-100;
+        @apply p-4;
+        min-height: 3rem;
+
+        .footer {
+            @apply flex;
+            @apply items-end;
+            @apply justify-end;
+            button {
+                @apply m-2;
+            }
+        }
+    }
+}

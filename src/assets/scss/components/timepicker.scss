@@ -1,0 +1,260 @@
+.fe-timepicker {
+    @apply outline-none;
+    @apply leading-normal;
+    @apply block;
+
+    .timepicker-input-placeholder, .timepicker-display-value {
+        @apply px-2;
+        font-feature-settings: "tnum";
+    }
+
+    .timepicker-input-placeholder {
+        @apply text-gray-600;
+    }
+
+    .timepicker-clear {
+        @apply flex;
+        @apply items-center;
+        @apply justify-center;
+        @apply cursor-pointer;
+        @apply h-full;
+        @apply text-gray-500;
+    }
+
+    &.is-xs {
+        @apply w-32;
+        .timepicker-input-wrapper {
+            @apply h-6;
+            @apply text-xs;
+            .timepicker-icon {
+                @apply w-5;
+            }
+        }
+
+        .timepicker-clear {
+            @apply w-4;
+        }
+
+        .hours-selector, .minutes-selector, .seconds-selector {
+            @apply px-0;
+            @apply text-sm;
+            .hour, .minute, .second {
+                @apply py-0;
+            }
+        }
+
+        .timepicker .meridiem-selector {
+            padding: .1rem;
+            width: 2.2rem;
+        }
+    }
+
+    &.is-sm {
+        width: 10rem;
+
+        .timepicker-input-wrapper {
+            @apply h-6;
+            @apply text-sm;
+            .timepicker-icon {
+                @apply w-6;
+            }
+        }
+
+        .timepicker-clear {
+            @apply w-5;
+        }
+
+        .hours-selector, .minutes-selector, .seconds-selector {
+            @apply px-1;
+            @apply text-base;
+            .hour, .minute, .second {
+                @apply py-0;
+            }
+        }
+
+        .timepicker .meridiem-selector {
+            padding: .1rem;
+            width: 2.2rem;
+        }
+    }
+
+    &.is-md {
+        @apply w-48;
+        .timepicker-input-wrapper {
+            @apply h-8;
+            @apply text-base;
+            .timepicker-icon {
+                @apply w-8;
+            }
+        }
+
+        .timepicker-clear {
+            @apply w-6;
+        }
+
+        .hours-selector, .minutes-selector, .seconds-selector {
+            @apply px-2;
+            @apply text-lg;
+            .hour, .minute, .second {
+                @apply py-1;
+            }
+        }
+
+        .timepicker .meridiem-selector {
+            @apply p-1;
+            @apply w-10;
+        }
+    }
+
+    &.is-lg {
+        width: 14rem;
+
+        .timepicker-input-wrapper {
+            @apply h-10;
+            @apply text-lg;
+            .timepicker-icon {
+                @apply w-10;
+            }
+        }
+
+        .timepicker-clear {
+            @apply w-8;
+        }
+
+        .hours-selector, .minutes-selector, .seconds-selector {
+            @apply px-3;
+            @apply text-xl;
+            .hour, .minute, .second {
+                @apply py-2;
+            }
+        }
+
+        .timepicker .meridiem-selector {
+            @apply p-2;
+            @apply w-12;
+        }
+    }
+
+    .timepicker-input-wrapper {
+        @apply border;
+        @apply rounded;
+        @apply flex;
+        @apply flex-no-wrap;
+        @apply items-center;
+        @apply cursor-pointer;
+
+        input {
+            @apply appearance-none;
+            @apply outline-none;
+        }
+
+        &:hover {
+            @apply border-gray-500;
+        }
+
+        &:focus {
+            @apply border;
+            @apply rounded;
+            @apply outline-none;
+            @apply border-solid;
+            @apply border-blue-600;
+        }
+
+        .input-value-wrapper {
+            @apply flex-1;
+            @apply appearance-none;
+            @apply outline-none;
+            @apply flex;
+            @apply flex-no-wrap;
+            @apply items-center;
+        }
+
+        .timepicker-icon {
+            @apply flex;
+            @apply items-center;
+            @apply justify-center;
+            @apply border-l;
+            @apply h-full;
+        }
+    }
+
+    .timepicker {
+        min-width: 8rem;
+        @apply p-2;
+        @apply px-4;
+        @apply select-none;
+        @apply z-20;
+
+        &.opened {
+            @apply mt-1;
+            @apply bg-white;
+            @apply rounded;
+            @apply border;
+            @apply border-gray-400;
+            @apply shadow;
+        }
+
+        .time-separator {
+            @apply px-2;
+            @apply font-bold;
+            @apply text-lg;
+            @apply text-gray-500;
+        }
+
+        .hours-selector, .minutes-selector, .seconds-selector {
+            @apply flex;
+            @apply flex-col;
+            @apply font-bold;
+            .hour-up, .hour-down, .minute-up, .minute-down, .second-up, .second-down {
+                @apply text-gray-500;
+                @apply text-center;
+                &:hover {
+                    @apply text-gray-800;
+                    @apply cursor-pointer;
+                }
+            }
+
+            .hour, .minute, .second {
+                font-feature-settings: "tnum";
+            }
+        }
+
+        .meridiem-selector {
+            @apply inline-block;
+            @apply border;
+            @apply rounded;
+            @apply outline-none;
+            @apply select-none;
+            @apply font-bold;
+            @apply text-right;
+            @apply tracking-widest;
+            &:hover {
+                @apply bg-gray-200;
+                @apply cursor-pointer;
+            }
+        }
+    }
+
+    @responsive {
+        .white-backdrop {
+            @apply opacity-0;
+        }
+
+        .gray-backdrop {
+            background-color: hsla(0, 0%, 8%, .90);
+        }
+
+        .normal-position {
+            @apply absolute;
+            @apply inset-auto;
+            transform: none;
+        }
+
+        .center-position {
+            @apply fixed;
+            transform: translate3d(-50%, -25%, 0);
+            top: 25%;
+            left: 50%;
+        }
+    }
+}
