@@ -1,10 +1,11 @@
 import {expect} from 'chai';
 import {createLocalVue, shallowMount} from '@vue/test-utils';
 import Timepicker from '@/components/Timepicker/Timepicker.vue';
+import lodash from 'lodash';
 import VueLodash from "vue-lodash";
 
 let localVue = createLocalVue();
-localVue.use(VueLodash);
+localVue.use(VueLodash, {lodash: lodash});
 
 describe('Timepicker.vue', () => {
     it('is called', () => {
@@ -22,7 +23,7 @@ describe('Timepicker.vue', () => {
         expect(wrapper.isVueInstance()).to.be.true;
     });
 
-    it('render simple timepicker', () => {
+    it('render simple timepicker', async () => {
         let wrapper = shallowMount(Timepicker, {
             localVue,
         });
@@ -30,6 +31,7 @@ describe('Timepicker.vue', () => {
         expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
@@ -86,7 +88,7 @@ describe('Timepicker.vue', () => {
         minutesUp.trigger('click');
     });
 
-    it('render timepicker with seconds', () => {
+    it('render timepicker with seconds', async () => {
         let wrapper = shallowMount(Timepicker, {
             localVue,
             propsData: {
@@ -97,6 +99,7 @@ describe('Timepicker.vue', () => {
         expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
@@ -130,7 +133,7 @@ describe('Timepicker.vue', () => {
         expect(wrapper.vm.meridiem).to.be.equal('AM');
     });
 
-    it('render timepicker with 24 hours format', () => {
+    it('render timepicker with 24 hours format', async () => {
         let wrapper = shallowMount(Timepicker, {
             localVue,
             propsData: {
@@ -141,6 +144,7 @@ describe('Timepicker.vue', () => {
         expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;

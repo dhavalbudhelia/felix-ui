@@ -2,10 +2,11 @@ import {expect} from 'chai';
 import {createLocalVue, shallowMount} from '@vue/test-utils';
 import Icon from '@/components/Icon/Icon.vue';
 import Input from '@/components/Input/Input.vue';
+import lodash from 'lodash';
 import VueLodash from 'vue-lodash';
 
 let localVue = createLocalVue();
-localVue.use(VueLodash);
+localVue.use(VueLodash, {lodash: lodash});
 
 describe('Input.vue', () => {
     it('is called', () => {

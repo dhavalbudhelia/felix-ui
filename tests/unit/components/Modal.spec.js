@@ -1,5 +1,4 @@
 import {expect} from 'chai';
-import Vue from 'vue';
 import {shallowMount, mount} from '@vue/test-utils';
 import Modal from '@/components/Modal/Modal.vue';
 import Icon from '@/components/Icon/Icon.vue';
@@ -16,8 +15,8 @@ describe('Modal.vue', () => {
         expect(wrapper.isVueInstance()).to.be.true;
     });
 
-    it('render default modal', () => {
-        const wrapper = mount(Modal, {
+    it('render default modal', async () => {
+        const wrapper = shallowMount(Modal, {
             propsData: {
                 value: true
             },
@@ -29,13 +28,14 @@ describe('Modal.vue', () => {
         expect(wrapper.find('div.fe-modal-body').exists()).to.be.true;
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.true;
         wrapper.setProps({ value: false });
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-modal-header').exists()).to.be.false;
         expect(wrapper.find('div.fe-modal-body').exists()).to.be.false;
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.false;
     });
 
-    it('render modal with no footer', () => {
-        const wrapper = mount(Modal, {
+    it('render modal with no footer', async () => {
+        const wrapper = shallowMount(Modal, {
             propsData: {
                 value: true,
                 showFooter: false,
@@ -48,13 +48,14 @@ describe('Modal.vue', () => {
         expect(wrapper.find('div.fe-modal-body').exists()).to.be.true;
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.false;
         wrapper.setProps({ value: false });
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-modal-header').exists()).to.be.false;
         expect(wrapper.find('div.fe-modal-body').exists()).to.be.false;
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.false;
     });
 
-    it('render modal with custom footer slot', () => {
-        const wrapper = mount(Modal, {
+    it('render modal with custom footer slot', async () => {
+        const wrapper = shallowMount(Modal, {
             propsData: {
                 value: true,
             },
@@ -70,13 +71,14 @@ describe('Modal.vue', () => {
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.true;
         expect(wrapper.find('div.fe-modal-footer').text()).to.be.equal('Custom Footer Content');
         wrapper.setProps({ value: false });
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-modal-header').exists()).to.be.false;
         expect(wrapper.find('div.fe-modal-body').exists()).to.be.false;
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.false;
     });
 
-    it('render modal with custom header slot', () => {
-        const wrapper = mount(Modal, {
+    it('render modal with custom header slot', (done) => {
+        const wrapper = shallowMount(Modal, {
             propsData: {
                 value: true,
             },
@@ -92,9 +94,12 @@ describe('Modal.vue', () => {
         expect(wrapper.find('div.fe-modal-body').exists()).to.be.true;
         expect(wrapper.find('div.fe-modal-footer').exists()).to.be.true;
         wrapper.setProps({ value: false });
-        expect(wrapper.find('div.fe-modal-header').exists()).to.be.false;
-        expect(wrapper.find('div.fe-modal-body').exists()).to.be.false;
-        expect(wrapper.find('div.fe-modal-footer').exists()).to.be.false;
+        wrapper.vm.$nextTick(() => {
+            expect(wrapper.find('div.fe-modal-header').exists()).to.be.false;
+            expect(wrapper.find('div.fe-modal-body').exists()).to.be.false;
+            expect(wrapper.find('div.fe-modal-footer').exists()).to.be.false;
+            done();
+        });
     });
 
     it('closes modal on escape', () => {

@@ -5,10 +5,11 @@ import Button from '@/components/Button/Button.vue';
 import Icon from '@/components/Icon/Icon.vue';
 import Input from '@/components/Input/Input.vue';
 import Checkbox from '@/components/Checkbox/Checkbox.vue';
+import lodash from 'lodash';
 import VueLodash from "vue-lodash";
 
 let localVue = createLocalVue();
-localVue.use(VueLodash);
+localVue.use(VueLodash, {lodash: lodash});
 
 describe('MultiSelect.vue', () => {
     it('is called', () => {
@@ -32,7 +33,7 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.isVueInstance()).to.be.true;
     });
 
-    it('render simple multi select', () => {
+    it('render simple multi select', async () => {
         const wrapper = mount(MultiSelect, {
             localVue,
             propsData: {
@@ -55,6 +56,7 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')
@@ -121,6 +123,7 @@ describe('MultiSelect.vue', () => {
             .find('div.dropdown-item')
             .find({name: 'fe-checkbox'});
         selectAllCheckbox.trigger('click');
+        await wrapper.vm.$nextTick();
 
         //expect all of the checkboxes are checked
         expect(wrapper
@@ -152,7 +155,7 @@ describe('MultiSelect.vue', () => {
         ).to.be.true;
     });
 
-    it('render grouped multi select', () => {
+    it('render grouped multi select', async () => {
         const wrapper = mount(MultiSelect, {
             localVue,
             propsData: {
@@ -176,6 +179,7 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')
@@ -223,7 +227,7 @@ describe('MultiSelect.vue', () => {
         ).to.equal('Carrot');
     });
 
-    it('select all the grouped item when group checkbox is checked', () => {
+    it('select all the grouped item when group checkbox is checked', async () => {
         const wrapper = mount(MultiSelect, {
             localVue,
             propsData: {
@@ -247,6 +251,7 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')
@@ -338,6 +343,7 @@ describe('MultiSelect.vue', () => {
 
         let fruitGroupCheckbox = fruitGroup.find({name: 'fe-checkbox'});
         fruitGroupCheckbox.trigger('click');
+        await wrapper.vm.$nextTick();
 
         //expect all of the checkboxes under fruit group are checked
         expect(wrapper
@@ -383,6 +389,7 @@ describe('MultiSelect.vue', () => {
         ).to.be.true;
 
         fruitGroupCheckbox.trigger('click');
+        await wrapper.vm.$nextTick();
 
         //expect all of the checkboxes to be unchecked
         expect(wrapper
@@ -428,7 +435,7 @@ describe('MultiSelect.vue', () => {
         ).to.be.true;
     });
 
-    it('filters items by the supplied search term', () => {
+    it('filters items by the supplied search term', async () => {
         const wrapper = mount(MultiSelect, {
             localVue,
             propsData: {
@@ -453,6 +460,7 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')
@@ -502,6 +510,7 @@ describe('MultiSelect.vue', () => {
         wrapper.setData({
             searchTerm: 'ake'
         });
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
@@ -525,6 +534,7 @@ describe('MultiSelect.vue', () => {
         wrapper.setData({
             searchTerm: 'Boop'
         });
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')

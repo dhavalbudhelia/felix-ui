@@ -22,7 +22,7 @@ describe('Tooltip.vue', () => {
         expect(wrapper.isVueInstance()).to.be.true;
     });
 
-    it('shows on left side', () => {
+    it('shows on left side', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -35,6 +35,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -44,7 +45,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-left');
     });
 
-    it('shows on right side', () => {
+    it('shows on right side', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -57,6 +58,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -66,7 +68,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-right');
     });
 
-    it('shows on top side', () => {
+    it('shows on top side', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -79,6 +81,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -88,7 +91,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-top');
     });
 
-    it('shows on bottom side', () => {
+    it('shows on bottom side', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -101,6 +104,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -110,7 +114,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-bottom');
     });
 
-    it('shows extra small tooltip', () => {
+    it('shows extra small tooltip', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -124,6 +128,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -134,7 +139,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-xs');
     });
 
-    it('shows small tooltip', () => {
+    it('shows small tooltip', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -148,6 +153,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -158,7 +164,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-sm');
     });
 
-    it('shows large tooltip', () => {
+    it('shows large tooltip', async () => {
         const wrapper = shallowMount(Tooltip, {
             localVue,
             children: [Button],
@@ -172,6 +178,7 @@ describe('Tooltip.vue', () => {
                 default: '<Button :plain="true">Show Tooltip</Button>'
             }
         });
+        await wrapper.vm.$nextTick();
         expect(wrapper.name()).to.equal('fe-tooltip');
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
@@ -182,7 +189,7 @@ describe('Tooltip.vue', () => {
         expect(tooltipWrapper.classes()).to.include('is-lg');
     });
 
-    it('triggers on click', () => {
+    it('triggers on click', async () => {
         const wrapper = mount(Tooltip, {
             localVue,
             propsData: {
@@ -202,6 +209,7 @@ describe('Tooltip.vue', () => {
         expect(wrapper.name()).to.equal('fe-tooltip');
         let triggerButton = wrapper.find('button');
         triggerButton.trigger('click');
+        await wrapper.vm.$nextTick();
 
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
         expect(tooltipWrapper.isVisible()).to.be.true;

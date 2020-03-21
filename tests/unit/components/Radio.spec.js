@@ -74,7 +74,7 @@ describe('Radio.vue', () => {
         expect(wrapper.find('input[type="radio"]:checked').exists()).to.be.true;
     });
 
-    it('changes the radio value on selection', () => {
+    it('changes the radio value on selection', async () => {
         let checkboxName = 'FooBar';
         let wrapperBar = shallowMount(Radio, {
             propsData: {
@@ -103,18 +103,22 @@ describe('Radio.vue', () => {
         wrapperBar.setProps({
             value: 'Bar'
         });
+        await wrapperBar.vm.$nextTick();
         wrapperFoo.setProps({
             value: 'Bar'
         });
+        await wrapperFoo.vm.$nextTick();
         expect(wrapperBar.find('input[type="radio"]:checked').exists()).to.be.true;
         expect(wrapperFoo.find('input[type="radio"]:checked').exists()).to.be.false;
 
         wrapperBar.setProps({
             value: 'Foo'
         });
+        await wrapperBar.vm.$nextTick();
         wrapperFoo.setProps({
             value: 'Foo'
         });
+        await wrapperFoo.vm.$nextTick();
         expect(wrapperFoo.find('input[type="radio"]:checked').exists()).to.be.true;
         expect(wrapperBar.find('input[type="radio"]:checked').exists()).to.be.false;
     });
