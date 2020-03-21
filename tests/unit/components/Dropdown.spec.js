@@ -15,7 +15,7 @@ describe('Dropdown.vue', () => {
         expect(wrapper.isVueInstance()).to.be.true;
     });
 
-    it('render simple dropdown', () => {
+    it('render simple dropdown', async () => {
         const wrapper = shallowMount(Dropdown, {
             propsData: {
                 items: ['Foo', 'Bar', 'Cake']
@@ -27,6 +27,7 @@ describe('Dropdown.vue', () => {
         expect(wrapper.find('div.dropdown-trigger').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')
@@ -53,7 +54,7 @@ describe('Dropdown.vue', () => {
         ).to.equal('Cake');
     });
 
-    it('render dropdown with custom trigger slot', () => {
+    it('render dropdown with custom trigger slot', async () => {
         const wrapper = shallowMount(Dropdown, {
             propsData: {
                 items: ['Foo', 'Bar', 'Cake']
@@ -66,6 +67,7 @@ describe('Dropdown.vue', () => {
         expect(wrapper.find('div.dropdown-trigger span').classes()).to.include('custom-trigger-class');
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')
@@ -92,7 +94,7 @@ describe('Dropdown.vue', () => {
         ).to.equal('Cake');
     });
 
-    it('render dropdown with custom item slot', () => {
+    it('render dropdown with custom item slot', async () => {
         const wrapper = shallowMount(Dropdown, {
             propsData: {
                 items: ['Foo', 'Bar', 'Cake']
@@ -104,6 +106,7 @@ describe('Dropdown.vue', () => {
         expect(wrapper.find('div.dropdown-trigger').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu')

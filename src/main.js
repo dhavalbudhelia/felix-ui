@@ -15,6 +15,7 @@ dayjs.extend(isSameOrBefore);
 dayjs.extend(isBetween);
 dayjs.extend(quarterOfYear);
 
+import lodash from 'lodash';
 import VueLodash from 'vue-lodash';
 import ErDayjs from '@/plugins/dayjs';
 
@@ -30,7 +31,7 @@ const FelixUi = {
         Vue.prototype.$felixUiOptions = { ...optionsDefaults, ...opts };
 
         //vue-lodash
-        Vue.use(VueLodash);
+        Vue.use(VueLodash, {lodash: lodash});
 
         //dayjs
         Vue.use(ErDayjs, {

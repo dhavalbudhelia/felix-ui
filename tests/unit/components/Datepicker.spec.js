@@ -4,6 +4,7 @@ import Input from '@/components/Input/Input.vue';
 import Button from '@/components/Button/Button.vue';
 import Select from '@/components/Select/Select.vue';
 import Datepicker from '@/components/Datepicker/Datepicker.vue';
+import lodash from "lodash";
 import VueLodash from "vue-lodash";
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -23,7 +24,7 @@ dayjs.extend(isBetween);
 dayjs.extend(quarterOfYear);
 
 let localVue = createLocalVue();
-localVue.use(VueLodash);
+localVue.use(VueLodash, {lodash: lodash});
 localVue.use(ErDayjs, {
     dayjs: dayjs
 });
@@ -56,7 +57,7 @@ describe('Datepicker.vue', () => {
         expect(wrapper.isVueInstance()).to.be.true;
     });
 
-    it('render simple datepicker', () => {
+    it('render simple datepicker', async () => {
         const wrapper = mount(Datepicker, {
             localVue,
             children: [Input, Select, Button, DatepickerRow],
@@ -69,6 +70,7 @@ describe('Datepicker.vue', () => {
         });
         expect(wrapper.find('input').classes()).to.include('fe-input');
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         let calendarWrapper = wrapper.find('div.datepicker-calendar');
         expect(calendarWrapper.find('div.datepicker-header').exists()).to.be.true;
         expect(calendarWrapper.find('div.datepicker').exists()).to.be.true;
@@ -77,7 +79,7 @@ describe('Datepicker.vue', () => {
         expect(calendarWrapper.find('div.datepicker-footer').exists()).to.be.false;
     });
 
-    it('render datepicker with footer', () => {
+    it('render datepicker with footer', async () => {
         const wrapper = mount(Datepicker, {
             localVue,
             children: [Input, Select, Button, DatepickerRow],
@@ -93,6 +95,7 @@ describe('Datepicker.vue', () => {
         });
         expect(wrapper.find('input').classes()).to.include('fe-input');
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         let calendarWrapper = wrapper.find('div.datepicker-calendar');
         expect(calendarWrapper.find('div.datepicker-header').exists()).to.be.true;
         expect(calendarWrapper.find('div.datepicker').exists()).to.be.true;
@@ -101,7 +104,7 @@ describe('Datepicker.vue', () => {
         expect(calendarWrapper.find('div.datepicker-footer').exists()).to.be.true;
     });
 
-    it('render datepicker with custom date range', () => {
+    it('render datepicker with custom date range', async () => {
         let today = new Date();
         let minDate = new Date(today.getFullYear(), 0, today.getDate());
         let maxDate =new Date(today.getFullYear(), 3, today.getDate());
@@ -122,6 +125,7 @@ describe('Datepicker.vue', () => {
         });
         expect(wrapper.find('input').classes()).to.include('fe-input');
         wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
         let calendarWrapper = wrapper.find('div.datepicker-calendar');
         expect(calendarWrapper.find('div.datepicker-header').exists()).to.be.true;
         expect(calendarWrapper.find('div.datepicker').exists()).to.be.true;
