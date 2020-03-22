@@ -28,7 +28,7 @@ import '@/assets/scss/style.scss';
 const FelixUi = {
     install(Vue, opts) {
         //merge options
-        Vue.prototype.$felixUiOptions = { ...optionsDefaults, ...opts };
+        let options = { ...optionsDefaults, ...opts };
 
         //vue-lodash
         Vue.use(VueLodash, {lodash: lodash});
@@ -41,7 +41,18 @@ const FelixUi = {
         //components
         for (let componentName in components) {
             let component = components[componentName];
-            Vue.component(component.name, component);
+            let { props } = components[componentName];
+            Object.keys(options).forEach(key => {
+                props[key] = {
+                    default: () => options[key]
+                };
+            });
+            Vue.component(component.name, Vue.extend({
+                ...component,
+                ...{
+                    props
+                }
+            }));
         }
     }
 };
