@@ -1,6 +1,6 @@
 {
     "name": "felix-ui",
-    "version": "1.0.0",
+    "version": "0.1.0",
     "license": "MIT",
     "private": false,
     "description": "UI components for Vue.js based on Tailwind CSS",
