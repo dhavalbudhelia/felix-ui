@@ -19,13 +19,11 @@ import lodash from 'lodash';
 import VueLodash from 'vue-lodash';
 import ErDayjs from '@/plugins/dayjs';
 
-import {vuse} from '@/utils/main';
-
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '@/assets/css/tailwind.scss';
 import '@/assets/scss/style.scss';
 
-const FelixUi = {
+export default {
     install(Vue, opts) {
         //merge options
         let options = { ...optionsDefaults, ...opts };
@@ -56,8 +54,3 @@ const FelixUi = {
         }
     }
 };
-
-export default FelixUi;
-
-vuse(FelixUi);
-
