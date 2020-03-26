@@ -9,7 +9,7 @@
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
-        "build-bundle": "vue-cli-service build --target lib --name @felixui ./src/main.js",
+        "build-bundle": "vue-cli-service build --target lib --name @felixui ./src/index.js",
         "test:unit": "vue-cli-service test:unit",
         "test:watch": "vue-cli-service test:unit --watch",
         "storybook": "start-storybook -s ./public -p 6006"
