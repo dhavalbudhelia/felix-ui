@@ -5,11 +5,11 @@
     "private": false,
     "description": "UI components for Vue.js based on Tailwind CSS",
     "author": "Dhaval Budhelia <budhelia.dhaval@gmail.com>",
-    "main": "./dist/@felixui.common.js",
+    "main": "./dist/felix-ui.common.js",
     "scripts": {
         "serve": "vue-cli-service serve",
         "build": "vue-cli-service build",
-        "build-bundle": "vue-cli-service build --target lib --name @felixui ./src/index.js",
+        "build-bundle": "vue-cli-service build --target lib --name felix-ui ./src/index.js",
         "test:unit": "vue-cli-service test:unit",
         "test:watch": "vue-cli-service test:unit --watch",
         "storybook": "start-storybook -s ./public -p 6006"
