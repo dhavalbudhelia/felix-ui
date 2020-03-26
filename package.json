@@ -1,7 +1,8 @@
 {
     "name": "@felixui/vue-components",
     "version": "0.1.0",
-    "private": true,
+    "license": "MIT",
+    "private": false,
     "description": "UI components for Vue.js based on Tailwind CSS",
     "author": "Dhaval Budhelia <budhelia.dhaval@gmail.com>",
     "main": "./dist/@felixui.common.js",
