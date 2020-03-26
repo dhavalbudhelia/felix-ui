@@ -23,34 +23,35 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import '@/assets/css/tailwind.scss';
 import '@/assets/scss/style.scss';
 
-export default {
-    install(Vue, opts) {
-        //merge options
-        let options = { ...optionsDefaults, ...opts };
+const install = ((Vue, opts) => {
+    //merge options
+    let options = { ...optionsDefaults, ...opts };
 
-        //vue-lodash
-        Vue.use(VueLodash, {lodash: lodash});
+    //vue-lodash
+    Vue.use(VueLodash, {lodash: lodash});
 
-        //dayjs
-        Vue.use(ErDayjs, {
-            dayjs: dayjs
+    //dayjs
+    Vue.use(ErDayjs, {
+        dayjs: dayjs
+    });
+
+    //components
+    for (let componentName in components) {
+        let component = components[componentName];
+        let { props } = components[componentName];
+        Object.keys(options).forEach(key => {
+            props[key] = {
+                default: () => options[key]
+            };
         });
-
-        //components
-        for (let componentName in components) {
-            let component = components[componentName];
-            let { props } = components[componentName];
-            Object.keys(options).forEach(key => {
-                props[key] = {
-                    default: () => options[key]
-                };
-            });
-            Vue.component(component.name, Vue.extend({
-                ...component,
-                ...{
-                    props
-                }
-            }));
-        }
+        Vue.component(component.name, Vue.extend({
+            ...component,
+            ...{
+                props
+            }
+        }));
     }
-};
+});
+
+
+export {install};
