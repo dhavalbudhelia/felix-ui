@@ -63,7 +63,7 @@
              * class object
              */
             classObject() {
-                let classes =  ['flex items-center', CssClasses.base];
+                let classes =  ['fe-button flex items-center', CssClasses.base];
                 if (this.inverted) {
                     classes.push(CssClasses.inverted);
                 } else if (this.plain) {
