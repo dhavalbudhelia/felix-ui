@@ -1,6 +1,6 @@
 <template>
     <div :class="[classObject, size]">
-        <Input :value="formattedDate"
+        <fe-input :value="formattedDate"
                :readonly="!editable"
                :placeholder="placeholder"
                ref="trigger"
@@ -10,11 +10,11 @@
                @blur="triggerBlurred"
                icon-before="calendar-alt"
                icon-pack-before="far"
-        ></Input>
+        ></fe-input>
         <div v-if="opened" @click.stop.prevent :class="calendarClassObject">
             <div v-if="showHeader" class="datepicker-header">
                 <div class="header-control fe-field has-addons">
-                    <Button :icon-only="true"
+                    <fe-button :icon-only="true"
                             :plain="true"
                             :size="size"
                             @click.stop.prevent="decrementMonth"
@@ -22,7 +22,7 @@
                             icon-pack="fas"
                             icon="chevron-left"
                             css-class="flex-grow-0"
-                    ></Button>
+                    ></fe-button>
                     <Select v-model="month"
                             :options="monthNames"
                             @input="emitMonthChange"
@@ -37,7 +37,7 @@
                             :size="size"
                             css-class="flex-grow"
                     ></Select>
-                    <Button :icon-only="true"
+                    <fe-button :icon-only="true"
                             :plain="true"
                             @click.stop.prevent="incrementMonth"
                             :disabled="!hasNextMonth"
@@ -45,7 +45,7 @@
                             icon="chevron-right"
                             :size="size"
                             css-class="flex-grow-0"
-                    ></Button>
+                    ></fe-button>
                 </div>
             </div>
             <DatepickerRow :weeks="weeks"
@@ -55,23 +55,23 @@
             ></DatepickerRow>
             <div v-if="showFooter" class="datepicker-footer">
                 <div class="footer-control text-left">
-                    <Button :plain="true"
+                    <fe-button :plain="true"
                             @click.stop.prevent="selectToday"
                             icon-pack-before="fas"
                             icon-before="calendar-day"
                             :disabled="!isTodaySelectable()"
                             :size="size"
                     >Today
-                    </Button>
+                    </fe-button>
                 </div>
                 <div class="footer-control text-left">
-                    <Button :plain="true"
+                    <fe-button :plain="true"
                             @click.stop.prevent="clearDate"
                             icon-pack-before="far"
                             icon-before="times-circle"
                             :size="size"
                     >Clear
-                    </Button>
+                    </fe-button>
                 </div>
             </div>
         </div>
@@ -82,8 +82,8 @@
 <script>
     import {MONTH, MONTH_DATA, WEEK} from "@/utils/date";
     import DatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
-    import Input from '@/components/Input/Input.vue';
-    import Button from '@/components/Button/Button.vue';
+    import FeInput from "@/components/Input/Input";
+    import FeButton from "@/components/Button/Button";
     import Select from '@/components/Select/Select.vue';
     import Dropdown from "@/components/Dropdown/Dropdown.vue";
     import SizeMixin from "@/mixins/SizeMixin";
@@ -91,10 +91,10 @@
     export default {
         name: 'fe-datepicker',
         components: {
+            FeButton,
+            FeInput,
             Dropdown,
-            Button,
             DatepickerRow,
-            Input,
             Select,
         },
         mixins: [SizeMixin],

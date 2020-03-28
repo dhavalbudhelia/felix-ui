@@ -1,13 +1,13 @@
 <template>
     <div :class="[classObject, size]">
-        <Input :placeholder="placeholder"
-               v-model="searchTerm"
-               :icon-pack-before="iconPackBefore"
-               :icon-before="iconBefore"
-               :icon-pack-after="iconPackAfter"
-               :icon-after="iconAfter"
-               :size="size"
-        ></Input>
+        <fe-input :placeholder="placeholder"
+                  v-model="searchTerm"
+                  :icon-pack-before="iconPackBefore"
+                  :icon-before="iconBefore"
+                  :icon-pack-after="iconPackAfter"
+                  :icon-after="iconAfter"
+                  :size="size"
+        ></fe-input>
         <div :class="[dropdownClassObject, size]">
             <transition name="fade">
                 <div :class="dropDownMenuClassObject">
@@ -33,14 +33,14 @@
 </template>
 
 <script>
-    import Input from '@/components/Input/Input.vue';
+    import FeInput from '@/components/Input/Input.vue';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
 
     export default {
         name: 'fe-autocomplete',
         components: {
-            Input,
+            FeInput,
         },
         mixins: [IconMixin, SizeMixin],
         props: {

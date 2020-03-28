@@ -23,12 +23,12 @@
                 <div class="dropdown-content">
                     <div class="dropdown-content-header-wrapper">
                         <div v-if="searchable" class="dropdown-item header-control search-control">
-                            <Input ref="search"
+                            <fe-input ref="search"
                                    v-model="searchTerm"
                                    placeholder="Search..."
                                    icon-pack-before="fas"
                                    icon-before="search"
-                            ></Input>
+                            ></fe-input>
                             <div v-if="searchTerm !== ''" @click.stop.prevent="clearSearch"
                                  class="multi-select-search-clear">
                                 <Icon icon-pack="fas" icon="times" size="is-sm"></Icon>
@@ -83,18 +83,16 @@
 </template>
 
 <script>
-    import Button from '@/components/Button/Button.vue';
     import Icon from '@/components/Icon/Icon.vue';
-    import Input from '@/components/Input/Input.vue';
+    import FeInput from '@/components/Input/Input.vue';
     import Checkbox from '@/components/Checkbox/Checkbox.vue';
     import SizeMixin from "@/mixins/SizeMixin";
 
     export default {
         name: 'fe-multi-select',
         components: {
-            Button,
+            FeInput,
             Icon,
-            Input,
             Checkbox
         },
         mixins: [SizeMixin],

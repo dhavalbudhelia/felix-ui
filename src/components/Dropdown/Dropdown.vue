@@ -2,10 +2,10 @@
     <div :class="[classObject, size]" @mouseover="hovered(true)" @mouseout="hovered(false)">
         <div class="dropdown-trigger" @click="toggleTrigger">
             <slot name="trigger">
-                <Button :size="size" icon-pack-after="fas" :disabled="disabled" icon-after="caret-down">
+                <fe-button :size="size" icon-pack-after="fas" :disabled="disabled" icon-after="caret-down">
                     <template v-if="selectedItem">{{ selectedItem }}</template>
                     <template v-else>{{ triggerButtonText }}</template>
-                </Button>
+                </fe-button>
             </slot>
         </div>
         <transition name="fade">
@@ -26,14 +26,14 @@
 </template>
 
 <script>
-    import Button from '@/components/Button/Button.vue';
+    import FeButton from "@/components/Button/Button.vue";
     import SizeMixin from "@/mixins/SizeMixin";
 
     export default {
         name: 'fe-dropdown',
         mixins: [SizeMixin],
         components: {
-            Button
+            FeButton,
         },
         props: {
             value: {
