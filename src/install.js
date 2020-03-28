@@ -19,13 +19,9 @@ import lodash from 'lodash';
 import VueLodash from 'vue-lodash';
 import ErDayjs from '@/plugins/dayjs';
 
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import '@/assets/css/tailwind.scss';
-import '@/assets/scss/style.scss';
-
 const install = ((Vue, opts) => {
     //merge options
-    let options = { ...optionsDefaults, ...opts };
+    let options = { ...optionsDefaults, ...opts || {} };
 
     //vue-lodash
     Vue.use(VueLodash, {lodash: lodash});
@@ -52,6 +48,5 @@ const install = ((Vue, opts) => {
         }));
     }
 });
-
 
 export {install};
