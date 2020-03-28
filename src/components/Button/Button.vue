@@ -54,7 +54,7 @@
                 type: Object,
                 required: false,
                 default: function () {
-                    return optionsDefaults;
+                    return optionsDefaults.options;
                 },
             },
         },
