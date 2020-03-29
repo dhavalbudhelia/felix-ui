@@ -113,10 +113,18 @@
                         return CssClasses.sizeMd;
                 }
             },
+            /**
+             * check class object
+             * @return {string[]}
+             */
             checkClass() {
                 let color = this.checkColorClass !== '' ? this.checkColorClass : `text-${this.options.color.primary}`;
                 return ['check', `${color}`, `hover:${color}`];
             },
+            /**
+             * input class object
+             * @return {string[]}
+             */
             inputClass() {
                 return [CssClasses.input];
             },
