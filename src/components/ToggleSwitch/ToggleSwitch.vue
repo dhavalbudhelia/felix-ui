@@ -1,5 +1,5 @@
 <template>
-    <label :class="[classObject, size]"
+    <label :class="[classObject, cssClass, size]"
            ref="label"
            :disabled="disabled"
            :tabindex="disabled ? false : 0"
@@ -8,15 +8,18 @@
                type="checkbox"
                :disabled="disabled"
                :name="name"
+               :class="inputClass"
                :value="localValue"
                :true-value="trueValue"
                :false-value="falseValue">
-        <span class="check"></span>
+        <span :class="[checkClass]"></span>
     </label>
 </template>
 
 <script>
     import SizeMixin from "@/mixins/SizeMixin";
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-toggle-switch',
@@ -49,6 +52,23 @@
                 type: String,
                 required: false,
             },
+            cssClass: {
+                type: String,
+                required: false,
+                default: ''
+            },
+            checkColorClass: {
+                type: String,
+                required: false,
+                default: ''
+            },
+            options: {
+                type: Object,
+                required: false,
+                default: function () {
+                    return optionsDefaults.options;
+                },
+            },
         },
         computed: {
             /**
@@ -66,10 +86,133 @@
              * class names object
              */
             classObject() {
-                return {
-                    'fe-toggle-switch': true,
+                let classes =  ['fe-toggle-switch', CssClasses.base];
+                let checkColor = `bg-${this.options.color.tertiary}`;
+                let hoverColor = `hover:bg-${this.options.color.tertiaryDark}`;
+                if (this.localValue) {
+                    if (this.checkColorClass !== '') {
+                        checkColor = this.checkColorClass;
+                        hoverColor = `hover:${checkColor}`;
+                    } else {
+                        checkColor = `bg-${this.options.color.primary}`;
+                        hoverColor = `hover:bg-${this.options.color.primaryDark}`;
+                    }
                 }
-            }
+                if (this.disabled) {
+                    classes.push(CssClasses.disabled);
+                } else {
+                    classes.push(CssClasses.general);
+                    classes.push(hoverColor);
+                }
+                classes.push(this.sizeClass);
+                classes.push(checkColor);
+                return classes;
+            },
+            /**
+             * size class object
+             */
+            sizeClass() {
+                switch (this.size) {
+                    case 'is-xs':
+                        return CssClasses.sizeXs;
+                    case 'is-sm':
+                        return CssClasses.sizeSm;
+                    case 'is-md':
+                        return CssClasses.sizeMd;
+                    case 'is-lg':
+                        return CssClasses.sizeLg;
+                    default:
+                        return CssClasses.sizeMd;
+                }
+            },
+            /**
+             * check class object
+             * @return {string[]}
+             */
+            checkClass() {
+                let checkColor = 'bg-white';
+                return ['check', checkColor, CssClasses.check];
+            },
+            /**
+             * input class object
+             * @return {string[]}
+             */
+            inputClass() {
+                return [CssClasses.input];
+            },
         },
     }
 </script>
+
+<style scoped>
+    /*size*/
+    .is-xs {
+        width: 36px;
+        height: 18px;
+    }
+    .is-xs input[type=checkbox] + .check {
+        height: 12px;
+        width: 12px;
+    }
+    .is-xs input[type=checkbox]:checked + .check {
+        -webkit-transform: translateX(18px);
+        -ms-transform: translateX(18px);
+        transform: translateX(18px);
+    }
+
+    .is-sm {
+        width: 44px;
+        height: 22px;
+    }
+    .is-sm input[type=checkbox] + .check {
+        height: 16px;
+        width: 16px;
+    }
+    .is-sm input[type=checkbox]:checked + .check {
+        -webkit-transform: translateX(22px);
+        -ms-transform: translateX(22px);
+        transform: translateX(22px);
+    }
+
+    .is-md {
+        width: 52px;
+        height: 26px;
+    }
+    .is-md input[type=checkbox] + .check {
+        height: 20px;
+        width: 20px;
+    }
+    .is-md input[type=checkbox]:checked + .check {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+    }
+
+    .is-lg {
+        width: 60px;
+        height: 30px;
+    }
+    .is-lg input[type=checkbox] + .check {
+        height: 24px;
+        width: 24px;
+    }
+    .is-lg input[type=checkbox]:checked + .check {
+        -webkit-transform: translateX(30px);
+        -ms-transform: translateX(30px);
+        transform: translateX(30px);
+    }
+
+    /*check*/
+    .check {
+        -webkit-transition: .3s;
+        transition: .3s;
+        left: 3px;
+        top: 3px;
+    }
+
+    .check:before {
+        content: "";
+        -webkit-transition: .3s;
+        transition: .3s;
+    }
+</style>

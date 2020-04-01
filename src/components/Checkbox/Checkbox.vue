@@ -12,7 +12,7 @@
                :value="localValue"
                :true-value="trueValue"
                :false-value="falseValue">
-        <span :class="[checkClass, checkColorClass]"></span>
+        <span :class="[checkClass]"></span>
         <span class="control-label pl-2"><slot/></span>
     </label>
 </template>
