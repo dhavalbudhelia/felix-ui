@@ -61,13 +61,6 @@
                 required: false,
                 default: 0,
             },
-            options: {
-                type: Object,
-                required: false,
-                default: function () {
-                    return optionsDefaults.options;
-                },
-            },
         },
         data() {
             return {

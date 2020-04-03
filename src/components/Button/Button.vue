@@ -50,11 +50,11 @@
                 required: false,
                 default: ''
             },
-            options: {
+            themeOptions: {
                 type: Object,
                 required: false,
                 default: function () {
-                    return optionsDefaults.options;
+                    return optionsDefaults.themeOptions;
                 },
             },
         },
@@ -98,18 +98,18 @@
              * color class object
              */
             colorClass() {
-                let primary = `bg-${this.options.color.primary}`;
-                let primaryDark = `bg-${this.options.color.primaryDark}`;
+                let primary = `bg-${this.themeOptions.color.primary}`;
+                let primaryDark = `bg-${this.themeOptions.color.primaryDark}`;
                 if (this.inverted) {
                     primary = `bg-white`;
-                    let darkInverted = `bg-${this.options.color.tertiaryDark}`;
+                    let darkInverted = `bg-${this.themeOptions.color.tertiaryDark}`;
                     primaryDark = `hover:${darkInverted} active:${darkInverted} focus:${darkInverted}`;
                 } else if (this.plain) {
                     primary = `bg-white`;
                     primaryDark = `hover:bg-white active:bg-white focus:bg-white`;
                 } else if (this.disabled) {
-                    primary = `bg-${this.options.color.tertiary}`;
-                    primaryDark = `bg-${this.options.color.tertiary}`;
+                    primary = `bg-${this.themeOptions.color.tertiary}`;
+                    primaryDark = `bg-${this.themeOptions.color.tertiary}`;
                 }
                 return `${primary} hover:${primaryDark} active:${primaryDark} focus:${primaryDark}`;
             },

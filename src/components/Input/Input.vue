@@ -75,11 +75,11 @@
                 required: false,
                 default: false,
             },
-            options: {
+            themeOptions: {
                 type: Object,
                 required: false,
                 default: function () {
-                    return optionsDefaults.options;
+                    return optionsDefaults.themeOptions;
                 },
             },
         },
@@ -98,7 +98,7 @@
                     classes.push(CssClasses.disabled);
                 } else {
                     classes.push(CssClasses.general);
-                    classes.push(`focus-within:border-${this.options.color.primary} active:border-${this.options.color.primary}`);
+                    classes.push(`focus-within:border-${this.themeOptions.color.primary} active:border-${this.themeOptions.color.primary}`);
                 }
                 classes.push(this.colorClass);
                 return classes;
@@ -144,7 +144,7 @@
             colorClass() {
                 let primary = '';
                 if (this.disabled) {
-                    primary = `bg-${this.options.color.tertiary}`;
+                    primary = `bg-${this.themeOptions.color.tertiary}`;
                 } else {
                     primary = `bg-white`;
                 }

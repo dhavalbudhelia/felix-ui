@@ -62,11 +62,11 @@
                 required: false,
                 default: ''
             },
-            options: {
+            themeOptions: {
                 type: Object,
                 required: false,
                 default: function () {
-                    return optionsDefaults.options;
+                    return optionsDefaults.themeOptions;
                 },
             },
         },
@@ -87,15 +87,15 @@
              */
             classObject() {
                 let classes =  ['fe-toggle-switch', CssClasses.base];
-                let checkColor = `bg-${this.options.color.tertiary}`;
-                let hoverColor = `hover:bg-${this.options.color.tertiaryDark}`;
+                let checkColor = `bg-${this.themeOptions.color.tertiary}`;
+                let hoverColor = `hover:bg-${this.themeOptions.color.tertiaryDark}`;
                 if (this.localValue) {
                     if (this.checkColorClass !== '') {
                         checkColor = this.checkColorClass;
                         hoverColor = `hover:${checkColor}`;
                     } else {
-                        checkColor = `bg-${this.options.color.primary}`;
-                        hoverColor = `hover:bg-${this.options.color.primaryDark}`;
+                        checkColor = `bg-${this.themeOptions.color.primary}`;
+                        hoverColor = `hover:bg-${this.themeOptions.color.primaryDark}`;
                     }
                 }
                 if (this.disabled) {

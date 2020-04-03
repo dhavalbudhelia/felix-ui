@@ -62,11 +62,11 @@
                 required: false,
                 default: ''
             },
-            options: {
+            themeOptions: {
                 type: Object,
                 required: false,
                 default: function () {
-                    return optionsDefaults.options;
+                    return optionsDefaults.themeOptions;
                 },
             },
         },
@@ -118,7 +118,7 @@
              * @return {string[]}
              */
             checkClass() {
-                let color = this.checkColorClass !== '' ? this.checkColorClass : `text-${this.options.color.primary}`;
+                let color = this.checkColorClass !== '' ? this.checkColorClass : `text-${this.themeOptions.color.primary}`;
                 return ['check', `${color}`, `hover:${color}`];
             },
             /**

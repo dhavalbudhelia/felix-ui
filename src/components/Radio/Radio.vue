@@ -56,11 +56,11 @@
                 required: false,
                 default: ''
             },
-            options: {
+            themeOptions: {
                 type: Object,
                 required: false,
                 default: function () {
-                    return optionsDefaults.options;
+                    return optionsDefaults.themeOptions;
                 },
             },
         },
@@ -121,7 +121,7 @@
             checkClass() {
                 let color = '';
                 if (this.localValue) {
-                    color = this.checkColorClass !== '' ? this.checkColorClass : `border-${this.options.color.primary}`;
+                    color = this.checkColorClass !== '' ? this.checkColorClass : `border-${this.themeOptions.color.primary}`;
                 }
                 return ['check', CssClasses.check, color];
             },

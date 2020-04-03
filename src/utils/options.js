@@ -1,5 +1,5 @@
 const optionsDefaults = {
-    options: {
+    themeOptions: {
         color: {
             primary: 'indigo-500',
             primaryDark: 'indigo-600',
