@@ -5,39 +5,43 @@
          role="dialog"
          @keydown.esc="onEscape"
     >
-        <transition name="fade">
-            <div v-if="opened" :class="[modalClassObject, `lg:${size}`]">
-                <div class="fe-modal-header">
-                    <div class="header">
-                        <slot name="header">
-                            {{header}}
-                        </slot>
-                    </div>
-                    <div v-if="canClose" class="close" @click="close">
-                        <Icon icon-pack="fas" icon="times" size="is-lg"></Icon>
-                    </div>
+        <div v-if="opened" :class="[modalClassObject, `lg:${size}`]">
+            <div :class="headerClassObject">
+                <div class="flex-grow">
+                    <slot name="header">
+                        {{header}}
+                    </slot>
                 </div>
-                <div class="fe-modal-body">
-                    <slot></slot>
-                </div>
-                <div v-if="showFooter" class="fe-modal-footer">
-                    <div class="footer">
-                        <slot name="footer"></slot>
-                    </div>
+                <div v-if="canClose" :class="closeClassObject" @click="close">
+                    <fe-icon icon-pack="fas" icon="times" size="is-lg"></fe-icon>
                 </div>
             </div>
+            <div :class="bodyClassObject">
+                <slot></slot>
+            </div>
+            <div v-if="showFooter" :class="footerClassObject">
+                <div class="flex items-end justify-end">
+                    <slot name="footer"></slot>
+                </div>
+            </div>
+        </div>
+        <transition name="fade">
+            <div v-if="opened" :class="backdropClassObject"></div>
         </transition>
-        <div v-if="opened" class="backdrop"></div>
     </div>
 </template>
 
 <script>
-    import Icon from '@/components/Icon/Icon.vue';
+    import FeIcon from '@/components/Icon/Icon.vue';
     import SizeMixin from "@/mixins/SizeMixin";
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-modal',
-        components: {Icon},
+        components: {
+            FeIcon
+        },
         mixins: [SizeMixin],
         props: {
             value: {
@@ -64,7 +68,14 @@
                 type: Boolean,
                 required: false,
                 default: false,
-            }
+            },
+            themeOptions: {
+                type: Object,
+                required: false,
+                default: function () {
+                    return optionsDefaults.themeOptions;
+                },
+            },
         },
         computed: {
             /**
@@ -82,19 +93,67 @@
              * class names object
              */
             classObject() {
-                return {
-                    'fe-modal': true,
-                    'opened': this.opened,
+                let classes = [CssClasses.base];
+                if (this.opened) {
+                    classes.push(CssClasses.general);
+                } else {
+                    classes.push('hidden');
+                }
+                classes.push(this.sizeClass);
+                return classes;
+            },
+            /**
+             * size class object
+             */
+            sizeClass() {
+                switch (this.size) {
+                    case 'is-xs':
+                        return CssClasses.sizeXs;
+                    case 'is-sm':
+                        return CssClasses.sizeSm;
+                    case 'is-md':
+                        return CssClasses.sizeMd;
+                    case 'is-lg':
+                        return CssClasses.sizeLg;
+                    default:
+                        return CssClasses.sizeMd;
                 }
             },
             /**
              * class names object for modal content container
              */
             modalClassObject() {
-                return {
-                    'fe-modal-container': true,
-                    'sm:is-lg': true,
-                }
+                return [CssClasses.container];
+            },
+            /**
+             * header class object
+             */
+            headerClassObject() {
+                return ['fe-modal-header', CssClasses.header];
+            },
+            /**
+             * body class object
+             */
+            bodyClassObject() {
+                return ['fe-modal-body', CssClasses.body];
+            },
+            /**
+             * footer class object
+             */
+            footerClassObject() {
+                return ['fe-modal-footer', CssClasses.footer];
+            },
+            /**
+             * close icon class object
+             */
+            closeClassObject() {
+                return CssClasses.close;
+            },
+            /**
+             * backdrop class object
+             */
+            backdropClassObject() {
+                return [CssClasses.backdrop];
             },
         },
         watch: {
@@ -129,3 +188,9 @@
         },
     }
 </script>
+
+<style scoped>
+    .fe-modal-header, .fe-modal-footer {
+        min-height: 3rem;
+    }
+</style>
