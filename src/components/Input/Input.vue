@@ -11,11 +11,11 @@
         ></textarea>
         <template v-if="type === 'text'">
             <div v-if="iconBefore">
-                <Icon :icon-pack="iconPackBefore"
+                <fe-icon :icon-pack="iconPackBefore"
                       :icon="iconBefore"
                       :size="size"
                       :class="[iconClass]"
-                ></Icon>
+                ></fe-icon>
             </div>
             <input ref="input"
                    :class="[inputObject]"
@@ -28,27 +28,27 @@
                    @blur="onBlur"
                    @focus="onFocus">
             <div v-if="iconAfter">
-                <Icon :icon-pack="iconPackAfter"
+                <fe-icon :icon-pack="iconPackAfter"
                       :icon="iconAfter"
                       :size="size"
                       :class="[iconClass]"
-                ></Icon>
+                ></fe-icon>
             </div>
         </template>
     </div>
 </template>
 
 <script>
-    import Icon from '@/components/Icon/Icon.vue';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
+    import FeIcon from '@/components/Icon/Icon.vue';
     import optionsDefaults from '@/utils/options';
     import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-input',
         components: {
-            Icon,
+            FeIcon,
         },
         mixins: [IconMixin, SizeMixin],
         props: {

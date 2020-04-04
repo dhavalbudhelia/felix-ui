@@ -23,20 +23,20 @@
                             icon="chevron-left"
                             css-class="flex-grow-0"
                     ></fe-button>
-                    <Select v-model="month"
+                    <fe-select v-model="month"
                             :options="monthNames"
                             @input="emitMonthChange"
                             :expanded="true"
                             :size="size"
                             css-class="flex-grow"
-                    ></Select>
-                    <Select v-model="year"
+                    ></fe-select>
+                    <fe-select v-model="year"
                             :options="yearNames"
                             @input="emitYearChange"
                             :expanded="true"
                             :size="size"
                             css-class="flex-grow"
-                    ></Select>
+                    ></fe-select>
                     <fe-button :icon-only="true"
                             :plain="true"
                             @click.stop.prevent="incrementMonth"
@@ -48,11 +48,11 @@
                     ></fe-button>
                 </div>
             </div>
-            <DatepickerRow :weeks="weeks"
+            <fe-datepicker-row :weeks="weeks"
                            :day-names="dayNames"
                            :selected-day="selectedDay"
                            @select="select"
-            ></DatepickerRow>
+            ></fe-datepicker-row>
             <div v-if="showFooter" class="datepicker-footer">
                 <div class="footer-control text-left">
                     <fe-button :plain="true"
@@ -81,11 +81,10 @@
 
 <script>
     import {MONTH, MONTH_DATA, WEEK} from "@/utils/date";
-    import DatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
+    import FeDatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
     import FeInput from "@/components/Input/Input";
     import FeButton from "@/components/Button/Button";
-    import Select from '@/components/Select/Select.vue';
-    import Dropdown from "@/components/Dropdown/Dropdown.vue";
+    import FeSelect from '@/components/Select/Select.vue';
     import SizeMixin from "@/mixins/SizeMixin";
 
     export default {
@@ -93,9 +92,8 @@
         components: {
             FeButton,
             FeInput,
-            Dropdown,
-            DatepickerRow,
-            Select,
+            FeDatepickerRow,
+            FeSelect,
         },
         mixins: [SizeMixin],
         props: {

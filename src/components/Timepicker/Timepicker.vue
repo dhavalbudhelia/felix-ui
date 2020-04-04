@@ -9,10 +9,10 @@
                 <input type="hidden" :id="id" :value="formattedTime"></input>
             </div>
             <div v-if="changed && clearable" @click.stop.prevent="clearValues" class="timepicker-clear">
-                <Icon icon-pack="fas" icon="times" :size="size"></Icon>
+                <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
             </div>
             <div class="timepicker-icon">
-                <Icon :icon-pack="iconPack" :icon="icon" :size="size"></Icon>
+                <fe-icon :icon-pack="iconPack" :icon="icon" :size="size"></fe-icon>
             </div>
         </div>
 
@@ -21,33 +21,33 @@
 
                 <div class="hours-selector">
                     <div class="hour-up" @click.prevent.stop="hourIncrement()">
-                        <Icon icon-pack="fas" icon="chevron-up" :size="size"></Icon>
+                        <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
                     </div>
                     <div class="hour">{{ formattedHour }}</div>
                     <div class="hour-down" @click.prevent.stop="hourDecrement()">
-                        <Icon icon-pack="fas" icon="chevron-down" :size="size"></Icon>
+                        <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
                     </div>
                 </div>
 
                 <div class="time-separator">{{ separator }}</div>
                 <div class="minutes-selector">
                     <div class="minute-up" @click.prevent.stop="minuteIncrement()">
-                        <Icon icon-pack="fas" icon="chevron-up" :size="size"></Icon>
+                        <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
                     </div>
                     <div class="minute">{{ formattedMinute }}</div>
                     <div class="minute-down" @click.prevent.stop="minuteDecrement()">
-                        <Icon icon-pack="fas" icon="chevron-down" :size="size"></Icon>
+                        <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
                     </div>
                 </div>
 
                 <div v-if="showSeconds" class="time-separator">{{ separator }}</div>
                 <div v-if="showSeconds" class="seconds-selector">
                     <div class="second-up" @click.prevent.stop="secondIncrement()">
-                        <Icon icon-pack="fas" icon="chevron-up" :size="size"></Icon>
+                        <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
                     </div>
                     <div class="second">{{ formattedSecond }}</div>
                     <div class="second-down" @click.prevent.stop="secondDecrement()">
-                        <Icon icon-pack="fas" icon="chevron-down" :size="size"></Icon>
+                        <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
                     </div>
                 </div>
 
@@ -62,20 +62,20 @@
 </template>
 
 <script>
-    import Button from '@/components/Button/Button.vue';
-    import Icon from '@/components/Icon/Icon.vue';
-    import Input from '@/components/Input/Input.vue';
-    import Select from '@/components/Select/Select.vue';
+    import FeButton from '@/components/Button/Button.vue';
+    import FeIcon from '@/components/Icon/Icon.vue';
+    import FeInput from '@/components/Input/Input.vue';
+    import FeSelect from '@/components/Select/Select.vue';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
 
     export default {
         name: 'fe-timepicker',
         components: {
-            Button,
-            Icon,
-            Input,
-            Select
+            FeButton,
+            FeIcon,
+            FeInput,
+            FeSelect
         },
         mixins: [IconMixin, SizeMixin],
         props: {

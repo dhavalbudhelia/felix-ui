@@ -9,10 +9,10 @@
                 </div>
             </div>
             <div v-if="selectValueDislay !== ''" @click.stop.prevent="clearValues" class="multi-select-clear">
-                <Icon icon-pack="fas" icon="times" :size="size"></Icon>
+                <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
             </div>
             <div class="dropdown-wrapper">
-                <Icon icon-pack="fas" icon="caret-down" size="is-lg"></Icon>
+                <fe-icon icon-pack="fas" icon="caret-down" size="is-lg"></fe-icon>
             </div>
         </div>
         <select aria-hidden="true" class="sp-multi-select-hidden" :id="id" :name="name">
@@ -31,44 +31,44 @@
                             ></fe-input>
                             <div v-if="searchTerm !== ''" @click.stop.prevent="clearSearch"
                                  class="multi-select-search-clear">
-                                <Icon icon-pack="fas" icon="times" size="is-sm"></Icon>
+                                <fe-icon icon-pack="fas" icon="times" size="is-sm"></fe-icon>
                             </div>
                         </div>
 
                         <div v-if="items.length > 0 && searchTerm === ''" class="dropdown-item header-control">
-                            <Checkbox key="selectAll"
+                            <fe-checkbox key="selectAll"
                                       local-value="selectAll"
                                       v-model="selectAllValue"
                                       @input="selectAll"
                             >Select All
-                            </Checkbox>
+                            </fe-checkbox>
                         </div>
                     </div>
                     <div class="dropdown-content-items-wrapper">
                         <div v-if="groupByProperty === null" v-for="item in items" class="dropdown-item">
-                            <Checkbox :key="item.id"
+                            <fe-checkbox :key="item.id"
                                       :local-value="item.id"
                                       v-model="item.selected"
                                       @input="selectItem(item, $event)"
                             >{{ item.text }}
-                            </Checkbox>
+                            </fe-checkbox>
                         </div>
                         <template v-if="groupByProperty !== null" v-for="group in groups">
                             <div class="dropdown-item dropdown-group">
-                                <Checkbox :key="group.name"
+                                <fe-checkbox :key="group.name"
                                           :local-value="group.name"
                                           @input="selectGroup(group.name, $event)"
                                           v-model="group.selected"
                                 >{{ group.name }}
-                                </Checkbox>
+                                </fe-checkbox>
                             </div>
                             <div v-for="groupItem in group.items" class="dropdown-item grouped-item">
-                                <Checkbox :key="groupItem.id"
+                                <fe-checkbox :key="groupItem.id"
                                           :local-value="groupItem.id"
                                           v-model="groupItem.selected"
                                           @input="selectItem(groupItem, $event)"
                                 >{{ groupItem.text }}
-                                </Checkbox>
+                                </fe-checkbox>
                             </div>
                         </template>
                         <div v-if="searchable && filteredItems.length === 0" class="dropdown-item no-records">
@@ -83,17 +83,17 @@
 </template>
 
 <script>
-    import Icon from '@/components/Icon/Icon.vue';
+    import FeIcon from '@/components/Icon/Icon.vue';
     import FeInput from '@/components/Input/Input.vue';
-    import Checkbox from '@/components/Checkbox/Checkbox.vue';
+    import FeCheckbox from '@/components/Checkbox/Checkbox.vue';
     import SizeMixin from "@/mixins/SizeMixin";
 
     export default {
         name: 'fe-multi-select',
         components: {
             FeInput,
-            Icon,
-            Checkbox
+            FeIcon,
+            FeCheckbox
         },
         mixins: [SizeMixin],
         props: {

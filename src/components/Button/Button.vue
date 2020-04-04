@@ -1,26 +1,26 @@
 <template>
     <button type="button" :class="[classObject, cssClass]" :disabled="disabled" @click="emitClick">
         <template v-if="!iconOnly">
-            <Icon v-if="iconBefore"
+            <fe-icon v-if="iconBefore"
                   :class="iconClass"
                   :icon-pack="iconPackBefore"
                   :icon="iconBefore"
                   :size="size"
-            ></Icon>
+            ></fe-icon>
             <div class="mx-2"><slot></slot></div>
-            <Icon v-if="iconAfter"
+            <fe-icon v-if="iconAfter"
                   :class="iconClass"
                   :icon-pack="iconPackAfter"
                   :icon="iconAfter"
                   :size="size"
-            ></Icon>
+            ></fe-icon>
         </template>
-        <Icon v-else :class="iconClass" :icon-pack="iconPack" :icon="icon" :size="size"></Icon>
+        <fe-icon v-else :class="iconClass" :icon-pack="iconPack" :icon="icon" :size="size"></fe-icon>
     </button>
 </template>
 
 <script>
-    import Icon from '@/components/Icon/Icon';
+    import FeIcon from '@/components/Icon/Icon';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
     import optionsDefaults from '@/utils/options';
@@ -29,7 +29,7 @@
     export default {
         name: 'fe-button',
         components: {
-            Icon,
+            FeIcon,
         },
         mixins: [IconMixin, SizeMixin],
         props: {
