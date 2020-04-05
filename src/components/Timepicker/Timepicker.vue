@@ -130,8 +130,18 @@
         },
         computed: {
             classObject() {
+                let classes = ['fe-timepicker'];
+                return classes;
+            },
+            /**
+             * timepicker class object
+             */
+            timepickerClassObject() {
                 return {
-                    'fe-timepicker': true,
+                    'timepicker': true,
+                    'center-position': true,
+                    'md:normal-position': true,
+                    'opened': true,
                 }
             },
             /**
@@ -167,17 +177,6 @@
              */
             formattedSecond() {
                 return this._.padStart(this.second, 2, 0);
-            },
-            /**
-             * timepicker class object
-             */
-            timepickerClassObject() {
-                return {
-                    'timepicker': true,
-                    'center-position': true,
-                    'md:normal-position': true,
-                    'opened': true,
-                }
             },
         },
         methods: {
