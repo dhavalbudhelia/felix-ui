@@ -211,7 +211,7 @@
                         text: itemData[this.labelProperty],
                         groupLabel: itemData[this.groupByProperty],
                         selected: selected,
-                        vbIndex: itemData['vbIndex']
+                        feIndex: itemData['feIndex']
                     };
                 });
             },
@@ -374,7 +374,7 @@
                 if (checked) {
                     if (!this.isItemSelected(item)) {
                         this.selectedItems.push(item);
-                        this.selectedItems = this._.orderBy(this.selectedItems, ['vbIndex'], ['asc']);
+                        this.selectedItems = this._.orderBy(this.selectedItems, ['feIndex'], ['asc']);
                     }
                 } else {
                     this.selectedItems = this._.filter(this.selectedItems, (selectedItem) => {
@@ -433,7 +433,7 @@
                 });
                 this.filteredItems = this._.orderBy(
                     this.filteredItems,
-                    ['selected', 'vbIndex'],
+                    ['selected', 'feIndex'],
                     ['desc', 'asc']
                 );
             },
@@ -441,9 +441,9 @@
         mounted() {
             this.indexedDataSource = this._.orderBy(this._.map(this.dataSource, (item, key) => {
                 return this._.merge(this._.clone(item), {
-                    vbIndex: key
+                    feIndex: key
                 });
-            }), ['vbIndex'], ['asc']);
+            }), ['feIndex'], ['asc']);
             this.filteredItems = this.indexedDataSource;
         }
     }
