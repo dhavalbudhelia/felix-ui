@@ -1,84 +1,97 @@
 <template>
     <div :class="[classObject, size]">
-        <div class="multi-select-input-wrapper" @click="toggleTrigger">
-            <div class="input-value-wrapper">
-                <div v-if="selectValueDislay === ''" class="multi-select-input-placeholder">{{ placeholder }}</div>
-                <div class="multi-select-display-value">{{ selectValueDislay }}</div>
-                <div v-if="!allItemSelected" class="multi-select-display-remaining">
+        <div :class="wrapperClassObject" @click="toggleTrigger">
+            <div :class="placeholderWrapperClassObject">
+                <div v-if="selectValueDislay === ''" :class="placeholderClassObject">{{ placeholder }}</div>
+                <div :class="displayValuePlaceholderClassObject">{{ selectValueDislay }}</div>
+                <div v-if="!allItemSelected" :class="remainingValuePlaceholderClassObject">
                     {{ selectedValueDisplayRemaining }}
                 </div>
             </div>
-            <div v-if="selectValueDislay !== ''" @click.stop.prevent="clearValues" class="multi-select-clear">
+            <div v-if="selectValueDislay !== ''" @click.stop.prevent="clearValues" :class="clearClassObject">
                 <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
             </div>
-            <div class="dropdown-wrapper">
+            <div :class="caretClassObject">
                 <fe-icon icon-pack="fas" icon="caret-down" size="is-lg"></fe-icon>
             </div>
         </div>
-        <select aria-hidden="true" class="sp-multi-select-hidden" :id="id" :name="name">
+        <select aria-hidden="true" :class="selectClassObject" :id="id" :name="name">
             <option v-for="(item, key) in selectedItems" :key="key" :value="item.id" selected>{{ key }}</option>
         </select>
         <transition name="fade">
             <div v-if="opened" :class="dropDownMenuClassObject" @click.stop>
-                <div class="dropdown-content">
+                <div :class="dropdownContentClassObject">
                     <div class="dropdown-content-header-wrapper">
-                        <div v-if="searchable" class="dropdown-item header-control search-control">
+                        <div v-if="searchable" :class="dropdownItemClassObject" class="border-b p-1 px-2">
                             <fe-input ref="search"
-                                   v-model="searchTerm"
-                                   placeholder="Search..."
-                                   icon-pack-before="fas"
-                                   icon-before="search"
+                                      v-model="searchTerm"
+                                      placeholder="Search..."
+                                      icon-pack-before="fas"
+                                      icon-before="search"
+                                      class="w-full"
                             ></fe-input>
-                            <div v-if="searchTerm !== ''" @click.stop.prevent="clearSearch"
-                                 class="multi-select-search-clear">
+                            <div v-if="searchTerm !== ''"
+                                 @click.stop.prevent="clearSearch"
+                                 :class="searchClearClassObject"
+                            >
                                 <fe-icon icon-pack="fas" icon="times" size="is-sm"></fe-icon>
                             </div>
                         </div>
 
-                        <div v-if="items.length > 0 && searchTerm === ''" class="dropdown-item header-control">
+                        <div v-if="items.length > 0 && searchTerm === ''" :class="dropdownItemClassObject"
+                             class="border-b">
                             <fe-checkbox key="selectAll"
-                                      local-value="selectAll"
-                                      v-model="selectAllValue"
-                                      @input="selectAll"
+                                         local-value="selectAll"
+                                         v-model="selectAllValue"
+                                         @input="selectAll"
+                                         :class="checkboxClassObject"
                             >Select All
                             </fe-checkbox>
                         </div>
                     </div>
-                    <div class="dropdown-content-items-wrapper">
-                        <div v-if="groupByProperty === null" v-for="item in items" class="dropdown-item">
+                    <div :class="dropdownContentItemWrapperClassObject">
+                        <div v-if="groupByProperty === null" v-for="item in items"
+                             :class="[dropdownItemClassObject, dropdownItemHoverClassObject]">
                             <fe-checkbox :key="item.id"
-                                      :local-value="item.id"
-                                      v-model="item.selected"
-                                      @input="selectItem(item, $event)"
+                                         :local-value="item.id"
+                                         v-model="item.selected"
+                                         @input="selectItem(item, $event)"
+                                         :class="checkboxClassObject"
                             >{{ item.text }}
                             </fe-checkbox>
                         </div>
                         <template v-if="groupByProperty !== null" v-for="group in groups">
-                            <div class="dropdown-item dropdown-group">
+                            <div :class="[dropdownItemClassObject, dropdownItemHoverClassObject]"
+                                 class="dropdown-group">
                                 <fe-checkbox :key="group.name"
-                                          :local-value="group.name"
-                                          @input="selectGroup(group.name, $event)"
-                                          v-model="group.selected"
+                                             :local-value="group.name"
+                                             @input="selectGroup(group.name, $event)"
+                                             v-model="group.selected"
+                                             :class="checkboxClassObject"
                                 >{{ group.name }}
                                 </fe-checkbox>
                             </div>
-                            <div v-for="groupItem in group.items" class="dropdown-item grouped-item">
+                            <div v-for="groupItem in group.items"
+                                 :class="[dropdownItemClassObject, dropdownItemHoverClassObject]"
+                                 class="grouped-item pl-3">
                                 <fe-checkbox :key="groupItem.id"
-                                          :local-value="groupItem.id"
-                                          v-model="groupItem.selected"
-                                          @input="selectItem(groupItem, $event)"
+                                             :local-value="groupItem.id"
+                                             v-model="groupItem.selected"
+                                             @input="selectItem(groupItem, $event)"
+                                             :class="checkboxClassObject"
                                 >{{ groupItem.text }}
                                 </fe-checkbox>
                             </div>
                         </template>
-                        <div v-if="searchable && filteredItems.length === 0" class="dropdown-item no-records">
+                        <div v-if="searchable && filteredItems.length === 0" :class="dropdownItemClassObject"
+                             class="py-2 px-4">
                             {{ noRecordsFoundTemplate }}
                         </div>
                     </div>
                 </div>
             </div>
         </transition>
-        <div v-if="opened" @click="clickedOutside" class="mobile-device-backdrop gray-backdrop md:white-backdrop"></div>
+        <div v-if="opened" @click="clickedOutside" :class="backdropClassObject"></div>
     </div>
 </template>
 
@@ -87,6 +100,8 @@
     import FeInput from '@/components/Input/Input.vue';
     import FeCheckbox from '@/components/Checkbox/Checkbox.vue';
     import SizeMixin from "@/mixins/SizeMixin";
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-multi-select',
@@ -152,6 +167,13 @@
                 required: false,
                 default: false,
             },
+            themeOptions: {
+                type: Object,
+                required: false,
+                default: function () {
+                    return optionsDefaults.themeOptions;
+                },
+            },
         },
         data() {
             return {
@@ -178,24 +200,167 @@
                 }
 
             },
+            wrapperClassObject() {
+                return [CssClasses.wrapper];
+            },
             /**
              * class object
              */
             classObject() {
-                return {
-                    'fe-multi-select': true,
-                    'opened': this.opened,
+                let classes = ['fe-multi-select', CssClasses.base];
+                if (this.opened) {
+                    classes.push('opened')
                 }
+                classes.push(this.sizeClass);
+                return classes;
             },
             /**
              * class names object for dropdown menu
              */
             dropDownMenuClassObject() {
-                return {
-                    'dropdown-menu': true,
-                    'center-position': true,
-                    'md:normal-position': true,
+                let classes = ['dropdown-menu'];
+                if (this.opened) {
+                    classes.push(CssClasses.menu);
+                    classes.push('center-position md:normal-position');
+                } else {
+                    classes.push('hidden');
                 }
+                return classes;
+            },
+            /**
+             * dropdown content class object
+             */
+            dropdownContentClassObject() {
+                return ['dropdown-content', CssClasses.dropdownContent];
+            },
+            /**
+             * dropdown item wrapper class object
+             */
+            dropdownContentItemWrapperClassObject() {
+                return ['dropdown-content-items-wrapper', CssClasses.dropdownContentItemWrapper];
+            },
+            /**
+             * dropdown item class object
+             */
+            dropdownItemClassObject() {
+                let classes = ['dropdown-item', CssClasses.dropdownItem];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.dropdownItemXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.dropdownItemSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.dropdownItemMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.dropdownItemLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.dropdownItemMd);
+                }
+                return classes;
+            },
+            /**
+             * dropdown item hover effect class object
+             */
+            dropdownItemHoverClassObject() {
+                return CssClasses.dropdownItemHover;
+            },
+            /**
+             * checkbox class object
+             */
+            checkboxClassObject() {
+                return CssClasses.checkbox;
+            },
+            /**
+             * select element class object
+             */
+            selectClassObject() {
+                return CssClasses.select;
+            },
+            /**
+             * clear icon class object
+             */
+            clearClassObject() {
+                return CssClasses.clear;
+            },
+            /**
+             * search clear icon class object
+             */
+            searchClearClassObject() {
+                return ['multi-select-search-clear', CssClasses.searchClear];
+            },
+            /**
+             * placeholder wrapper class object
+             */
+            placeholderWrapperClassObject() {
+                let classes = ['placeholder-wrapper', CssClasses.placeholderWrapper];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.placeholderWrapperXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.placeholderWrapperSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.placeholderWrapperMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.placeholderWrapperLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.placeholderWrapperMd);
+                }
+                return classes;
+            },
+            /**
+             * placeholder class object
+             */
+            placeholderClassObject() {
+                return CssClasses.placeholder;
+            },
+            /**
+             * display value placeholder class object
+             */
+            displayValuePlaceholderClassObject() {
+                return CssClasses.displayValuePlaceholder;
+            },
+            /**
+             * remaining value placeholder class object
+             */
+            remainingValuePlaceholderClassObject() {
+                return CssClasses.remainingValuePlaceholder;
+            },
+            /**
+             * dropdown caret icon class object
+             */
+            caretClassObject() {
+                let classes = ['caret', CssClasses.caret];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.caretXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.caretSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.caretMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.caretLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.caretMd);
+                }
+                return classes;
+            },
+            /**
+             * backdrop class object
+             */
+            backdropClassObject() {
+                return CssClasses.backdrop;
             },
             /**
              * computed prop for item data
@@ -448,3 +613,66 @@
         }
     }
 </script>
+
+<style scoped>
+    .fe-multi-select.is-xs {
+        width: 240px;
+    }
+
+    .fe-multi-select.is-sm {
+        width: 280px;
+    }
+
+    .fe-multi-select.is-md {
+        width: 320px;
+    }
+
+    .fe-multi-select.is-lg {
+        width: 360px;
+    }
+
+    .dropdown-content {
+        margin-top: .15rem;
+    }
+
+    .dropdown-content-items-wrapper {
+        max-height: 275px;
+    }
+
+    .fe-multi-select.is-xs .dropdown-content-items-wrapper {
+        width: 238px;
+    }
+
+    .fe-multi-select.is-sm .dropdown-content-items-wrapper {
+        width: 278px;
+    }
+
+    .fe-multi-select.is-md .dropdown-content-items-wrapper {
+        width: 318px;
+    }
+
+    .fe-multi-select.is-lg .dropdown-content-items-wrapper {
+        width: 358px;
+    }
+
+    @media (min-width: 768px) {
+        .fe-multi-select .md\:normal-position {
+            position: absolute;
+            top: auto;
+            right: auto;
+            bottom: auto;
+            left: auto;
+            -webkit-transform: none;
+            transform: none;
+        }
+    }
+
+    .center-position {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+</style>
