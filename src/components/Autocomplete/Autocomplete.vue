@@ -1,5 +1,5 @@
 <template>
-    <div :class="[classObject, size]">
+    <div :class="[size]">
         <fe-input :placeholder="placeholder"
                   v-model="searchTerm"
                   :icon-pack-before="iconPackBefore"
@@ -11,24 +11,24 @@
         <div :class="[dropdownClassObject, size]">
             <transition name="fade">
                 <div :class="dropDownMenuClassObject">
-                    <div class="dropdown-content">
+                    <div :class="contentClassObject">
                         <slot name="items" :items="computedItems" :selectItem="selectItem" v-if="!isEmpty">
                             <a v-for="(item, itemKey) in computedItems"
                                :key="itemKey"
-                               class="dropdown-item"
+                               :class="itemClassObject"
                                @click.stop.prevent="selectItem(item)"
                             >
                                 <slot name="item" :item="item">{{ item }}</slot>
                             </a>
                         </slot>
                         <slot name="empty" v-else-if="opened">
-                            <span class="dropdown-item">No results found</span>
+                            <span :class="itemClassObject">No results found</span>
                         </slot>
                     </div>
                 </div>
             </transition>
         </div>
-        <div v-if="opened" @click="clickedOutside" class="mobile-device-backdrop"></div>
+        <div v-if="opened" @click="clickedOutside" class="fixed w-full h-full top-0 left-0 z-10"></div>
     </div>
 </template>
 
@@ -36,6 +36,7 @@
     import FeInput from '@/components/Input/Input.vue';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-autocomplete',
@@ -123,30 +124,56 @@
         },
         computed: {
             /**
-             * class names object
-             */
-            classObject() {
-                return {
-                    'fe-autocomplete' : true,
-                }
-            },
-            /**
              * dropdown class names object
              */
             dropdownClassObject() {
-                return {
-                    'fe-dropdown': true,
-                    'opened': this.opened,
+                let classes = ['fe-dropdown', CssClasses.base];
+                if (this.opened) {
+                    classes.push('opened')
                 }
+                classes.push(this.sizeClass);
+                return classes;
             },
             /**
              * class names object for dropdown menu
              */
             dropDownMenuClassObject() {
-                return {
-                    'dropdown-menu': true,
-                    'center-position': true,
-                    'md:normal-position': true,
+                let classes = ['dropdown-menu'];
+                if (this.opened) {
+                    classes.push(CssClasses.menu);
+                    classes.push('normal-position');
+                } else {
+                    classes.push('hidden');
+                }
+                return classes;
+            },
+            /**
+             * content class object
+             */
+            contentClassObject() {
+                return ['dropdown-content', CssClasses.content];
+            },
+            /**
+             * item class object
+             */
+            itemClassObject() {
+                return ['dropdown-item', CssClasses.item];
+            },
+            /**
+             * size class object
+             */
+            sizeClass() {
+                switch (this.size) {
+                    case 'is-xs':
+                        return CssClasses.sizeXs;
+                    case 'is-sm':
+                        return CssClasses.sizeSm;
+                    case 'is-md':
+                        return CssClasses.sizeMd;
+                    case 'is-lg':
+                        return CssClasses.sizeLg;
+                    default:
+                        return CssClasses.sizeMd;
                 }
             },
             /**
@@ -166,3 +193,23 @@
         },
     }
 </script>
+
+<style scoped>
+    .normal-position {
+        position: absolute;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        -webkit-transform: none;
+        transform: none;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s ease;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+</style>
