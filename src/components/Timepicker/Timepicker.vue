@@ -1,63 +1,63 @@
 <template>
     <div :class="[classObject, size]">
-        <div class="timepicker-input-wrapper" @click="triggerFocused">
-            <div class="input-value-wrapper">
-                <div v-if="formattedTime === ''" class="timepicker-input-placeholder">
-                    {{ placeholder }}
-                </div>
-                <div class="timepicker-display-value">{{ formattedTime }}</div>
-                <input type="hidden" :id="id" :value="formattedTime"></input>
+        <div :class="placeholderWrapperClassObject" @click="triggerFocused">
+            <div :class="placeholderValueWrapperClassObject">
+                <div v-if="formattedTime === ''"
+                     class="timepicker-input-placeholder px-2 text-gray-600"
+                >{{ placeholder }}</div>
+                <div class="timepicker-display-value px-2">{{ formattedTime }}</div>
+                <input class="hidden" type="hidden" :id="id" :value="formattedTime"></input>
             </div>
-            <div v-if="changed && clearable" @click.stop.prevent="clearValues" class="timepicker-clear">
+            <div v-if="changed && clearable" @click.stop.prevent="clearValues" :class="clearClassObject">
                 <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
             </div>
-            <div class="timepicker-icon">
+            <div :class="timePickerIconClassObject">
                 <fe-icon :icon-pack="iconPack" :icon="icon" :size="size"></fe-icon>
             </div>
         </div>
 
         <div v-if="opened" @click.stop.prevent :class="timepickerClassObject">
-            <div class="header-control fe-field has-addons">
+            <div class="fe-field has-addons">
 
-                <div class="hours-selector">
-                    <div class="hour-up" @click.prevent.stop="hourIncrement()">
+                <div class="hours-selector" :class="hoursMinutesSecondsSelectorClassObject">
+                    <div class="hour-up" :class="upDownIconsClassObject" @click.prevent.stop="hourIncrement()">
                         <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
                     </div>
-                    <div class="hour">{{ formattedHour }}</div>
-                    <div class="hour-down" @click.prevent.stop="hourDecrement()">
+                    <div class="hour" :class="formattedValueClassObject">{{ formattedHour }}</div>
+                    <div class="hour-down" :class="upDownIconsClassObject" @click.prevent.stop="hourDecrement()">
                         <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
                     </div>
                 </div>
 
-                <div class="time-separator">{{ separator }}</div>
-                <div class="minutes-selector">
-                    <div class="minute-up" @click.prevent.stop="minuteIncrement()">
+                <div :class="timeSeparatorClassObject">{{ separator }}</div>
+                <div class="minutes-selector" :class="hoursMinutesSecondsSelectorClassObject">
+                    <div class="minute-up" :class="upDownIconsClassObject" @click.prevent.stop="minuteIncrement()">
                         <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
                     </div>
-                    <div class="minute">{{ formattedMinute }}</div>
-                    <div class="minute-down" @click.prevent.stop="minuteDecrement()">
+                    <div class="minute" :class="formattedValueClassObject">{{ formattedMinute }}</div>
+                    <div class="minute-down" :class="upDownIconsClassObject" @click.prevent.stop="minuteDecrement()">
                         <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
                     </div>
                 </div>
 
-                <div v-if="showSeconds" class="time-separator">{{ separator }}</div>
-                <div v-if="showSeconds" class="seconds-selector">
-                    <div class="second-up" @click.prevent.stop="secondIncrement()">
+                <div v-if="showSeconds" :class="timeSeparatorClassObject">{{ separator }}</div>
+                <div v-if="showSeconds" class="seconds-selector" :class="hoursMinutesSecondsSelectorClassObject">
+                    <div class="second-up" :class="upDownIconsClassObject" @click.prevent.stop="secondIncrement()">
                         <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
                     </div>
-                    <div class="second">{{ formattedSecond }}</div>
-                    <div class="second-down" @click.prevent.stop="secondDecrement()">
+                    <div class="second" :class="formattedValueClassObject">{{ formattedSecond }}</div>
+                    <div class="second-down" :class="upDownIconsClassObject" @click.prevent.stop="secondDecrement()">
                         <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
                     </div>
                 </div>
 
-                <div v-if="hourFormat === 12" class="time-separator"></div>
-                <div v-if="hourFormat === 12" class="meridiem-selector" @click.prevent.stop="toggleMeridiem()">
+                <div v-if="hourFormat === 12" :class="timeSeparatorClassObject"></div>
+                <div v-if="hourFormat === 12" class="meridiem-selector" :class="meridiemSelectorClassObject" @click.prevent.stop="toggleMeridiem()">
                     {{ meridiem }}
                 </div>
             </div>
         </div>
-        <div v-if="opened" @click="clickedOutside" class="mobile-device-backdrop gray-backdrop md:white-backdrop"></div>
+        <div v-if="opened" @click="clickedOutside" :class="backdropClassObject"></div>
     </div>
 </template>
 
@@ -68,6 +68,7 @@
     import FeSelect from '@/components/Select/Select.vue';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-timepicker',
@@ -129,20 +130,180 @@
             }
         },
         computed: {
+            /**
+             * timepicker wrapper class object
+             */
             classObject() {
-                let classes = ['fe-timepicker'];
+                let classes = ['fe-timepicker', CssClasses.base];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.sizeXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.sizeSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.sizeMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.sizeLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.sizeMd);
+                }
                 return classes;
             },
             /**
              * timepicker class object
              */
             timepickerClassObject() {
-                return {
-                    'timepicker': true,
-                    'center-position': true,
-                    'md:normal-position': true,
-                    'opened': true,
+                let classes = [CssClasses.timepicker, 'timepicker', 'center-position', 'md:normal-position'];
+                return classes;
+            },
+            /**
+             * placeholder wrapper class object
+             */
+            placeholderWrapperClassObject() {
+                let classes = ['timepicker-placeholder-wrapper', CssClasses.placeholderWrapper];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.placeholderWrapperXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.placeholderWrapperSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.placeholderWrapperMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.placeholderWrapperLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.placeholderWrapperMd);
                 }
+                return classes;
+            },
+            /**
+             * placeholder value wrapper class object
+             */
+            placeholderValueWrapperClassObject() {
+                return CssClasses.placeholderValueWrapper;
+            },
+            /**
+             * clear icon class object
+             */
+            clearClassObject() {
+                let classes = [CssClasses.clear];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.clearXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.clearSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.clearMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.clearLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.clearMd);
+                }
+                return classes;
+            },
+            /**
+             * time separator class object
+             */
+            timeSeparatorClassObject() {
+                return CssClasses.timeSeparator;
+            },
+            /**
+             * selectors class object
+             */
+            hoursMinutesSecondsSelectorClassObject() {
+                let classes = [CssClasses.hoursMinutesSecondsSelector];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.hmsSelectorXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.hmsSelectorSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.hmsSelectorMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.hmsSelectorLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.hmsSelectorMd);
+                }
+                return classes;
+            },
+            /**
+             * formatted display value class object
+             */
+            formattedValueClassObject() {
+                let classes = [];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.formattedValueXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.formattedValueSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.formattedValueMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.formattedValueLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.formattedValueMd);
+                }
+                return classes;
+            },
+            /**
+             * chevron up and down class object
+             */
+            upDownIconsClassObject() {
+                return CssClasses.upDownIcons;
+            },
+            /**
+             * timepicker icon class object
+             */
+            timePickerIconClassObject() {
+                let classes = [CssClasses.caret];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.caretXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.caretSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.caretMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.caretLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.caretMd);
+                }
+                return classes;
+            },
+            /**
+             * backdrop class object
+             */
+            backdropClassObject() {
+                return CssClasses.backdrop;
+            },
+            /**
+             * meridiem class object
+             */
+            meridiemSelectorClassObject() {
+                return CssClasses.meridiemSelector;
             },
             /**
              * computed prop to display formatted time string
@@ -262,3 +423,37 @@
         },
     }
 </script>
+
+<style scoped>
+    .timepicker {
+        min-width: 8rem;
+    }
+
+    .timepicker-input-placeholder, .timepicker-display-value {
+        font-feature-settings: "tnum";
+    }
+
+    .hour, .minute, .second {
+        font-feature-settings: "tnum";
+    }
+
+    @media (min-width: 768px) {
+        .fe-timepicker .md\:normal-position {
+            position: absolute;
+            top: auto;
+            right: auto;
+            bottom: auto;
+            left: auto;
+            -webkit-transform: none;
+            transform: none;
+        }
+    }
+
+    .center-position {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>
