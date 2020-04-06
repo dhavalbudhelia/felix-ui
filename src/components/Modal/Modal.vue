@@ -193,4 +193,11 @@
     .fe-modal-header, .fe-modal-footer {
         min-height: 3rem;
     }
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s ease;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
 </style>

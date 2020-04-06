@@ -221,4 +221,12 @@
         -webkit-transform: translate(-50%, -50%);
         transform: translate(-50%, -50%);
     }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s ease;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
 </style>
