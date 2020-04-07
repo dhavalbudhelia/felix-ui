@@ -5,6 +5,11 @@
     "private": false,
     "description": "UI components for Vue.js based on Tailwind CSS",
     "author": "Dhaval Budhelia <budhelia.dhaval@gmail.com>",
+    "homepage": "www.felix-ui.com",
+    "repository": {
+        "type" : "git",
+        "url" : "https://github.com/dhavalbudhelia/felix-ui"
+    },
     "main": "./dist/felix-ui.common.js",
     "scripts": {
         "serve": "vue-cli-service serve ./src/index.js",
