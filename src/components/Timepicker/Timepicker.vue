@@ -17,8 +17,7 @@
         </div>
 
         <div v-if="opened" @click.stop.prevent :class="timepickerClassObject">
-            <div class="fe-field has-addons">
-
+            <div class="has-addons" :class="addonsClassObject">
                 <div class="hours-selector" :class="hoursMinutesSecondsSelectorClassObject">
                     <div class="hour-up" :class="upDownIconsClassObject" @click.prevent.stop="hourIncrement()">
                         <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
@@ -152,6 +151,12 @@
                         classes.push(CssClasses.sizeMd);
                 }
                 return classes;
+            },
+            /**
+             * addons class object
+             */
+            addonsClassObject() {
+                return ['flex justify-center items-center'];
             },
             /**
              * timepicker class object

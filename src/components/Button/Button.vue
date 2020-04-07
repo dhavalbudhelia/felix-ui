@@ -64,9 +64,9 @@
              */
             classObject() {
                 let classes =  ['fe-button flex items-center', CssClasses.base];
-                if (this.inverted) {
+                if (this.inverted && !this.disabled) {
                     classes.push(CssClasses.inverted);
-                } else if (this.plain) {
+                } else if (this.plain && !this.disabled) {
                     classes.push(CssClasses.plain);
                 } else if (this.disabled) {
                     classes.push(CssClasses.disabled);

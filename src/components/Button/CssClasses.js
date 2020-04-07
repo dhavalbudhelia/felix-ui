@@ -7,7 +7,7 @@ const cssClasses = {
         'active:border-gray-600',
     plain: 'text-gray-900 border-gray-500 shadow-none ' +
         'hover:border-gray-600 active:border-gray-400 focus:border-gray-600',
-    disabled: 'cursor-not-allowed border-gray-300 text-gray-600',
+    disabled: 'cursor-not-allowed border-gray-400 text-gray-600',
     sizeXs: 'p-0',
     sizeSm: 'p-px',
     sizeMd: 'p-1',

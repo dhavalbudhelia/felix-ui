@@ -13,7 +13,7 @@
         ></fe-input>
         <div v-if="opened" @click.stop.prevent :class="calendarClassObject">
             <div v-if="showHeader" :class="headerClassObject">
-                <div class="fe-field has-addons" :class="headerControlClassObject">
+                <div class="has-addons" :class="[headerControlClassObject, addonsClassObject]">
                     <fe-button :icon-only="true"
                                :plain="true"
                                :size="size"
@@ -21,21 +21,21 @@
                                :disabled="!hasPreviousMonth"
                                icon-pack="fas"
                                icon="chevron-left"
-                               css-class="h-full flex-grow-0"
+                               css-class="-mr-px rounded-r-none h-full flex-grow-0"
                     ></fe-button>
                     <fe-select v-model="month"
                                :options="monthNames"
                                @input="emitMonthChange"
                                :expanded="true"
                                :size="size"
-                               css-class="h-full flex-grow"
+                               css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
                     ></fe-select>
                     <fe-select v-model="year"
                                :options="yearNames"
                                @input="emitYearChange"
                                :expanded="true"
                                :size="size"
-                               css-class="h-full flex-grow"
+                               css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
                     ></fe-select>
                     <fe-button :icon-only="true"
                                :plain="true"
@@ -44,7 +44,7 @@
                                icon-pack="fas"
                                icon="chevron-right"
                                :size="size"
-                               css-class="h-full flex-grow-0"
+                               css-class="rounded-l-none h-full flex-grow-0"
                     ></fe-button>
                 </div>
             </div>
@@ -218,6 +218,12 @@
              */
             headerControlClassObject() {
                 return ['header-control', CssClasses.headerControl];
+            },
+            /**
+             * addons class object
+             */
+            addonsClassObject() {
+                return ['flex justify-center items-center'];
             },
             /**
              * footer class object
