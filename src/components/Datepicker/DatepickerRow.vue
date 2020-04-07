@@ -1,9 +1,9 @@
 <template>
-    <div class="datepicker">
-        <div class="week-label-container">
-            <div v-for="dayName in dayNames" class="week-label">{{ dayName }}</div>
+    <div :class="[datepickerClassObject]">
+        <div class="week-label-container flex">
+            <div v-for="dayName in dayNames" :class="weekLabelClassObject">{{ dayName }}</div>
         </div>
-        <div v-for="days in weeks" class="day-container">
+        <div v-for="days in weeks" class="flex day-container">
             <div v-for="(day, key) in days"
                  :key="key"
                  @click="emitSelect(day)"
@@ -15,6 +15,9 @@
 </template>
 
 <script>
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
+
     export default {
         name: 'fe-datepicker-row',
         props: {
@@ -31,23 +34,118 @@
                 type: Object,
                 required: false,
                 default: null,
-            }
+            },
+            size: {
+                type: String,
+                default: 'is-md',
+                required: false,
+                validator: function (value) {
+                    return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+                },
+            },
+            themeOptions: {
+                type: Object,
+                required: false,
+                default: function () {
+                    return optionsDefaults.themeOptions;
+                },
+            },
+        },
+        computed: {
+            datepickerClassObject() {
+                let classes = ['datepicker', CssClasses.row, this.size];
+                return classes;
+            },
+            weekLabelClassObject() {
+                let classes = ['week-label font-medium', CssClasses.dayWeekCell];
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.dayXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.daySm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.dayMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.dayLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.dayMd);
+                }
+                return classes;
+            },
         },
         methods: {
             /**
+             * check if the supplied day is selected
+             */
+            isDaySelected(day) {
+                return this.selectedDay !== null && day.date.isSame(this.selectedDay.date.format('YYYY-MM-DD'));
+            },
+            /**
+             * check if the supplied day is today
+             */
+            isDayIsToday(day) {
+                return day.date.isSame(this.$dayjs().format('YYYY-MM-DD'));
+            },
+            /**
              * class object
              * @param day
-             * @return {{previous: *, following: *, today: *, unselectable: *, day: boolean, selected: (boolean|*)}}
              */
             dayClassObject(day) {
-                return {
-                    'day': true,
-                    'previous': day.previous,
-                    'following': day.following,
-                    'unselectable': day.unselectable,
-                    'selected': (this.selectedDay !== null && day.date.isSame(this.selectedDay.date.format('YYYY-MM-DD'))),
-                    'today': day.date.isSame(this.$dayjs().format('YYYY-MM-DD')),
+                let classes = ['day', CssClasses.day, CssClasses.dayWeekCell];
+                if (day.previous) { classes.push('previous'); }
+                if (day.following) { classes.push('following'); }
+                if (day.unselectable) {
+                    classes.push('unselectable');
+                    if (!this.isDaySelected(day)) {
+                        classes.push('text-gray-500');
+                    }
                 }
+                if (this.isDaySelected(day)) {
+                    classes.push('selected');
+                    classes.push(CssClasses.selectedDay);
+                    let primary = `bg-${this.themeOptions.color.primary} border-${this.themeOptions.color.primary}`;
+                    classes.push(primary);
+                }
+                if (this.isDayIsToday(day)) {
+                    classes.push('today');
+                }
+                classes.push(this.hoverClassObject(day));
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.dayXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.daySm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.dayMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.dayLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.dayMd);
+                }
+                return classes;
+            },
+            /**
+             * return hover classes for supplied day
+             */
+            hoverClassObject(day) {
+                let classes = '';
+                if (!this.isDaySelected(day) && !day.unselectable && !this.isDayIsToday(day)) {
+                    classes = CssClasses.dayHover;
+                } else if (this.isDayIsToday(day) && !this.isDaySelected(day)) {
+                    classes = `border-${this.themeOptions.color.primary}`;
+                    if (!day.unselectable) {
+                        classes = classes + ' hover:bg-gray-300 hover:cursor-pointer';
+                    }
+                }
+                return classes;
             },
             /**
              * emit select day event to the parent component
@@ -61,3 +159,21 @@
         },
     }
 </script>
+
+<style scoped>
+    .day {
+        font-feature-settings: "tnum";
+    }
+    .is-xs.datepicker {
+        min-height: 13rem;
+    }
+    .is-sm.datepicker {
+        min-height: 14rem;
+    }
+    .is-md.datepicker {
+        min-height: 19rem;
+    }
+    .is-lg.datepicker {
+        min-height: 20rem;
+    }
+</style>
