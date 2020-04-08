@@ -5,6 +5,11 @@
     "private": false,
     "description": "UI components for Vue.js based on Tailwind CSS",
     "author": "Dhaval Budhelia <budhelia.dhaval@gmail.com>",
+    "homepage": "www.felix-ui.com",
+    "repository": {
+        "type" : "git",
+        "url" : "https://github.com/dhavalbudhelia/felix-ui"
+    },
     "main": "./dist/felix-ui.common.js",
     "scripts": {
         "serve": "vue-cli-service serve ./src/index.js",
@@ -25,7 +30,6 @@
         "core-js": "^3.2.1",
         "dayjs": "^1.8.17",
         "lodash": "^4.17.15",
-        "tailwindcss": "^1.1.0",
         "vue": "^2.6.10",
         "vue-lodash": "^2.1.0"
     },
@@ -39,7 +43,7 @@
         "@storybook/vue": "^5.1.11",
         "@vue/cli-plugin-babel": "^3.10.0",
         "@vue/cli-plugin-unit-mocha": "^3.10.0",
-        "@vue/cli-service": "^3.10.0",
+        "@vue/cli-service": "^4.2.3",
         "@vue/test-utils": "^1.0.0-beta.29",
         "axios": "^0.18.1",
         "babel-loader": "^8.0.6",
@@ -51,6 +55,7 @@
         "postcss-loader": "^3.0.0",
         "sass-loader": "^7.0.1",
         "style-loader": "^1.0.0",
+        "tailwindcss": "^1.1.0",
         "vue-loader": "^15.7.1",
         "vue-template-compiler": "^2.6.10",
         "webpack-dev-server": ">=3.1.11"

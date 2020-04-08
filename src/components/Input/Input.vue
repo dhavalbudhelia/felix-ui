@@ -1,7 +1,7 @@
 <template>
-    <div class="fe-input-wrapper" :class="[controlClass, size]">
+    <div :class="[wrapperClass]">
         <textarea v-if="type === 'textarea'" ref="textarea"
-                  :class="[classObject, size]"
+                  :class="[inputObject]"
                   :placeholder="placeholder"
                   :value="computedValue"
                   :disabled="disabled"
@@ -10,8 +10,15 @@
                   @focus="onFocus"
         ></textarea>
         <template v-if="type === 'text'">
+            <div v-if="iconBefore">
+                <fe-icon :icon-pack="iconPackBefore"
+                      :icon="iconBefore"
+                      :size="size"
+                      :class="[iconClass]"
+                ></fe-icon>
+            </div>
             <input ref="input"
-                   :class="[classObject, size]"
+                   :class="[inputObject]"
                    :placeholder="placeholder"
                    type="text"
                    :value="computedValue"
@@ -20,25 +27,28 @@
                    @input="onInput"
                    @blur="onBlur"
                    @focus="onFocus">
-            <span v-if="iconBefore" class="icon is-left">
-                <Icon :icon-pack="iconPackBefore" :icon="iconBefore" :size="size"></Icon>
-            </span>
-            <span v-if="iconAfter" class="icon is-right">
-                <Icon :icon-pack="iconPackAfter" :icon="iconAfter" :size="size"></Icon>
-            </span>
+            <div v-if="iconAfter">
+                <fe-icon :icon-pack="iconPackAfter"
+                      :icon="iconAfter"
+                      :size="size"
+                      :class="[iconClass]"
+                ></fe-icon>
+            </div>
         </template>
     </div>
 </template>
 
 <script>
-    import Icon from '@/components/Icon/Icon.vue';
     import IconMixin from "@/mixins/IconMixin";
     import SizeMixin from "@/mixins/SizeMixin";
+    import FeIcon from '@/components/Icon/Icon.vue';
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-input',
         components: {
-            Icon,
+            FeIcon,
         },
         mixins: [IconMixin, SizeMixin],
         props: {
@@ -65,6 +75,13 @@
                 required: false,
                 default: false,
             },
+            themeOptions: {
+                type: Object,
+                required: false,
+                default: function () {
+                    return optionsDefaults.themeOptions;
+                },
+            },
         },
         data() {
             return {
@@ -73,19 +90,71 @@
         },
         computed: {
             /**
-             * control class object
+             * class object for wrapper div
              */
-            controlClass() {
-                return {
-                    'has-icon-before': this.iconBefore,
-                    'has-icon-after': this.iconAfter,
-                    'disabled': this.disabled,
-                };
-            },
-            classObject() {
-                return {
-                    'fe-input': true,
+            wrapperClass() {
+                let classes =  ['fe-input-wrapper', CssClasses.base];
+                if (this.disabled) {
+                    classes.push(CssClasses.disabled);
+                } else {
+                    classes.push(CssClasses.general);
+                    classes.push(`focus-within:border-${this.themeOptions.color.primary} active:border-${this.themeOptions.color.primary}`);
                 }
+                classes.push(this.colorClass);
+                return classes;
+            },
+            /**
+             * class object for input
+             */
+            inputObject() {
+                let classes =  ['fe-input w-full', CssClasses.input];
+                if (this.disabled) {
+                    classes.push(CssClasses.disabled);
+                }
+                if (this.iconBefore) {
+                    classes.push('pl-2');
+                }
+                if (this.iconAfter) {
+                    classes.push('pr-2');
+                }
+                classes.push(this.sizeClass);
+                classes.push(this.colorClass);
+                return classes;
+            },
+            /**
+             * size class object
+             */
+            sizeClass() {
+                switch (this.size) {
+                    case 'is-xs':
+                        return CssClasses.sizeXs;
+                    case 'is-sm':
+                        return CssClasses.sizeSm;
+                    case 'is-md':
+                        return CssClasses.sizeMd;
+                    case 'is-lg':
+                        return CssClasses.sizeLg;
+                    default:
+                        return CssClasses.sizeMd;
+                }
+            },
+            /**
+             * color class object
+             */
+            colorClass() {
+                let primary = '';
+                if (this.disabled) {
+                    primary = `bg-${this.themeOptions.color.tertiary}`;
+                } else {
+                    primary = `bg-white`;
+                }
+                return `${primary}`;
+            },
+            /**
+             * icon class object
+             */
+            iconClass() {
+                return CssClasses.icon;
             },
             /**
              * set local value on change of the input

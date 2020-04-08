@@ -1,101 +1,101 @@
 <template>
     <div :class="[classObject, size]">
-        <Input :value="formattedDate"
-               :readonly="!editable"
-               :placeholder="placeholder"
-               ref="trigger"
-               :size="size"
-               @change.native="onChange"
-               @focus="triggerFocused"
-               @blur="triggerBlurred"
-               icon-before="calendar-alt"
-               icon-pack-before="far"
-        ></Input>
+        <fe-input :value="formattedDate"
+                  :readonly="!editable"
+                  :placeholder="placeholder"
+                  ref="trigger"
+                  :size="size"
+                  @change.native="onChange"
+                  @focus="triggerFocused"
+                  @blur="triggerBlurred"
+                  icon-before="calendar-alt"
+                  icon-pack-before="far"
+        ></fe-input>
         <div v-if="opened" @click.stop.prevent :class="calendarClassObject">
-            <div v-if="showHeader" class="datepicker-header">
-                <div class="header-control fe-field has-addons">
-                    <Button :icon-only="true"
-                            :plain="true"
-                            :size="size"
-                            @click.stop.prevent="decrementMonth"
-                            :disabled="!hasPreviousMonth"
-                            icon-pack="fas"
-                            icon="chevron-left"
-                            css-class="flex-grow-0"
-                    ></Button>
-                    <Select v-model="month"
-                            :options="monthNames"
-                            @input="emitMonthChange"
-                            :expanded="true"
-                            :size="size"
-                            css-class="flex-grow"
-                    ></Select>
-                    <Select v-model="year"
-                            :options="yearNames"
-                            @input="emitYearChange"
-                            :expanded="true"
-                            :size="size"
-                            css-class="flex-grow"
-                    ></Select>
-                    <Button :icon-only="true"
-                            :plain="true"
-                            @click.stop.prevent="incrementMonth"
-                            :disabled="!hasNextMonth"
-                            icon-pack="fas"
-                            icon="chevron-right"
-                            :size="size"
-                            css-class="flex-grow-0"
-                    ></Button>
+            <div v-if="showHeader" :class="headerClassObject">
+                <div class="has-addons" :class="[headerControlClassObject, addonsClassObject]">
+                    <fe-button :icon-only="true"
+                               :plain="true"
+                               :size="size"
+                               @click.stop.prevent="decrementMonth"
+                               :disabled="!hasPreviousMonth"
+                               icon-pack="fas"
+                               icon="chevron-left"
+                               css-class="-mr-px rounded-r-none h-full flex-grow-0"
+                    ></fe-button>
+                    <fe-select v-model="month"
+                               :options="monthNames"
+                               @input="emitMonthChange"
+                               :expanded="true"
+                               :size="size"
+                               css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
+                    ></fe-select>
+                    <fe-select v-model="year"
+                               :options="yearNames"
+                               @input="emitYearChange"
+                               :expanded="true"
+                               :size="size"
+                               css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
+                    ></fe-select>
+                    <fe-button :icon-only="true"
+                               :plain="true"
+                               @click.stop.prevent="incrementMonth"
+                               :disabled="!hasNextMonth"
+                               icon-pack="fas"
+                               icon="chevron-right"
+                               :size="size"
+                               css-class="rounded-l-none h-full flex-grow-0"
+                    ></fe-button>
                 </div>
             </div>
-            <DatepickerRow :weeks="weeks"
-                           :day-names="dayNames"
-                           :selected-day="selectedDay"
-                           @select="select"
-            ></DatepickerRow>
-            <div v-if="showFooter" class="datepicker-footer">
-                <div class="footer-control text-left">
-                    <Button :plain="true"
-                            @click.stop.prevent="selectToday"
-                            icon-pack-before="fas"
-                            icon-before="calendar-day"
-                            :disabled="!isTodaySelectable()"
-                            :size="size"
+            <fe-datepicker-row :weeks="weeks"
+                               :day-names="dayNames"
+                               :selected-day="selectedDay"
+                               :size="size"
+                               @select="select"
+            ></fe-datepicker-row>
+            <div v-if="showFooter" :class="footerClassObject">
+                <div class="text-gray-500 text-left">
+                    <fe-button :plain="true"
+                               @click.stop.prevent="selectToday"
+                               icon-pack-before="fas"
+                               icon-before="calendar-day"
+                               :disabled="!isTodaySelectable()"
+                               :size="size"
                     >Today
-                    </Button>
+                    </fe-button>
                 </div>
-                <div class="footer-control text-left">
-                    <Button :plain="true"
-                            @click.stop.prevent="clearDate"
-                            icon-pack-before="far"
-                            icon-before="times-circle"
-                            :size="size"
+                <div class="text-gray-500 text-left">
+                    <fe-button :plain="true"
+                               @click.stop.prevent="clearDate"
+                               icon-pack-before="far"
+                               icon-before="times-circle"
+                               :size="size"
                     >Clear
-                    </Button>
+                    </fe-button>
                 </div>
             </div>
         </div>
-        <div v-if="opened" @click="clickedOutside" class="mobile-device-backdrop gray-backdrop md:white-backdrop"></div>
+        <div v-if="opened" @click="clickedOutside" :class="backdropClassObject"></div>
     </div>
 </template>
 
 <script>
     import {MONTH, MONTH_DATA, WEEK} from "@/utils/date";
-    import DatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
-    import Input from '@/components/Input/Input.vue';
-    import Button from '@/components/Button/Button.vue';
-    import Select from '@/components/Select/Select.vue';
-    import Dropdown from "@/components/Dropdown/Dropdown.vue";
+    import FeDatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
+    import FeInput from "@/components/Input/Input";
+    import FeButton from "@/components/Button/Button";
+    import FeSelect from '@/components/Select/Select.vue';
     import SizeMixin from "@/mixins/SizeMixin";
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-datepicker',
         components: {
-            Dropdown,
-            Button,
-            DatepickerRow,
-            Input,
-            Select,
+            FeButton,
+            FeInput,
+            FeDatepickerRow,
+            FeSelect,
         },
         mixins: [SizeMixin],
         props: {
@@ -174,22 +174,68 @@
              * class names object
              */
             classObject() {
-                return {
-                    'fe-datepicker': true,
-                }
+                return ['fe-datepicker', CssClasses.base];
             },
             /**
-             * class object
+             * calendar class object
              */
             calendarClassObject() {
-                return {
-                    'datepicker-calendar': true,
-                    'opened': true,
-                    'has-footer': this.showFooter,
-                    'has-header': this.showHeader,
-                    'center-position': true,
-                    'md:normal-position': true,
+                let classes = ['datepicker-calendar opened center-position md:normal-position', CssClasses.calendar];
+                if (this.showFooter) {
+                    classes.push('has-footer');
                 }
+                if (this.showHeader) {
+                    classes.push('has-header');
+                }
+
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push(CssClasses.calendarXs);
+                        break;
+                    case 'is-sm':
+                        classes.push(CssClasses.calendarSm);
+                        break;
+                    case 'is-md':
+                        classes.push(CssClasses.calendarMd);
+                        break;
+                    case 'is-lg':
+                        classes.push(CssClasses.calendarLg);
+                        break;
+                    default:
+                        classes.push(CssClasses.calendarMd);
+                }
+
+                return classes;
+            },
+            /**
+             * header class object
+             */
+            headerClassObject() {
+                return ['datepicker-header', CssClasses.header];
+            },
+            /**
+             * header control class object
+             */
+            headerControlClassObject() {
+                return ['header-control', CssClasses.headerControl];
+            },
+            /**
+             * addons class object
+             */
+            addonsClassObject() {
+                return ['flex justify-center items-center'];
+            },
+            /**
+             * footer class object
+             */
+            footerClassObject() {
+                return ['datepicker-footer', CssClasses.footer];
+            },
+            /**
+             * backdrop class object
+             */
+            backdropClassObject() {
+                return CssClasses.backdrop;
             },
             /**
              * dayjs object for the first day of the current month
@@ -250,7 +296,6 @@
                         'unselectable': true,
                         'previous': true,
                     });
-
                 });
 
                 // Add following days
@@ -569,3 +614,46 @@
         },
     }
 </script>
+
+<style scoped>
+    .datepicker-calendar {
+        min-width: 12rem;
+    }
+
+    .fe-datepicker.is-xs .header-control button {
+        padding-right: 0.35rem;
+        padding-left: 0.35rem;
+    }
+    .fe-datepicker.is-sm .header-control button {
+        padding-right: 0.45rem;
+        padding-left: 0.45rem;
+    }
+    .fe-datepicker.is-md .header-control button {
+        padding-right: 0.7rem;
+        padding-left: 0.7rem;
+    }
+    .fe-datepicker.is-lg .header-control button {
+        padding-right: 0.45rem;
+        padding-left: 0.45rem;
+    }
+
+    @media (min-width: 768px) {
+        .fe-datepicker .md\:normal-position {
+            position: absolute;
+            top: auto;
+            right: auto;
+            bottom: auto;
+            left: auto;
+            -webkit-transform: none;
+            transform: none;
+        }
+    }
+
+    .center-position {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+</style>

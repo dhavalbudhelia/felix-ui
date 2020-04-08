@@ -1,12 +1,12 @@
 <template>
-    <div class="fe-tooltip-container"
-         ref="ertooltip_trigger"
+    <div :class="wrapperClassObject"
+         ref="fetooltip_trigger"
          @mouseenter="hovered(true)"
          @mouseleave="hovered(false)"
     >
         <transition name="tooltip-fade">
-            <div v-show="opened" :class="[contentClassObject, position, size]"
-                 ref="ertooltip"
+            <div v-if="opened" :class="[contentClassObject, position, size]"
+                 ref="fetooltip"
                  v-html="content"
                  :style="style"
             ></div>
@@ -21,6 +21,8 @@
 
 <script>
     import SizeMixin from "@/mixins/SizeMixin";
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-tooltip',
@@ -58,7 +60,7 @@
                 type: Number,
                 required: false,
                 default: 0,
-            }
+            },
         },
         data() {
             return {
@@ -79,12 +81,39 @@
         },
         computed: {
             /**
+             * tooltip wrapper class
+             */
+            wrapperClassObject() {
+                return CssClasses.container;
+            },
+            /**
              * content class object
              */
             contentClassObject() {
-                return {
-                    'fe-tooltip': true,
-                    'wrap': this.wrap,
+                let classes = ['fe-tooltip', CssClasses.base];
+                if (this.wrap) {
+                    classes.push(CssClasses.wrap);
+                } else {
+                    classes.push(CssClasses.general);
+                }
+                classes.push(this.sizeClass);
+                return classes;
+            },
+            /**
+             * size class object
+             */
+            sizeClass() {
+                switch (this.size) {
+                    case 'is-xs':
+                        return CssClasses.sizeXs;
+                    case 'is-sm':
+                        return CssClasses.sizeSm;
+                    case 'is-md':
+                        return CssClasses.sizeMd;
+                    case 'is-lg':
+                        return CssClasses.sizeLg;
+                    default:
+                        return CssClasses.sizeMd;
                 }
             },
             /**
@@ -105,7 +134,7 @@
             showTooltip() {
                 this.opened = true;
                 this.$nextTick(() => {
-                    this.insertTooltipToBody(this.$refs.ertooltip);
+                    this.insertTooltipToBody(this.$refs.fetooltip);
                     this.positionTooltip();
                 });
             },
@@ -114,8 +143,8 @@
              */
             hideTooltip() {
                 this.opened = false;
-                if (this.$refs.ertooltip) {
-                    this.removeTooltipFromBody(this.$refs.ertooltip);
+                if (this.$refs.fetooltip) {
+                    this.removeTooltipFromBody(this.$refs.fetooltip);
                 }
             },
             /**
@@ -160,10 +189,10 @@
              * after adding tooltip to the dom position it as per the property
              */
             positionTooltip() {
-                let triggerDomRect = this.$refs.ertooltip_trigger.getBoundingClientRect();
+                let triggerDomRect = this.$refs.fetooltip_trigger.getBoundingClientRect();
                 let triggerElementHeight = triggerDomRect.height;
                 let triggerElementWidth = triggerDomRect.width;
-                let tooltipDomRect = this.$refs.ertooltip.getBoundingClientRect();
+                let tooltipDomRect = this.$refs.fetooltip.getBoundingClientRect();
                 let tooltipHeight = tooltipDomRect.height;
                 let tooltipWidth = tooltipDomRect.width;
 
@@ -194,10 +223,74 @@
             this.opened = this.active;
             if (this.opened) {
                 this.$nextTick(() => {
-                    this.insertTooltipToBody(this.$refs.ertooltip);
+                    this.insertTooltipToBody(this.$refs.fetooltip);
                     this.positionTooltip();
                 });
             }
         }
     }
 </script>
+
+<style scoped>
+    /*size*/
+    .is-xs {
+        width: 80px;
+    }
+
+    .is-sm {
+        width: 120px;
+    }
+
+    .is-md {
+        width: 180px;
+    }
+
+    .is-lg {
+        width: 240px;
+    }
+
+    /*Triangle*/
+    .fe-tooltip:before {
+        content: '';
+        border: 5px solid transparent;
+        position: absolute;
+        display: block;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+    }
+
+    /*position*/
+    .is-left:before {
+        border-left: 5px solid black;
+        top: calc(50% - 5px);
+        left: calc(100%);
+    }
+
+    .is-right:before {
+        border-right: 5px solid black;
+        top: calc(50% - 5px);
+        right: calc(100%);
+    }
+
+    .is-bottom:before {
+        border-bottom: 5px solid black;
+        bottom: calc(100%);
+        left: 50%;
+    }
+
+    .is-top:before {
+        border-top: 5px solid black;
+        top: calc(100%);
+        left: 50%;
+    }
+
+    .tooltip-fade-enter-active, .tooltip-fade-leave-active {
+        transition: opacity .2s;
+    }
+
+    .tooltip-fade-enter, .tooltip-fade-leave-to {
+        opacity: 0;
+    }
+</style>

@@ -123,7 +123,6 @@ describe('Button.vue', () => {
             }
         });
         expect(wrapper.find('button').classes()).to.include('fe-button');
-        expect(wrapper.find('button').classes()).to.include('inverted');
         expect(wrapper.find('button').text()).to.include('Foo');
         expect(wrapper.find({name: 'fe-icon'}).isVueInstance()).to.be.true;
         expect(wrapper.find({name: 'fe-icon'}).props().icon).to.equal('globe-americas');

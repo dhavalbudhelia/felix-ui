@@ -2,38 +2,38 @@
     <div :class="[classObject, size]" @mouseover="hovered(true)" @mouseout="hovered(false)">
         <div class="dropdown-trigger" @click="toggleTrigger">
             <slot name="trigger">
-                <Button :size="size" icon-pack-after="fas" :disabled="disabled" icon-after="caret-down">
+                <fe-button :size="size" icon-pack-after="fas" :disabled="disabled" icon-after="caret-down">
                     <template v-if="selectedItem">{{ selectedItem }}</template>
                     <template v-else>{{ triggerButtonText }}</template>
-                </Button>
+                </fe-button>
             </slot>
         </div>
         <transition name="fade">
             <div v-if="opened || hoverable" :class="dropDownMenuClassObject">
-                <div class="dropdown-content">
+                <div :class="contentClassObject">
                     <a v-for="item in items"
                        :key="item"
                        @click="selectItem(item)"
-                       class="dropdown-item"
-                    >
-                        <slot name="item" :item="item">{{ item }}</slot>
-                    </a>
+                       :class="itemClassObject"
+                    ><slot name="item" :item="item">{{ item }}</slot></a>
                 </div>
             </div>
         </transition>
-        <div v-if="opened && !hoverable" @click="clickedOutside" class="mobile-device-backdrop gray-backdrop md:white-backdrop"></div>
+        <div v-if="opened && !hoverable" @click="clickedOutside" :class="backdropClassObject"></div>
     </div>
 </template>
 
 <script>
-    import Button from '@/components/Button/Button.vue';
+    import FeButton from "@/components/Button/Button.vue";
     import SizeMixin from "@/mixins/SizeMixin";
+    import optionsDefaults from '@/utils/options';
+    import CssClasses from "./CssClasses";
 
     export default {
         name: 'fe-dropdown',
         mixins: [SizeMixin],
         components: {
-            Button
+            FeButton,
         },
         props: {
             value: {
@@ -54,7 +54,14 @@
             hoverable: {
                 type: Boolean,
                 default: false
-            }
+            },
+            themeOptions: {
+                type: Object,
+                required: false,
+                default: function () {
+                    return optionsDefaults.themeOptions;
+                },
+            },
         },
         data() {
             return {
@@ -81,22 +88,64 @@
              * class names object form dropdown wrapper
              */
             classObject() {
-                return {
-                    'fe-dropdown': true,
-                    'opened': this.opened,
-                    'hoverable': this.hoverable,
-                    'disabled': this.disabled,
+                let classes = ['fe-dropdown', CssClasses.base];
+                if (this.opened) {
+                    classes.push('opened')
                 }
+                classes.push(this.sizeClass);
+                return classes;
             },
             /**
              * class names object for dropdown menu
              */
             dropDownMenuClassObject() {
-                return {
-                    'dropdown-menu': true,
-                    'center-position': true,
-                    'md:normal-position': true,
+                let classes = ['dropdown-menu'];
+                if (this.opened) {
+                    classes.push(CssClasses.menu);
+                    if (this.hoverable) {
+                        classes.push('md:normal-position');
+                    } else {
+                        classes.push('center-position md:normal-position');
+                    }
+                } else {
+                    classes.push('hidden');
                 }
+                return classes;
+            },
+            /**
+             * content class object
+             */
+            contentClassObject() {
+                return ['dropdown-content', CssClasses.content];
+            },
+            /**
+             * item class object
+             */
+            itemClassObject() {
+                return ['dropdown-item', CssClasses.item];
+            },
+            /**
+             * size class object
+             */
+            sizeClass() {
+                switch (this.size) {
+                    case 'is-xs':
+                        return CssClasses.sizeXs;
+                    case 'is-sm':
+                        return CssClasses.sizeSm;
+                    case 'is-md':
+                        return CssClasses.sizeMd;
+                    case 'is-lg':
+                        return CssClasses.sizeLg;
+                    default:
+                        return CssClasses.sizeMd;
+                }
+            },
+            /**
+             * backdrop class object
+             */
+            backdropClassObject() {
+                return CssClasses.backdrop;
             },
         },
         methods: {
@@ -151,3 +200,33 @@
         },
     }
 </script>
+
+<style scoped>
+    @media (min-width: 768px) {
+        .fe-dropdown .md\:normal-position {
+            position: absolute;
+            top: auto;
+            right: auto;
+            bottom: auto;
+            left: auto;
+            -webkit-transform: none;
+            transform: none;
+        }
+    }
+
+    .center-position {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity .5s ease;
+    }
+
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+</style>

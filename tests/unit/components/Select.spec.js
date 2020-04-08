@@ -73,6 +73,6 @@ describe('Select.vue', () => {
             }
         });
         expect(wrapper.find('select').classes()).to.include('select');
-        expect(wrapper.find('div.fe-select').classes()).to.include('is-full-width');
+        expect(wrapper.find('div.fe-select').classes()).to.include('w-full');
     });
 });

@@ -28,12 +28,12 @@ describe('Timepicker.vue', () => {
             localVue,
         });
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
         let timepickerWrapper = wrapper.find('div.fe-timepicker div.timepicker');
         expect(timepickerWrapper.find('div.hours-selector').exists()).to.be.true;
@@ -96,12 +96,12 @@ describe('Timepicker.vue', () => {
             },
         });
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
         let timepickerWrapper = wrapper.find('div.fe-timepicker div.timepicker');
         expect(timepickerWrapper.find('div.hours-selector').exists()).to.be.true;
@@ -141,12 +141,12 @@ describe('Timepicker.vue', () => {
             },
         });
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-input-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
         let timepickerWrapper = wrapper.find('div.fe-timepicker div.timepicker');
         expect(timepickerWrapper.find('div.hours-selector').exists()).to.be.true;

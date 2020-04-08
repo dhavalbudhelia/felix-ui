@@ -1,9 +1,12 @@
 const optionsDefaults = {
-    theme: {
-        colors: {
-            primary: '#5A67D8',//indigo.600
-            secondary: '#A3BFFA',//indigo.300
-            tertiary: '#CBD5E0',//gray.400
+    themeOptions: {
+        color: {
+            primary: 'indigo-500',
+            primaryDark: 'indigo-600',
+            secondary: 'indigo-100',
+            secondaryDark: 'indigo-200',
+            tertiary: 'gray-300',
+            tertiaryDark: 'gray-400',
         },
     },
 };

@@ -53,7 +53,7 @@ describe('MultiSelect.vue', () => {
             }
         });
         expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
@@ -176,7 +176,7 @@ describe('MultiSelect.vue', () => {
             }
         });
         expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
@@ -248,7 +248,7 @@ describe('MultiSelect.vue', () => {
             }
         });
         expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
@@ -457,7 +457,7 @@ describe('MultiSelect.vue', () => {
             }
         });
         expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.input-value-wrapper').exists()).to.be.true;
+        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
         expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
