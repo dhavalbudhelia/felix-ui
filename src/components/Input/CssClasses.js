@@ -1,6 +1,6 @@
 const cssClasses = {
-    base: 'flex items-center px-2 text-left border rounded',
-    general: 'focus-within:outline-none hover:border-gray-500',
+    base: 'flex items-center px-2 text-left rounded',
+    general: 'border border-solid border-gray-400 focus-within:outline-none hover:border-gray-500',
     disabled: 'shadow-none cursor-not-allowed',
     input: 'focus:outline-none active:outline-none',
     sizeXs: 'my-px text-xs',
