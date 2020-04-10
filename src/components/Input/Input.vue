@@ -101,21 +101,23 @@
                     classes.push(`focus-within:border-${this.themeOptions.color.primary} active:border-${this.themeOptions.color.primary}`);
                 }
                 classes.push(this.colorClass);
-                switch (this.size) {
-                    case 'is-xs':
-                        classes.push(CssClasses.wrapperSizeXs);
-                        break;
-                    case 'is-sm':
-                        classes.push(CssClasses.wrapperSizeSm);
-                        break;
-                    case 'is-md':
-                        classes.push(CssClasses.wrapperSizeMd);
-                        break;
-                    case 'is-lg':
-                        classes.push(CssClasses.wrapperSizeLg);
-                        break;
-                    default:
-                        classes.push(CssClasses.wrapperSizeMd);
+                if (this.type === 'text') {
+                    switch (this.size) {
+                        case 'is-xs':
+                            classes.push(CssClasses.wrapperSizeXs);
+                            break;
+                        case 'is-sm':
+                            classes.push(CssClasses.wrapperSizeSm);
+                            break;
+                        case 'is-md':
+                            classes.push(CssClasses.wrapperSizeMd);
+                            break;
+                        case 'is-lg':
+                            classes.push(CssClasses.wrapperSizeLg);
+                            break;
+                        default:
+                            classes.push(CssClasses.wrapperSizeMd);
+                    }
                 }
                 return classes;
             },
