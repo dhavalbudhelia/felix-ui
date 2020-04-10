@@ -1,6 +1,8 @@
 <template>
     <div :class="[wrapperClass]">
         <textarea v-if="type === 'textarea'" ref="textarea"
+                  :id="id"
+                  :name="name"
                   :class="[inputObject]"
                   :placeholder="placeholder"
                   :value="computedValue"
@@ -18,6 +20,8 @@
                 ></fe-icon>
             </div>
             <input ref="input"
+                   :id="id"
+                   :name="name"
                    :class="[inputObject]"
                    :placeholder="placeholder"
                    type="text"
@@ -52,6 +56,16 @@
         },
         mixins: [IconMixin, SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             value: {
                 type: [String, Number],
                 default: null

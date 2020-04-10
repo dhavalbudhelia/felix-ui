@@ -5,9 +5,10 @@
            :tabindex="disabled ? false : 0"
            @keydown.prevent.enter.space="$refs.label.click()">
         <input v-model="computedValue"
+               :id="id"
+               :name="name"
                type="checkbox"
                :disabled="disabled"
-               :name="name"
                :class="inputClass"
                :value="localValue"
                :true-value="trueValue"
@@ -25,6 +26,16 @@
         name: 'fe-toggle-switch',
         mixins: [SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             value: {
                 type: [String, Number, Boolean],
                 required: false,
@@ -47,10 +58,6 @@
                 type: Boolean,
                 require: false,
                 default: false,
-            },
-            name: {
-                type: String,
-                required: false,
             },
             cssClass: {
                 type: String,

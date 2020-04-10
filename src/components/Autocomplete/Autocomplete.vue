@@ -2,6 +2,8 @@
     <div :class="[size]">
         <fe-input :placeholder="placeholder"
                   v-model="searchTerm"
+                  :id="id"
+                  :name="name"
                   :icon-pack-before="iconPackBefore"
                   :icon-before="iconBefore"
                   :icon-pack-after="iconPackAfter"
@@ -45,6 +47,16 @@
         },
         mixins: [IconMixin, SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             items: {
                 type: Array,
                 default: (() => {

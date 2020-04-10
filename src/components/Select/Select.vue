@@ -1,6 +1,8 @@
 <template>
     <div :class="[classObject, size, cssClass]">
         <select v-model="computedValue"
+                :id="id"
+                :name="name"
                 :class="selectClass"
                 ref="select"
                 v-bind="$attrs"
@@ -43,6 +45,16 @@
         },
         mixins: [SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             value: {
                 type: [String, Number, Boolean, Object, Array],
                 required: false,

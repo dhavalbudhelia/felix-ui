@@ -5,9 +5,10 @@
            :tabindex="disabled ? false : 0"
            @keydown.prevent.enter.space="$refs.label.click()">
         <input v-model="computedValue"
+               :id="id"
+               :name="name"
                type="radio"
                :disabled="disabled"
-               :name="name"
                :class="inputClass"
                :value="localValue"/>
         <span :class="[checkClass, checkColorClass]"></span>
@@ -24,6 +25,16 @@
         name: 'fe-radio',
         mixins: [SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             value: {
                 type: [String, Number, Object],
                 required: true,
@@ -36,10 +47,6 @@
                 type: Boolean,
                 required: false,
                 'default': false,
-            },
-            name: {
-                type: String,
-                required: false,
             },
             vertical: {
                 type: Boolean,

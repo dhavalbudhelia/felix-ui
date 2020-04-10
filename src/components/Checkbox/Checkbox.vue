@@ -6,8 +6,9 @@
            @keydown.prevent.enter.space="$refs.label.click()">
         <input v-model="computedValue"
                type="checkbox"
-               :disabled="disabled"
+               :id="id"
                :name="name"
+               :disabled="disabled"
                :class="inputClass"
                :value="localValue"
                :true-value="trueValue"
@@ -26,6 +27,16 @@
         name: 'fe-checkbox',
         mixins: [SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             value: {
                 type: [String, Number, Boolean],
                 required: false,
@@ -46,10 +57,6 @@
             },
             disabled: {
                 type: Boolean,
-                required: false,
-            },
-            name: {
-                type: String,
                 required: false,
             },
             cssClass: {

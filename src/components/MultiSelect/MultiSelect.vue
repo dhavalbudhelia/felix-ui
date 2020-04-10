@@ -115,10 +115,12 @@
             id: {
                 type: String,
                 required: false,
+                default: null,
             },
             name: {
                 type: String,
                 required: false,
+                default: null,
             },
             placeholder: {
                 type: String,

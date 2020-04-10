@@ -1,5 +1,11 @@
 <template>
-    <button type="button" :class="[classObject, cssClass]" :disabled="disabled" @click="emitClick">
+    <button type="button"
+            :class="[classObject, cssClass]"
+            :disabled="disabled"
+            @click="emitClick"
+            :id="id"
+            :name="name"
+    >
         <template v-if="!iconOnly">
             <fe-icon v-if="iconBefore"
                   :class="iconClass"
@@ -33,6 +39,16 @@
         },
         mixins: [IconMixin, SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             disabled: {
                 type: Boolean,
                 default: false,

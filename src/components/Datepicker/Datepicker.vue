@@ -1,6 +1,8 @@
 <template>
     <div :class="[classObject, size]">
         <fe-input :value="formattedDate"
+                  :id="id"
+                  :name="name"
                   :readonly="!editable"
                   :placeholder="placeholder"
                   ref="trigger"
@@ -99,6 +101,16 @@
         },
         mixins: [SizeMixin],
         props: {
+            id: {
+                type: String,
+                required: false,
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
+            },
             placeholder: {
                 type: String,
                 default: 'Click to select...',

@@ -6,7 +6,7 @@
                      class="timepicker-input-placeholder px-2 text-gray-600"
                 >{{ placeholder }}</div>
                 <div class="timepicker-display-value px-2">{{ formattedTime }}</div>
-                <input class="hidden" type="hidden" :id="id" :value="formattedTime"></input>
+                <input class="hidden" type="hidden" :id="id" :name="name" :value="formattedTime"/>
             </div>
             <div v-if="changed && clearable" @click.stop.prevent="clearValues" :class="clearClassObject">
                 <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
@@ -82,7 +82,12 @@
             id: {
                 type: String,
                 required: false,
-                default: ''
+                default: null,
+            },
+            name: {
+                type: String,
+                required: false,
+                default: null,
             },
             value: {
                 type: String,
