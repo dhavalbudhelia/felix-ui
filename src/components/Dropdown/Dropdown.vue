@@ -201,9 +201,9 @@
     }
 </script>
 
-<style scoped>
+<style>
     @media (min-width: 768px) {
-        .fe-dropdown .md\:normal-position {
+        .fe-dropdown .dropdown-menu.md\:normal-position {
             position: absolute;
             top: auto;
             right: auto;
@@ -214,7 +214,7 @@
         }
     }
 
-    .center-position {
+    .fe-dropdown .center-position {
         position: fixed;
         top: 50%;
         left: 50%;
@@ -222,11 +222,11 @@
         transform: translate(-50%, -50%);
     }
 
-    .fade-enter-active, .fade-leave-active {
+    .fe-dropdown .fade-enter-active, .fe-dropdown .fade-leave-active {
         transition: opacity .5s ease;
     }
 
-    .fade-enter, .fade-leave-to {
+    .fe-dropdown .fade-enter, .fe-dropdown .fade-leave-to {
         opacity: 0;
     }
 </style>
