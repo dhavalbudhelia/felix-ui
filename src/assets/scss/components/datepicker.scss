@@ -1,0 +1,56 @@
+.datepicker-calendar {
+    min-width: 12rem;
+}
+
+.fe-datepicker.is-xs .header-control button {
+    padding-right: 0.35rem;
+    padding-left: 0.35rem;
+}
+.fe-datepicker.is-sm .header-control button {
+    padding-right: 0.45rem;
+    padding-left: 0.45rem;
+}
+.fe-datepicker.is-md .header-control button {
+    padding-right: 0.7rem;
+    padding-left: 0.7rem;
+}
+.fe-datepicker.is-lg .header-control button {
+    padding-right: 0.45rem;
+    padding-left: 0.45rem;
+}
+
+@media (min-width: 768px) {
+    .fe-datepicker .md\:normal-position {
+        position: absolute;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+.datepicker-center-position {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.fe-datepicker .day {
+    font-feature-settings: "tnum";
+}
+.fe-datepicker .is-xs.datepicker {
+    min-height: 13rem;
+}
+.fe-datepicker .is-sm.datepicker {
+    min-height: 14rem;
+}
+.fe-datepicker .is-md.datepicker {
+    min-height: 19rem;
+}
+.fe-datepicker .is-lg.datepicker {
+    min-height: 20rem;
+}

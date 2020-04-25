@@ -138,24 +138,3 @@
         },
     }
 </script>
-
-
-<style scoped>
-    .check {
-        content: "";
-        transition: all .15s ease-out;
-    }
-
-    .check:before {
-        font-family: "Font Awesome 5 Free";
-        content: "\f0c8";
-        transform: scale(0);
-        transition: all .15s ease-out;
-    }
-
-    input[type=checkbox]:checked + .check:before {
-        content: "\f14a";
-        font-weight: 900;
-        transform: scale(1);
-    }
-</style>

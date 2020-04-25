@@ -1,0 +1,52 @@
+/*size*/
+.fe-radio.is-xs input[type=radio] + .check {
+    width: 14px;
+    height: 14px;
+}
+
+.fe-radio.is-xs input[type=radio]:checked + .check {
+    border-width: 4px;
+}
+
+.fe-radio.is-sm input[type=radio] + .check {
+    width: 16px;
+    height: 16px;
+}
+
+.fe-radio.is-sm input[type=radio]:checked + .check {
+    border-width: 5px;
+}
+
+.fe-radio.is-md input[type=radio] + .check {
+    width: 18px;
+    height: 18px;
+}
+
+.fe-radio.is-md input[type=radio]:checked + .check {
+    border-width: 6px;
+}
+
+.fe-radio.is-lg input[type=radio] + .check {
+    width: 20px;
+    height: 20px;
+}
+
+.fe-radio.is-lg input[type=radio]:checked + .check {
+    border-width: 7px;
+}
+
+/*check*/
+.fe-radio .check {
+    transition: border-width .15s ease-out;
+}
+
+.fe-radio .check:before {
+    content: "";
+    border: none;
+    transform: scale(0);
+    transition: border-width .15s ease-out;
+}
+
+.fe-radio input[type=radio]:checked + .check:before {
+    transform: scale(1);
+}

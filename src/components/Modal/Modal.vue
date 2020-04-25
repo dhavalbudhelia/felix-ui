@@ -1,6 +1,6 @@
 <template>
     <div ref="modal"
-         :class="classObject"
+         :class="[classObject, 'fe-modal']"
          tabindex="0"
          role="dialog"
          @keydown.esc="onEscape"
@@ -188,16 +188,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .fe-modal-header, .fe-modal-footer {
-        min-height: 3rem;
-    }
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s ease;
-    }
-
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }
-</style>

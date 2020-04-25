@@ -157,6 +157,24 @@
                 if (this.icon) {
                     classes.push('pl-8');
                 }
+
+                switch (this.size) {
+                    case 'is-xs':
+                        classes.push('pr-6');
+                        break;
+                    case 'is-sm':
+                        classes.push('pr-6');
+                        break;
+                    case 'is-md':
+                        classes.push('pr-8');
+                        break;
+                    case 'is-lg':
+                        classes.push('pr-10');
+                        break;
+                    default:
+                        classes.push('pr-8');
+                }
+
                 return classes;
             },
             /**
@@ -193,21 +211,3 @@
         }
     }
 </script>
-
-<style scoped>
-    .is-xs select {
-        @apply pr-6;
-    }
-
-    .is-sm select {
-        @apply pr-6;
-    }
-
-    .is-md select {
-        @apply pr-8;
-    }
-
-    .is-lg select {
-        @apply pr-10;
-    }
-</style>

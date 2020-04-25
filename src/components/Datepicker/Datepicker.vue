@@ -192,7 +192,7 @@
              * calendar class object
              */
             calendarClassObject() {
-                let classes = ['datepicker-calendar opened center-position md:normal-position', CssClasses.calendar];
+                let classes = ['datepicker-calendar opened datepicker-center-position md:normal-position', CssClasses.calendar];
                 if (this.showFooter) {
                     classes.push('has-footer');
                 }
@@ -626,46 +626,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .datepicker-calendar {
-        min-width: 12rem;
-    }
-
-    .fe-datepicker.is-xs .header-control button {
-        padding-right: 0.35rem;
-        padding-left: 0.35rem;
-    }
-    .fe-datepicker.is-sm .header-control button {
-        padding-right: 0.45rem;
-        padding-left: 0.45rem;
-    }
-    .fe-datepicker.is-md .header-control button {
-        padding-right: 0.7rem;
-        padding-left: 0.7rem;
-    }
-    .fe-datepicker.is-lg .header-control button {
-        padding-right: 0.45rem;
-        padding-left: 0.45rem;
-    }
-
-    @media (min-width: 768px) {
-        .fe-datepicker .md\:normal-position {
-            position: absolute;
-            top: auto;
-            right: auto;
-            bottom: auto;
-            left: auto;
-            -webkit-transform: none;
-            transform: none;
-        }
-    }
-
-    .center-position {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-</style>

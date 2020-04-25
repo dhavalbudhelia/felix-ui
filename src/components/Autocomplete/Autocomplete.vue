@@ -1,5 +1,5 @@
 <template>
-    <div :class="[size]">
+    <div :class="[size, 'fe-autocomplete']">
         <fe-input :placeholder="placeholder"
                   v-model="searchTerm"
                   :id="id"
@@ -205,23 +205,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .normal-position {
-        position: absolute;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        left: auto;
-        -webkit-transform: none;
-        transform: none;
-    }
-
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .5s ease;
-    }
-
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }
-</style>

@@ -19,6 +19,8 @@ import lodash from 'lodash';
 import VueLodash from 'vue-lodash';
 import ErDayjs from '@/plugins/dayjs';
 
+import '@/assets/scss/style.scss';
+
 const install = ((Vue, opts) => {
     //merge options
     let options = { ...optionsDefaults, ...opts || {} };

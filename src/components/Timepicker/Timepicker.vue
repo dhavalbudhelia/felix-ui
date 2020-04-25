@@ -167,7 +167,7 @@
              * timepicker class object
              */
             timepickerClassObject() {
-                let classes = [CssClasses.timepicker, 'timepicker', 'center-position', 'md:normal-position'];
+                let classes = [CssClasses.timepicker, 'timepicker', 'timepicker-center-position', 'md:normal-position'];
                 return classes;
             },
             /**
@@ -433,37 +433,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .timepicker {
-        min-width: 8rem;
-    }
-
-    .timepicker-input-placeholder, .timepicker-display-value {
-        font-feature-settings: "tnum";
-    }
-
-    .hour, .minute, .second {
-        font-feature-settings: "tnum";
-    }
-
-    @media (min-width: 768px) {
-        .fe-timepicker .md\:normal-position {
-            position: absolute;
-            top: auto;
-            right: auto;
-            bottom: auto;
-            left: auto;
-            -webkit-transform: none;
-            transform: none;
-        }
-    }
-
-    .center-position {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        -webkit-transform: translate(-50%, -50%);
-        transform: translate(-50%, -50%);
-    }
-</style>

@@ -159,21 +159,3 @@
         },
     }
 </script>
-
-<style scoped>
-    .day {
-        font-feature-settings: "tnum";
-    }
-    .is-xs.datepicker {
-        min-height: 13rem;
-    }
-    .is-sm.datepicker {
-        min-height: 14rem;
-    }
-    .is-md.datepicker {
-        min-height: 19rem;
-    }
-    .is-lg.datepicker {
-        min-height: 20rem;
-    }
-</style>
