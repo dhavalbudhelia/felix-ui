@@ -366,6 +366,7 @@
                 } else {
                     this.hour = (this.hour === 23) ? 0 : (this.hour + 1);
                 }
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -377,6 +378,7 @@
                 } else {
                     this.hour = (this.hour === 0) ? 23 : (this.hour - 1);
                 }
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -384,6 +386,7 @@
              */
             minuteIncrement() {
                 this.minute = (this.minute === 59) ? 0 : this.minute + 1;
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -391,6 +394,7 @@
              */
             minuteDecrement() {
                 this.minute = (this.minute === 0) ? 59 : this.minute - 1;
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -398,6 +402,7 @@
              */
             secondIncrement() {
                 this.second = (this.second === 59) ? 0 : this.second + 1;
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -405,6 +410,7 @@
              */
             secondDecrement() {
                 this.second = (this.second === 0) ? 59 : this.second - 1;
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -412,6 +418,7 @@
              */
             toggleMeridiem() {
                 this.meridiem = (this.meridiem === 'AM') ? 'PM' : 'AM';
+                this.$emit('input', this.formattedTime);
                 this.changed = true;
             },
             /**
@@ -422,6 +429,7 @@
                 this.minute = 0;
                 this.second = 0;
                 this.meridiem = (this.hourFormat === 12) ? 'AM' : null;
+                this.$emit('input', this.formattedTime);
                 this.changed = false;
             },
             /**
@@ -430,6 +438,9 @@
             clickedOutside() {
                 this.opened = false;
             },
+        },
+        mounted() {
+            this.$emit('input', this.formattedTime);
         },
     }
 </script>
