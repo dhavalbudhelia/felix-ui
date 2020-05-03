@@ -438,9 +438,55 @@
             clickedOutside() {
                 this.opened = false;
             },
+            /**
+             * decode initial value on mounted and initialise hour/minute/seconds/meridiem values
+             */
+            decodeValue() {
+                let parts = this._.split(this.value, this.separator);
+                if (this.value !== '' && parts.length > 1) {
+                    this.hour = parseInt(parts[0]);
+                    if (parts.length === 3 && this.showSeconds) {
+                        this.minute = parseInt(parts[1]);
+                        let secondsAndMeridiem = this._.split(parts[2], ' ');
+                        this.second = (secondsAndMeridiem.length >= 1) ? parseInt(secondsAndMeridiem[0]) : this.second;
+                        this.meridiem = (secondsAndMeridiem.length === 2) ? this._.upperCase(secondsAndMeridiem[1]) : this.meridiem;
+                    } else if (parts.length === 2) {
+                        let minutedAndMeridiem = this._.split(parts[1], ' ');
+                        this.minute = (minutedAndMeridiem.length >= 1) ? parseInt(minutedAndMeridiem[0]) : this.minute;
+                        this.meridiem = (minutedAndMeridiem.length === 2) ? this._.upperCase(minutedAndMeridiem[1]) : this.meridiem;
+                    }
+                    if (this._.isNaN(this.hour)) {
+                        this.hour = this.hourFormat === 12 ? 1 : 0;
+                    } else {
+                        this.hour = (this.hourFormat === 12 && this.hour > 12) ? 12 : this.hour;
+                        this.hour = (this.hourFormat === 24 && this.hour > 23) ? 23 : this.hour;
+                        this.hour = (this.hour < 1 && this.hourFormat === 12) ? 1 : this.hour;
+                        this.hour = (this.hour < 0 && this.hourFormat === 24) ? 0 : this.hour;
+                    }
+                    if (this._.isNaN(this.minute)) {
+                        this.minute = 0;
+                    } else {
+                        this.minute = (this.minute > 59) ? 59 : this.minute;
+                        this.minute = (this.minute < 1) ? 0 : this.minute;
+                    }
+
+                    if (this._.isNaN(this.second)) {
+                        this.second = 0;
+                    } else {
+                        this.second = (this.second > 59) ? 59 : this.second;
+                        this.second = (this.second < 0) ? 0 : this.second;
+                    }
+
+                    if (this.meridiem !== 'AM' && this.meridiem !== 'PM') {
+                        this.meridiem = this.hourFormat === 12 ? 'AM' : null;
+                    }
+                } else {
+                    this.$emit('input', this.formattedTime);
+                }
+            },
         },
         mounted() {
-            this.$emit('input', this.formattedTime);
+            this.decodeValue();
         },
     }
 </script>
