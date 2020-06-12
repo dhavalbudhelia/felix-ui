@@ -10,6 +10,7 @@
                   @input="onInput"
                   @blur="onBlur"
                   @focus="onFocus"
+                  :rows="rows"
         ></textarea>
         <template v-if="type === 'text'">
             <div v-if="iconBefore">
@@ -95,6 +96,11 @@
                 default: function () {
                     return optionsDefaults.themeOptions;
                 },
+            },
+            rows: {
+                type: Number,
+                required: false,
+                default: 2,
             },
         },
         data() {
