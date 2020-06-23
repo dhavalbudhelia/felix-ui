@@ -17,7 +17,7 @@ const cssClasses = {
     daySm: 'text-sm py-1 px-2',
     dayMd: 'text-base py-2 px-3',
     dayLg: 'text-lg py-2 px-3',
-    backdrop: 'fixed w-full h-full top-0 left-0 md:bg-white md:opacity-0 bg-black opacity-75',
+    backdrop: 'fixed w-full h-full top-0 left-0 md:bg-white md:opacity-0 bg-black opacity-75 z-10',
 };
 
 export default cssClasses;

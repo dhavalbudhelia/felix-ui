@@ -116,6 +116,11 @@
                 default: 'Click to select...',
                 required: false
             },
+            value: {
+                type: String,
+                default: '',
+                required: false,
+            },
             displayIcon: {
                 type: Boolean,
                 default: true,
@@ -150,6 +155,11 @@
                 type: Boolean,
                 required: false,
                 default: true,
+            },
+            inputFormat: {
+                type: String,
+                required: false,
+                default: 'YYYY-M-D',
             },
             displayFormat: {
                 type: String,
@@ -531,6 +541,7 @@
                 this.selectedDay = day;
                 this.month = parseInt(day.date.format('M'));
                 this.year = parseInt(day.date.format('YYYY'));
+                this.$emit('input', day.date.format(this.inputFormat));
                 this.closeCalendar();
             },
             /**
@@ -566,6 +577,7 @@
                 this.selectedDay = null;
                 this.month = parseInt(this.$dayjs().format('M'));
                 this.year = parseInt(this.$dayjs().format('YYYY'));
+                this.$emit('input', '');
                 this.closeCalendar();
             },
             /**
@@ -621,6 +633,15 @@
                 let maxDateMonth = this.maxDate.getMonth() + 1;
                 if (this.year === this.maxDate.getFullYear() && this.month > maxDateMonth) {
                     this.month = maxDateMonth;
+                }
+            }
+            if (this.value !== '') {
+                let parsedDate = this.$dayjs(this.value, this.inputFormat);
+                if (parsedDate.isValid() && this.isDateSelectable(parsedDate)) {
+                    this.select({
+                        'date': parsedDate,
+                        'unselectable': false
+                    });
                 }
             }
         },
