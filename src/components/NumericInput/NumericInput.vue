@@ -5,8 +5,9 @@
                :class="[inputObject]"
                :placeholder="placeholder"
                type="text"
-               :value="value"
+               :value="computedValue"
                :disabled="disabled"
+               @input="onInput"
                @blur="onBlur"
                @focus="onFocus">
         <div v-if="!disabled" class="flex flex-row right-0 absolute items-center h-full">
@@ -76,6 +77,11 @@
                     return optionsDefaults.themeOptions;
                 },
             },
+        },
+        data() {
+            return {
+                localValue: this.value
+            }
         },
         computed: {
             /**
@@ -169,6 +175,26 @@
             caretUpClass() {
                 return CssClasses.caretUp;
             },
+            /**
+             * set local value on change of the input
+             */
+            computedValue: {
+                get() {
+                    return this.localValue;
+                },
+                set(value) {
+                    this.localValue = value;
+                    this.$emit('input', value);
+                }
+            },
+        },
+        watch: {
+            /**
+             * When v-model is changed set local value.
+             */
+            value(value) {
+                this.localValue = value;
+            },
         },
         methods: {
             decrement() {
@@ -184,6 +210,15 @@
                 } else if (this.maxValue === null || (parseFloat(this.value) + this.step) <= this.maxValue) {
                     this.$emit('input', (parseFloat(this.value) + this.step));
                 }
+            },
+            /**
+             * Input's 'input' event listener, 'nextTick' is used to prevent event firing
+             * before ui update, helps when using masks (Cleavejs and potentially others).
+             */
+            onInput(event) {
+                this.$nextTick(() => {
+                    this.computedValue = event.target.value;
+                });
             },
             /**
              * emit blur event
