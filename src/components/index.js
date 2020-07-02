@@ -10,6 +10,7 @@ export { default as MultiSelect } from "./MultiSelect/MultiSelect";
 export { default as NumericInput } from "./NumericInput/NumericInput";
 export { default as Radio } from "./Radio/Radio";
 export { default as Select } from "./Select/Select";
+export { default as SingleSelect } from "./SingleSelect/SingleSelect";
 export { default as Timepicker } from "./Timepicker/Timepicker";
 export { default as ToggleSwitch } from "./ToggleSwitch/ToggleSwitch";
 export { default as Tooltip } from "./Tooltip/Tooltip";
