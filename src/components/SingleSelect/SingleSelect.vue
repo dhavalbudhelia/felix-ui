@@ -447,7 +447,7 @@
             this.filteredItems = this.indexedDataSource;
             if (this.value !== '') {
                 let selectedItem = this._.find(this.items, (item) => {
-                    return item[this.valueProperty] === this.value;
+                    return item.id === this.value;
                 });
                 if (selectedItem !== undefined) {
                     this.selectedItem = selectedItem;
