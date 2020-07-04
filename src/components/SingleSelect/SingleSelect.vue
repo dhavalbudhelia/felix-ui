@@ -38,7 +38,7 @@
                     <div :class="dropdownContentItemWrapperClassObject">
                         <div v-if="groupByProperty === null" v-for="item in items"
                              :class="[dropdownItemClassObject, dropdownItemHoverClassObject]">
-                            <div @click="selectItem(item, $event)"
+                            <div @click="selectItem(item)"
                                  :class="getItemClassObject(item)"
                             >{{ item.text }}</div>
                         </div>
@@ -50,7 +50,7 @@
                             <div v-for="groupItem in group.items"
                                  :class="[dropdownItemClassObject, dropdownItemHoverClassObject]"
                                  class="grouped-item">
-                                <div @click="selectItem(groupItem, $event)"
+                                <div @click="selectItem(groupItem)"
                                      :class="getItemClassObject(groupItem)"
                                 >{{ groupItem.text }}</div>
                             </div>
@@ -91,6 +91,11 @@
                 type: String,
                 required: false,
                 default: null,
+            },
+            value: {
+                type: [String, Number],
+                default: '',
+                required: false,
             },
             placeholder: {
                 type: String,
@@ -407,9 +412,8 @@
             /**
              * select supplied item if checked
              * @param item
-             * @param checked
              */
-            selectItem(item, checked) {
+            selectItem(item) {
                 this.selectedItem = item;
                 this.$emit('input', this.selectedItem.id);
                 this.clickedOutside();
@@ -441,6 +445,14 @@
                 });
             }), ['feIndex'], ['asc']);
             this.filteredItems = this.indexedDataSource;
+            if (this.value !== '') {
+                let selectedItem = this._.find(this.items, (item) => {
+                    return item[this.valueProperty] === this.value;
+                });
+                if (selectedItem !== undefined) {
+                    this.selectedItem = selectedItem;
+                }
+            }
         }
     }
 </script>
