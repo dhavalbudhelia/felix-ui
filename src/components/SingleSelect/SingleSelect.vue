@@ -141,6 +141,11 @@
                     return optionsDefaults.themeOptions;
                 },
             },
+            expanded: {
+                type: Boolean,
+                required: false,
+                default: false,
+            },
         },
         data() {
             return {
@@ -160,6 +165,9 @@
              */
             classObject() {
                 let classes = ['fe-single-select', CssClasses.base];
+                if (this.expanded) {
+                    classes.push('expanded w-full');
+                }
                 if (this.opened) {
                     classes.push('opened')
                 }

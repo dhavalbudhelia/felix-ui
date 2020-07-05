@@ -1,16 +1,16 @@
-.fe-single-select.is-xs {
+.fe-single-select.is-xs:not(.expanded) {
     width: 240px;
 }
 
-.fe-single-select.is-sm {
+.fe-single-select.is-sm:not(.expanded) {
     width: 280px;
 }
 
-.fe-single-select.is-md {
+.fe-single-select.is-md:not(.expanded) {
     width: 320px;
 }
 
-.fe-single-select.is-lg {
+.fe-single-select.is-lg:not(.expanded) {
     width: 360px;
 }
 
