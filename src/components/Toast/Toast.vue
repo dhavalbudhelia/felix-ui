@@ -46,7 +46,7 @@ export default {
       required: false,
       default: 'top-center',
       validator: function (value) {
-        return ['top-center', 'top-left', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'].includes(value);
+        return ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'].includes(value);
       },
     },
     closable: {
@@ -142,6 +142,7 @@ export default {
     closeToast() {
       this.$emit('input', false);
       this.removeToastFromBody();
+      this.show = true;
     },
     /**
      * insert spinner div element to the body
