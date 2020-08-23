@@ -86,7 +86,7 @@ export default {
      * spinner container class object
      */
     toastContainerClassObject() {
-      let classes = [CssClasses.toastContainer, this.position];
+      let classes = ['fe-toast-wrapper', CssClasses.toastContainer, this.position];
       if (this.value) {
         classes.push(CssClasses.show);
       } else {
@@ -98,7 +98,7 @@ export default {
      * toast class object
      */
     toastClassObject() {
-      let classes = [CssClasses.toast];
+      let classes = ['fe-toast', CssClasses.toast];
       switch (this.type) {
         case 'warning':
           classes.push(CssClasses.warning);
