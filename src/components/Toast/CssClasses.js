@@ -1,5 +1,5 @@
 const cssClasses = {
-    toastContainer: 'fixed flex flex-col items-center justify-center z-20',
+    toastContainer: 'absolute flex flex-col items-center justify-center z-20',
     hidden: 'hide',
     show: 'show',
     toast: 'flex flex-row justify-between items-center p-3 rounded-md shadow-md',

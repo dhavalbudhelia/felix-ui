@@ -49,6 +49,11 @@ export default {
         return ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'].includes(value);
       },
     },
+    appendTo: {
+      type: String,
+      required: false,
+      default: '',
+    },
     closable: {
       type: Boolean,
       required: false,
@@ -148,8 +153,8 @@ export default {
      * insert spinner div element to the body
      */
     insertToastToBody() {
-      let body = document.body;
-      body.insertBefore(this.$refs.fetoast, body.firstChild);
+      let parent = this.appendTo !== '' ? document.getElementById(this.appendTo) : document.body;
+      parent.insertBefore(this.$refs.fetoast, parent.firstChild);
     },
     /**
      * remove added spinner div element from the body
@@ -157,8 +162,8 @@ export default {
     removeToastFromBody() {
       //remove the toast dom element if its available
       if (this.$refs.fetoast) {
-        let body = document.body;
-        body.removeChild(this.$refs.fetoast);
+        let parent = this.appendTo !== '' ? document.getElementById(this.appendTo) : document.body;
+        parent.removeChild(this.$refs.fetoast);
       }
     },
   },
