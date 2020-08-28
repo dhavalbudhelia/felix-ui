@@ -73,6 +73,7 @@ export default {
   data() {
     return {
       show: false,
+      timer: null,
     }
   },
   watch: {
@@ -135,35 +136,35 @@ export default {
         this.insertToastToBody();
         //if fading automatically time out for the input event for given duration
         if (this.fadeAutomatic) {
-          setTimeout(() => {
+          this.timer = setTimeout(() => {
             this.$emit('input', false);
           }, this.duration);
         }
       });
     },
     /**
-     * stop spinner animation
+     * close toast
      */
     closeToast() {
-      this.$emit('input', false);
-      this.removeToastFromBody();
-      this.show = true;
+        clearTimeout(this.timer);
+        this.removeToastFromBody();
+        this.show = false;
+        this.$emit('input', false);
     },
     /**
-     * insert spinner div element to the body
+     * insert toast div element to the body
      */
     insertToastToBody() {
       let parent = this.appendTo !== '' ? document.getElementById(this.appendTo) : document.body;
       parent.insertBefore(this.$refs.fetoast, parent.firstChild);
     },
     /**
-     * remove added spinner div element from the body
+     * remove added toast div element from the body
      */
     removeToastFromBody() {
       //remove the toast dom element if its available
-      if (this.$refs.fetoast) {
-        let parent = this.appendTo !== '' ? document.getElementById(this.appendTo) : document.body;
-        parent.removeChild(this.$refs.fetoast);
+      if (this.$refs.fetoast && this.$refs.fetoast.parentNode) {
+        this.$refs.fetoast.parentNode.removeChild(this.$refs.fetoast);
       }
     },
   },
