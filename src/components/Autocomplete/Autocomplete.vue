@@ -153,7 +153,7 @@
                 let classes = ['dropdown-menu'];
                 if (this.opened) {
                     classes.push(CssClasses.menu);
-                    classes.push('normal-position');
+                    classes.push(CssClasses.position);
                 } else {
                     classes.push('hidden');
                 }
@@ -205,3 +205,13 @@
         },
     }
 </script>
+
+<style scoped>
+.fe-autocomplete .fade-enter-active, .fe-autocomplete .fade-leave-active {
+  transition: opacity .5s ease;
+}
+
+.fe-autocomplete .fade-enter, .fe-autocomplete .fade-leave-to {
+  opacity: 0;
+}
+</style>

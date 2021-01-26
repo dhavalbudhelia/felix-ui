@@ -188,3 +188,13 @@
         },
     }
 </script>
+
+<style scoped>
+.fe-modal .fade-enter-active, .fe-modal .fade-leave-active {
+  transition: opacity .5s ease;
+}
+
+.fe-modal .fade-enter, .fe-modal .fade-leave-to {
+  opacity: 0;
+}
+</style>

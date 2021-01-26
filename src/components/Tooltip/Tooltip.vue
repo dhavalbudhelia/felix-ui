@@ -91,9 +91,7 @@
              */
             contentClassObject() {
                 let classes = ['fe-tooltip', CssClasses.base];
-                if (this.wrap) {
-                    classes.push(CssClasses.wrap);
-                } else {
+                if (!this.wrap) {
                     classes.push(CssClasses.general);
                 }
                 classes.push(this.sizeClass);
@@ -230,3 +228,71 @@
         }
     }
 </script>
+
+<style scoped>
+/*transitions*/
+.tooltip-fade-enter-active, .tooltip-fade-leave-active {
+  transition: opacity .2s;
+}
+
+.tooltip-fade-enter, .tooltip-fade-leave-to {
+  opacity: 0;
+}
+
+/*size*/
+.fe-tooltip .is-xs {
+  width: 80px;
+}
+
+.fe-tooltip .is-sm {
+  width: 120px;
+}
+
+.fe-tooltip .is-md {
+  width: 180px;
+}
+
+.fe-tooltip .is-lg {
+  width: 240px;
+}
+
+
+/*Triangle*/
+.fe-tooltip:before {
+  content: '';
+  border: 5px solid transparent;
+  position: absolute;
+  display: block;
+  top: auto;
+  right: auto;
+  bottom: auto;
+  left: auto;
+}
+
+/*position*/
+.fe-tooltip.is-left:before {
+  border-left: 5px solid black;
+  top: calc(50% - 5px);
+  left: calc(100%);
+}
+
+.fe-tooltip.is-right:before {
+  border-right: 5px solid black;
+  top: calc(50% - 5px);
+  right: calc(100%);
+}
+
+.fe-tooltip.is-bottom:before {
+  border-bottom: 5px solid black;
+  bottom: calc(100%);
+  left: 50%;
+}
+
+.fe-tooltip.is-top:before {
+  border-top: 5px solid black;
+  top: calc(100%);
+  left: 50%;
+}
+
+
+</style>

@@ -150,3 +150,77 @@
         },
     }
 </script>
+
+<style scoped>
+/*size*/
+.fe-toggle-switch.is-xs {
+  width: 36px;
+  height: 18px;
+}
+.fe-toggle-switch.is-xs input[type=checkbox] + .check {
+  height: 12px;
+  width: 12px;
+}
+.fe-toggle-switch.is-xs input[type=checkbox]:checked + .check {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+
+.fe-toggle-switch.is-sm {
+  width: 44px;
+  height: 22px;
+}
+.fe-toggle-switch.is-sm input[type=checkbox] + .check {
+  height: 16px;
+  width: 16px;
+}
+.fe-toggle-switch.is-sm input[type=checkbox]:checked + .check {
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
+}
+
+.fe-toggle-switch.is-md {
+  width: 52px;
+  height: 26px;
+}
+.fe-toggle-switch.is-md input[type=checkbox] + .check {
+  height: 20px;
+  width: 20px;
+}
+.fe-toggle-switch.is-md input[type=checkbox]:checked + .check {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.fe-toggle-switch.is-lg {
+  width: 60px;
+  height: 30px;
+}
+.fe-toggle-switch.is-lg input[type=checkbox] + .check {
+  height: 24px;
+  width: 24px;
+}
+.fe-toggle-switch.is-lg input[type=checkbox]:checked + .check {
+  -webkit-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  transform: translateX(30px);
+}
+
+/*check*/
+.fe-toggle-switch .check {
+  -webkit-transition: .3s;
+  transition: .3s;
+  left: 3px;
+  top: 3px;
+}
+
+.fe-toggle-switch .check:before {
+  content: "";
+  -webkit-transition: .3s;
+  transition: .3s;
+}
+
+</style>

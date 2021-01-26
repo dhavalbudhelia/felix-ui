@@ -490,3 +490,38 @@
         },
     }
 </script>
+
+<style scoped>
+.timepicker {
+  min-width: 8rem;
+}
+
+.timepicker-input-placeholder, .timepicker-display-value {
+  font-variant-numeric: tabular-nums;
+}
+
+.fe-timepicker .hour, .fe-timepicker .minute, .fe-timepicker .second {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+  .fe-timepicker .md\:normal-position {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.timepicker-center-position {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+</style>

@@ -178,3 +178,148 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.fe-toast-wrapper.top-left {
+  left: 25px;
+}
+.fe-toast-wrapper.top-center {
+  @apply inset-x-0;
+}
+.fe-toast-wrapper.top-right {
+  right: 25px;
+}
+.fe-toast-wrapper.bottom-left {
+  left: 25px;
+  bottom: 25px;
+}
+.fe-toast-wrapper.bottom-center {
+  @apply inset-x-0;
+}
+.fe-toast-wrapper.bottom-right {
+  right: 25px;
+  bottom: 25px;
+}
+
+.fe-toast-wrapper.top-center.show,
+.fe-toast-wrapper.top-left.show,
+.fe-toast-wrapper.top-right.show {
+   top: 25px;
+   @apply opacity-100;
+   animation: fadeintop .5s;
+ }
+.fe-toast-wrapper.top-center.hide,
+.fe-toast-wrapper.top-left.hide,
+.fe-toast-wrapper.top-right.hide {
+   @apply top-0;
+   @apply opacity-0;
+   animation: fadeouttop .3s;
+}
+
+.fe-toast-wrapper.bottom-center.show,
+.fe-toast-wrapper.bottom-left.show,
+.fe-toast-wrapper.bottom-right.show {
+   bottom: 25px;
+   @apply opacity-100;
+   animation: fadeinbottom .5s;
+}
+
+.fe-toast-wrapper.bottom-center.hide,
+.fe-toast-wrapper.bottom-left.hide,
+.fe-toast-wrapper.bottom-right.hide {
+     @apply bottom-0;
+     @apply opacity-0;
+     animation: fadeoutbottom .3s;
+}
+
+/*Top keyframes*/
+@-webkit-keyframes fadeintop {
+  from {
+    @apply top-0;
+    @apply opacity-0;
+  }
+  to {
+    top: 25px;
+    @apply opacity-100;
+  }
+}
+
+@keyframes fadeintop {
+  from {
+    @apply top-0;
+    @apply opacity-0;
+  }
+  to {
+    top: 25px;
+    @apply opacity-100;
+  }
+}
+
+@-webkit-keyframes fadeouttop {
+  from {
+    top: 25px;
+    @apply opacity-100;
+  }
+  to {
+    @apply top-0;
+    @apply opacity-0;
+  }
+}
+
+@keyframes fadeouttop {
+  from {
+    top: 25px;
+    @apply opacity-100;
+  }
+  to {
+    @apply top-0;
+    @apply opacity-0;
+  }
+}
+
+/*Bottom keyframes*/
+@-webkit-keyframes fadeinbottom {
+  from {
+    @apply bottom-0;
+    @apply opacity-0;
+  }
+  to {
+    bottom: 25px;
+    @apply opacity-100;
+  }
+}
+
+@keyframes fadeinbottom {
+  from {
+    @apply bottom-0;
+    @apply opacity-0;
+  }
+  to {
+    bottom: 25px;
+    @apply opacity-100;
+  }
+}
+
+@-webkit-keyframes fadeoutbottom {
+  from {
+    bottom: 25px;
+    @apply opacity-100;
+  }
+  to {
+    @apply bottom-0;
+    @apply opacity-0;
+  }
+}
+
+@keyframes fadeoutbottom {
+  from {
+    bottom: 25px;
+    @apply opacity-100;
+  }
+  to {
+    @apply bottom-0;
+    @apply opacity-0;
+  }
+}
+
+</style>

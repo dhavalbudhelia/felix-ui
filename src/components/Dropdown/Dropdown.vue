@@ -200,3 +200,35 @@
         },
     }
 </script>
+
+
+<style scoped>
+@media (min-width: 768px) {
+  .fe-dropdown .dropdown-menu.md\:normal-position {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fe-dropdown .center-position {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.fe-dropdown .fade-enter-active, .fe-dropdown .fade-leave-active {
+  transition: opacity .5s ease;
+}
+
+.fe-dropdown .fade-enter, .fe-dropdown .fade-leave-to {
+  opacity: 0;
+}
+
+</style>
