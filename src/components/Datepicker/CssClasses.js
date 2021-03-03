@@ -9,7 +9,7 @@ const cssClasses = {
     footer: 'flex justify-between pt-4 border-t',
     headerControl: 'w-full',
     row: 'w-full bg-white',
-    day: 'font-hairline border border-white rounded',
+    day: 'font-thin border border-white rounded',
     dayWeekCell: 'flex-1 text-center align-middle',
     selectedDay: 'text-white cursor-pointer border-blue-600',
     dayHover: 'hover:bg-gray-300 hover:cursor-pointer hover:border-gray-300',

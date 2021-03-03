@@ -1,5 +1,5 @@
 const cssClasses = {
-    base: 'border cursor-pointer justify-center text-center whitespace-no-wrap ' +
+    base: 'border cursor-pointer justify-center text-center whitespace-nowrap ' +
         'rounded inline-flex items-center select-none font-medium ' +
         'hover:outline-none active:outline-none focus:outline-none',
     general: 'text-white border-transparent shadow active:border-gray-400',
