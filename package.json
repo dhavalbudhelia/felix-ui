@@ -36,6 +36,7 @@
     "devDependencies": {
         "@babel/core": "^7.5.5",
         "@babel/helper-define-map": "^7.12.13",
+        "@babel/helper-regex": "^7.10.5",
         "@fortawesome/fontawesome-free": "^5.5.0",
         "@fullhuman/postcss-purgecss": "^1.3.0",
         "@storybook/addon-actions": "^6.1.21",
