@@ -118,7 +118,9 @@
                     classes.push(CssClasses.disabled);
                 } else {
                     classes.push(CssClasses.general);
-                    classes.push(`focus-within:border-${this.themeOptions.color.primary} active:border-${this.themeOptions.color.primary}`);
+                    classes.push(`focus-within:border-${this.themeOptions.color.primary}`);
+                    classes.push(`active:border-${this.themeOptions.color.primary}`);
+                    classes.push(`hover:border-${this.themeOptions.color.primary}`);
                 }
                 classes.push(this.colorClass);
                 if (this.type === 'text') {

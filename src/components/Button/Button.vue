@@ -127,7 +127,7 @@
                     primary = `bg-${this.themeOptions.color.tertiary}`;
                     primaryDark = `bg-${this.themeOptions.color.tertiary}`;
                 }
-                return `${primary} hover:${primaryDark} active:${primaryDark} focus:${primaryDark}`;
+                return `${primary} hover:${primaryDark} focus:ring-${primary} active:${primaryDark}`;
             },
             /**
              * icon class object
