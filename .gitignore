@@ -2,7 +2,8 @@
 node_modules
 /dist
 .storybook
-stories
+storybook-static
+src/stories
 
 # local env files
 .env.local

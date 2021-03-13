@@ -6,7 +6,7 @@
        @keydown.esc="onEscape"
   >
     <transition name="slidedown">
-      <div v-if="opened" class="flex justify-center mt-12">
+      <div v-if="modelValue" class="flex justify-center mt-12">
         <div :class="[modalClassObject, `lg:${size}`]">
           <div :class="headerClassObject">
             <div class="flex-grow">
@@ -30,7 +30,7 @@
       </div>
     </transition>
     <transition name="fade">
-      <div v-if="opened" :class="backdropClassObject"></div>
+      <div v-if="modelValue" :class="backdropClassObject"></div>
     </transition>
   </div>
 </template>
@@ -38,7 +38,6 @@
 <script>
 import FeIcon from '@/components/Icon/Icon.vue';
 import SizeMixin from "@/mixins/SizeMixin";
-import optionsDefaults from '@/utils/options';
 import CssClasses from "./CssClasses";
 
 export default {
@@ -47,58 +46,36 @@ export default {
     FeIcon
   },
   mixins: [SizeMixin],
+  emits: ['update:modelValue'],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
-      required: false,
       default: false
     },
     header: {
       type: String,
-      required: false,
       default: ''
     },
     showFooter: {
       type: Boolean,
-      required: false,
       default: true
     },
     canClose: {
       type: Boolean,
-      required: false,
       default: true,
     },
     closeOnEscape: {
       type: Boolean,
-      required: false,
       default: false,
-    },
-    themeOptions: {
-      type: Object,
-      required: false,
-      default: function () {
-        return optionsDefaults.themeOptions;
-      },
     },
   },
   computed: {
-    /**
-     * compute opened value and on set emit input event
-     */
-    opened: {
-      get() {
-        return this.value;
-      },
-      set(value) {
-        this.$emit('input', value);
-      }
-    },
     /**
      * class names object
      */
     classObject() {
       let classes = [CssClasses.base];
-      if (this.opened) {
+      if (this.modelValue) {
         classes.push(CssClasses.general);
       } else {
         classes.push('hidden');
@@ -165,7 +142,7 @@ export default {
      * on open set the focus on the modal
      * @param value
      */
-    opened(value) {
+    modelValue(value) {
       if (value) {
         this.$nextTick(() => {
           this.$refs.modal.focus();
@@ -178,8 +155,7 @@ export default {
      * on close emit close event
      */
     close() {
-      this.opened = false;
-      this.$emit('close');
+      this.$emit('update:modelValue', false);
     },
     /**
      * if modal is set to closeOnEscape, call close method

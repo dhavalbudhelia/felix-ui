@@ -10,7 +10,7 @@ const cssClasses = {
     sizeXs: 'text-xs w-2/5',
     sizeSm: 'text-sm w-1/2',
     sizeMd: 'text-base w-3/5',
-    sizeLg: 'text-base w-4/5',
+    sizeLg: 'text-lg w-4/5',
 };
 
 export default cssClasses;

@@ -1,6 +1,6 @@
 <template>
   <transition name="tooltip-fade">
-    <div v-if="spinning" :class="backdropClassObject" ref="fespinner">
+    <div v-if="spinning" :class="backdropClassObject">
       <div :class="spinnerContainerClassObject">
         <slot>
           <!-- By Sam Herbert (@sherb), for everyone. More @ http://goo.gl/7AJzbL -->
@@ -23,8 +23,9 @@ import CssClasses from "./CssClasses";
 
 export default {
   name: 'fe-spinner',
+  emits: ['update:modelValue'],
   props: {
-    value: {
+    modelValue: {
       type: Boolean,
       required: false,
       default: false,
@@ -41,7 +42,7 @@ export default {
     }
   },
   watch: {
-    value(value) {
+    modelValue(value) {
       if (value) {
         this.startSpinning();
       } else {
@@ -70,7 +71,6 @@ export default {
     startSpinning() {
       this.spinning = true;
       this.$nextTick(() => {
-        this.insertSpinnerToBody();
         if (this.duration > 0) {
           setTimeout(()=>{
             this.stopSpinning();
@@ -84,29 +84,12 @@ export default {
     stopSpinning() {
       if (this.spinning) {
         this.spinning = false;
-        this.removeSpinnerFromBody();
-        this.$emit('input', false);
-      }
-    },
-    /**
-     * insert spinner div element to the body
-     */
-    insertSpinnerToBody() {
-      let body = document.body;
-      body.insertBefore(this.$refs.fespinner, body.firstChild);
-    },
-    /**
-     * remove added spinner div element from the body
-     */
-    removeSpinnerFromBody() {
-      if (this.$refs.fespinner) {
-        let body = document.body;
-        body.removeChild(this.$refs.fespinner);
+        this.$emit('update:modelValue', false);
       }
     },
   },
   mounted() {
-    if (this.value) {
+    if (this.modelValue) {
       this.$nextTick(() => {
         this.startSpinning();
       });
