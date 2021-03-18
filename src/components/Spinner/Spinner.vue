@@ -27,12 +27,10 @@ export default {
   props: {
     modelValue: {
       type: Boolean,
-      required: false,
       default: false,
     },
     duration: {
       type: Number,
-      required: false,
       default: 0,
     },
   },

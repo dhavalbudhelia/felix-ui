@@ -104,28 +104,23 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     placeholder: {
       type: String,
       default: 'Click to select...',
-      required: false
     },
     modelValue: {
       type: String,
       default: '',
-      required: false,
     },
     displayIcon: {
       type: Boolean,
       default: true,
-      required: false
     },
     dayNames: {
       type: Array,
@@ -140,46 +135,37 @@ export default {
           'S'
         ];
       },
-      required: false,
     },
     minDate: {
       type: Date,
-      required: false,
       default: null,
     },
     maxDate: {
       type: Date,
-      required: false,
       default: null,
     },
     inclusive: {
       type: Boolean,
-      required: false,
       default: true,
     },
     inputFormat: {
       type: String,
-      required: false,
       default: 'YYYY-M-D',
     },
     displayFormat: {
       type: String,
-      required: false,
       default: 'D/MM/YYYY',
     },
     editable: {
       type: Boolean,
-      required: false,
       default: false,
     },
     showHeader: {
       type: Boolean,
-      required: false,
       default: true,
     },
     showFooter: {
       type: Boolean,
-      required: false,
       default: false,
     },
   },

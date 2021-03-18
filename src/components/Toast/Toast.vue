@@ -21,6 +21,7 @@ import FeIcon from '@/components/Icon/Icon.vue';
 
 export default {
   name: 'fe-toast',
+  emits: ['update:modelValue'],
   components: {
     FeIcon
   },

@@ -86,59 +86,48 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     modelValue: {
       type: [String, Number],
       default: '',
-      required: false,
     },
     placeholder: {
       type: String,
-      required: false,
       default: 'Select Item'
     },
     dataSource: {
       type: Array,
-      required: false,
       default: function () {
         return [];
       }
     },
     valueProperty: {
       type: String,
-      required: false,
       default: 'value',
     },
     labelProperty: {
       type: String,
-      required: false,
       default: 'label',
     },
     groupByProperty: {
       type: String,
-      required: false,
       default: null,
     },
     searchable: {
       type: Boolean,
-      required: false,
       default: false,
     },
     noRecordsFoundTemplate: {
       type: String,
-      required: false,
       default: 'No Records Found'
     },
     expanded: {
       type: Boolean,
-      required: false,
       default: false,
     },
   },

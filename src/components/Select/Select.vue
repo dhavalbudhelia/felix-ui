@@ -44,17 +44,14 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     modelValue: {
       type: [String, Number, Boolean, Object, Array],
-      required: false,
       default: null
     },
     options: {
@@ -75,12 +72,10 @@ export default {
     },
     cssClass: {
       type: String,
-      required: false,
       default: ''
     },
     color: {
       type: String,
-      required: false,
       default: '',
     },
   },

@@ -43,12 +43,10 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     disabled: {
@@ -65,7 +63,6 @@ export default {
     },
     cssClass: {
       type: String,
-      required: false,
       default: ''
     },
   },

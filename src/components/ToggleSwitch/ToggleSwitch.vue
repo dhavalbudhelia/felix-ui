@@ -2,6 +2,7 @@
   <input type="checkbox"
          :checked="isChecked"
          :value="modelValue"
+         :disabled="disabled"
          v-bind="$attrs"
          class="hidden"
          :true-value="trueValue"
@@ -28,27 +29,22 @@ export default {
     },
     trueValue: {
       type: [String, Number, Boolean],
-      required: false,
       default: true,
     },
     falseValue: {
       type: [String, Number, Boolean],
-      required: false,
       default: false,
     },
     disabled: {
       type: Boolean,
-      require: false,
       default: false,
     },
     cssClass: {
       type: String,
-      required: false,
       default: ''
     },
     color: {
       type: String,
-      required: false,
       default: ''
     },
   },

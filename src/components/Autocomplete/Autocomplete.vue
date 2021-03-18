@@ -48,12 +48,10 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     items: {
@@ -61,16 +59,13 @@ export default {
       default: (() => {
         return [];
       }),
-      required: false,
     },
     placeholder: {
       type: String,
       default: 'Type to search...',
-      required: false,
     },
     async: {
       type: Boolean,
-      required: false,
       default: false,
     },
   },

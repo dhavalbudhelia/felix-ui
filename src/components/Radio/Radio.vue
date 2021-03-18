@@ -2,6 +2,7 @@
   <input type="radio"
          :checked="isChecked"
          :value="localValue"
+         :disabled="disabled"
          v-bind="$attrs"
          class="hidden"
   />

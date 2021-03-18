@@ -28,17 +28,14 @@ export default {
   props: {
     active: {
       type: Boolean,
-      required: false,
       default: false,
     },
     content: {
       type: String,
-      required: false,
       default: '',
     },
     position: {
       type: String,
-      required: false,
       default: 'is-right',
       validator: function (value) {
         return ['is-left', 'is-top', 'is-right', 'is-bottom'].includes(value);
@@ -46,17 +43,14 @@ export default {
     },
     wrap: {
       type: Boolean,
-      required: false,
       default: true,
     },
     triggerOnClick: {
       type: Boolean,
-      required: false,
       default: false,
     },
     delay: {
       type: Number,
-      required: false,
       default: 0,
     },
   },

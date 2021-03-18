@@ -1,147 +1,89 @@
-// import {expect} from 'chai';
-// import {mount, shallowMount} from '@vue/test-utils';
-// import { createApp } from 'vue';
-// import Input from '@/components/Input/Input.vue';
-// import Button from '@/components/Button/Button.vue';
-// import Select from '@/components/Select/Select.vue';
-// import Datepicker from '@/components/Datepicker/Datepicker.vue';
-// import dayjs from 'dayjs';
-// import utc from 'dayjs/plugin/utc';
-// import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-// import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-// import isBetween from 'dayjs/plugin/isBetween';
-// import quarterOfYear from 'dayjs/plugin/quarterOfYear';
-// import customParseFormat from 'dayjs/plugin/customParseFormat';
-// import ErDayjs from '@/plugins/dayjs';
-// import DatepickerRow from "@/components/Datepicker/DatepickerRow";
-//
-// dayjs.extend(utc);
-// dayjs.extend(customParseFormat);
-// dayjs.extend(isSameOrAfter);
-// dayjs.extend(isSameOrBefore);
-// dayjs.extend(isBetween);
-// dayjs.extend(quarterOfYear);
-//
-// const localVue = createApp({});
-// localVue.use(ErDayjs, {
-//     dayjs: dayjs
-// });
-//
-//
-// describe('Datepicker.vue', () => {
-//     it('is called', () => {
-//         let wrapper = shallowMount(Datepicker, {
-//             localVue,
-//             stubs: {
-//                 'fe-input': Input,
-//                 'fe-select': Select,
-//                 'fe-button': Button,
-//             }
-//         });
-//         expect(wrapper.name()).to.equal('fe-datepicker');
-//     });
-//
-//     it('is vue instance', () => {
-//         const wrapper = shallowMount(Datepicker, {
-//             localVue,
-//             children: [Input],
-//             stubs: {
-//                 'fe-input': Input,
-//                 'fe-select': Select,
-//                 'fe-button': Button,
-//             }
-//         });
-//         expect(wrapper.name()).to.equal('fe-datepicker');
-//         expect(wrapper.isVueInstance()).to.be.true;
-//     });
-//
-//     it('render simple datepicker', async () => {
-//         const wrapper = mount(Datepicker, {
-//             localVue,
-//             children: [Input, Select, Button, DatepickerRow],
-//             stubs: {
-//                 'fe-input': Input,
-//                 'fe-select': Select,
-//                 'fe-button': Button,
-//                 'fe-datepicker-row': DatepickerRow
-//             }
-//         });
-//         expect(wrapper.find('input').classes()).to.include('fe-input');
-//         wrapper.setData({opened: true});
-//         await wrapper.vm.$nextTick();
-//         let calendarWrapper = wrapper.find('div.datepicker-calendar');
-//         expect(calendarWrapper.find('div.datepicker-header').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.datepicker').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.week-label-container').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.day-container').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.datepicker-footer').exists()).to.be.false;
-//     });
-//
-//     it('render datepicker with footer', async () => {
-//         const wrapper = mount(Datepicker, {
-//             localVue,
-//             children: [Input, Select, Button, DatepickerRow],
-//             propsData: {
-//                 showFooter: true
-//             },
-//             stubs: {
-//                 'fe-input': Input,
-//                 'fe-select': Select,
-//                 'fe-button': Button,
-//                 'fe-datepicker-row': DatepickerRow
-//             }
-//         });
-//         expect(wrapper.find('input').classes()).to.include('fe-input');
-//         wrapper.setData({opened: true});
-//         await wrapper.vm.$nextTick();
-//         let calendarWrapper = wrapper.find('div.datepicker-calendar');
-//         expect(calendarWrapper.find('div.datepicker-header').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.datepicker').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.week-label-container').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.day-container').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.datepicker-footer').exists()).to.be.true;
-//     });
-//
-//     it('render datepicker with custom date range', async () => {
-//         let today = new Date();
-//         let minDate = new Date(today.getFullYear(), 0, today.getDate());
-//         let maxDate =new Date(today.getFullYear(), 3, today.getDate());
-//
-//         const wrapper = mount(Datepicker, {
-//             localVue,
-//             children: [Input, Select, Button, DatepickerRow],
-//             propsData: {
-//                 minDate: minDate,
-//                 maxDate: maxDate
-//             },
-//             stubs: {
-//                 'fe-input': Input,
-//                 'fe-select': Select,
-//                 'fe-button': Button,
-//                 'fe-datepicker-row': DatepickerRow
-//             }
-//         });
-//         expect(wrapper.find('input').classes()).to.include('fe-input');
-//         wrapper.setData({opened: true});
-//         await wrapper.vm.$nextTick();
-//         let calendarWrapper = wrapper.find('div.datepicker-calendar');
-//         expect(calendarWrapper.find('div.datepicker-header').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.datepicker').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.week-label-container').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.day-container').exists()).to.be.true;
-//         expect(calendarWrapper.find('div.datepicker-footer').exists()).to.be.false;
-//         expect(wrapper.vm.monthNames.length).to.be.equal(4);
-//         let monthNames = localVue._.map(wrapper.vm.monthNames, (monthData) => {
-//             return monthData.label;
-//         });
-//         expect(monthNames).contain('January');
-//         expect(monthNames).contain('February');
-//         expect(monthNames).contain('March');
-//         expect(monthNames).contain('April');
-//         expect(wrapper.vm.yearNames.length).to.be.equal(1);
-//         let yearNames = localVue._.map(wrapper.vm.yearNames, (monthData) => {
-//             return monthData.label;
-//         });
-//         expect(yearNames).contain(today.getFullYear());
-//     });
-// });
+import {config, mount} from '@vue/test-utils';
+import Datepicker from '@/components/Datepicker/Datepicker.vue';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isBetween from 'dayjs/plugin/isBetween';
+import quarterOfYear from 'dayjs/plugin/quarterOfYear';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import options from "@/utils/options";
+
+dayjs.extend(utc);
+dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
+dayjs.extend(isBetween);
+dayjs.extend(quarterOfYear);
+
+config.global.mocks = {
+    $theme: options,
+    $dayjs: dayjs,
+}
+
+describe('Datepicker.vue', () => {
+    it('render simple datepicker', async () => {
+        const wrapper = mount(Datepicker);
+        expect(wrapper.find('input').classes()).toContain('fe-input');
+        wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
+        let calendarWrapper = wrapper.find('div.datepicker-calendar');
+        expect(calendarWrapper.find('div.datepicker-header').exists()).toBe(true);
+        expect(calendarWrapper.find('div.datepicker').exists()).toBe(true);
+        expect(calendarWrapper.find('div.week-label-container').exists()).toBe(true);
+        expect(calendarWrapper.find('div.day-container').exists()).toBe(true);
+        expect(calendarWrapper.find('div.datepicker-footer').exists()).toBe(false);
+    });
+
+    it('render datepicker with footer', async () => {
+        const wrapper = mount(Datepicker, {
+            propsData: {
+                showFooter: true
+            },
+        });
+        expect(wrapper.find('input').classes()).toContain('fe-input');
+        wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
+        let calendarWrapper = wrapper.find('div.datepicker-calendar');
+        expect(calendarWrapper.find('div.datepicker-header').exists()).toBe(true);
+        expect(calendarWrapper.find('div.datepicker').exists()).toBe(true);
+        expect(calendarWrapper.find('div.week-label-container').exists()).toBe(true);
+        expect(calendarWrapper.find('div.day-container').exists()).toBe(true);
+        expect(calendarWrapper.find('div.datepicker-footer').exists()).toBe(true);
+    });
+
+    it('render datepicker with custom date range', async () => {
+        let today = new Date();
+        let minDate = new Date(today.getFullYear(), 0, today.getDate());
+        let maxDate =new Date(today.getFullYear(), 3, today.getDate());
+
+        const wrapper = mount(Datepicker, {
+            propsData: {
+                minDate: minDate,
+                maxDate: maxDate
+            },
+        });
+        expect(wrapper.find('input').classes()).toContain('fe-input');
+        wrapper.setData({opened: true});
+        await wrapper.vm.$nextTick();
+        let calendarWrapper = wrapper.find('div.datepicker-calendar');
+        expect(calendarWrapper.find('div.datepicker-header').exists()).toBe(true);
+        expect(calendarWrapper.find('div.datepicker').exists()).toBe(true);
+        expect(calendarWrapper.find('div.week-label-container').exists()).toBe(true);
+        expect(calendarWrapper.find('div.day-container').exists()).toBe(true);
+        expect(calendarWrapper.find('div.datepicker-footer').exists()).toBe(false);
+        expect(wrapper.vm.monthNames.length).toEqual(4);
+        let monthNames = wrapper.vm.monthNames.map((monthData) => {
+            return monthData.label;
+        });
+        expect(monthNames).toContain('January');
+        expect(monthNames).toContain('February');
+        expect(monthNames).toContain('March');
+        expect(monthNames).toContain('April');
+        expect(wrapper.vm.yearNames.length).toEqual(1);
+        let yearNames = wrapper.vm.yearNames.map((monthData) => {
+            return monthData.label;
+        });
+        expect(yearNames).toContain(today.getFullYear());
+    });
+});

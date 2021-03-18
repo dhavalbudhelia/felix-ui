@@ -36,12 +36,10 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     modelValue: {
@@ -54,17 +52,14 @@ export default {
     step: {
       type: Number,
       default: 1,
-      required: false,
     },
     minValue: {
       type: Number,
       default: null,
-      required: false,
     },
     maxValue: {
       type: Number,
       default: null,
-      required: false,
     },
     disabled: {
       type: Boolean,

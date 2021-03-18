@@ -84,27 +84,22 @@ export default {
   props: {
     id: {
       type: String,
-      required: false,
       default: null,
     },
     name: {
       type: String,
-      required: false,
       default: null,
     },
     modelValue: {
       type: String,
-      required: false,
       default: '',
     },
     placeholder: {
       type: String,
-      required: false,
       default: 'Select a time',
     },
     hourFormat: {
       type: Number,
-      required: false,
       default: 12,
       validator: function (value) {
         return [12, 24].includes(value);
@@ -112,17 +107,14 @@ export default {
     },
     separator: {
       type: String,
-      required: false,
       default: ':',
     },
     showSeconds: {
       type: Boolean,
-      required: false,
       default: false,
     },
     clearable: {
       type: Boolean,
-      required: false,
       default: false,
     },
   },

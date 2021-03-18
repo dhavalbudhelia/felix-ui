@@ -2,6 +2,7 @@
   <input type="checkbox"
          :checked="isChecked"
          :value="modelValue"
+         :disabled="disabled"
          v-bind="$attrs"
          class="hidden"
          :true-value="trueValue"

@@ -23,7 +23,6 @@ export default {
   props: {
     weeks: {
       type: Array,
-      required: false,
       default: [],
     },
     dayNames: {
@@ -32,13 +31,11 @@ export default {
     },
     selectedDay: {
       type: Object,
-      required: false,
       default: null,
     },
     size: {
       type: String,
       default: 'is-md',
-      required: false,
       validator: function (value) {
         return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
       },
