@@ -35,6 +35,7 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/helper-define-map": "^7.12.13",
     "@babel/helper-regex": "^7.10.5",
     "@babel/node": "^7.13.10",
     "@babel/preset-env": "^7.13.10",
