@@ -6,7 +6,7 @@
        @keydown.esc="onEscape"
   >
     <transition name="slidedown">
-      <div v-if="modelValue" class="flex justify-center mt-12">
+      <div v-if="modelValue" class="flex justify-center mt-12" :class="size">
         <div :class="[modalClassObject, `lg:${size}`]">
           <div :class="headerClassObject">
             <div class="flex-grow">
@@ -188,5 +188,18 @@ export default {
 .fe-modal .slidedown-enter,
 .fe-modal .slidedown-leave-to {
   margin-top: -10px;
+}
+
+.fe-modal .is-xs {
+  @apply w-full px-4 sm:w-4/5 sm:px-0 md:w-3/5 md:px-0 lg:w-2/5 lg:px-0;
+}
+.fe-modal .is-sm {
+  @apply w-full px-4 md:w-4/5 md:px-0 lg:w-1/2 lg:px-0;
+}
+.fe-modal .is-md {
+  @apply w-full px-4 md:w-4/5 md:px-0 lg:w-3/5 lg:px-0;
+}
+.fe-modal .is-lg {
+  @apply w-full px-4 lg:w-4/5 lg:px-0;
 }
 </style>
