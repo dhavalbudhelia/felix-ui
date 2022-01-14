@@ -1,41 +1,14 @@
-import {expect} from 'chai';
-import {createLocalVue, mount, shallowMount} from '@vue/test-utils';
+import {config, mount} from '@vue/test-utils';
 import MultiSelect from '@/components/MultiSelect/MultiSelect.vue';
-import Button from '@/components/Button/Button.vue';
-import Icon from '@/components/Icon/Icon.vue';
-import Input from '@/components/Input/Input.vue';
-import Checkbox from '@/components/Checkbox/Checkbox.vue';
-import lodash from 'lodash';
-import VueLodash from "vue-lodash";
+import options from "@/utils/options";
 
-let localVue = createLocalVue();
-localVue.use(VueLodash, {lodash: lodash});
+config.global.mocks = {
+    $theme: options,
+}
 
 describe('MultiSelect.vue', () => {
-    it('is called', () => {
-        let wrapper = shallowMount(
-            MultiSelect,
-            {
-                localVue
-            }
-        );
-        expect(wrapper.name()).to.equal('fe-multi-select');
-    });
-
-    it('is vue instance', () => {
-        const wrapper = shallowMount(
-            MultiSelect,
-            {
-                localVue
-            }
-        );
-        expect(wrapper.name()).to.equal('fe-multi-select');
-        expect(wrapper.isVueInstance()).to.be.true;
-    });
-
     it('render simple multi select', async () => {
         const wrapper = mount(MultiSelect, {
-            localVue,
             propsData: {
                 dataSource: [
                     {id: 1, name: 'Foo'},
@@ -45,119 +18,89 @@ describe('MultiSelect.vue', () => {
                 valueProperty: 'id',
                 labelProperty: 'name',
             },
-            stubs: {
-                'fe-button': Button,
-                'fe-icon': Icon,
-                'fe-input': Input,
-                'fe-checkbox': Checkbox,
-            }
         });
-        expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
+        expect(wrapper.find('div').classes()).toContain('fe-multi-select');
+        expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
-        ).to.equal(4);
+        ).toEqual(4);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(0)
+            .findAll('div.dropdown-item')[0]
             .text()
-        ).to.equal('Select All');
+        ).toEqual('Select All');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(1)
+            .findAll('div.dropdown-item')[1]
             .text()
-        ).to.equal('Foo');
+        ).toEqual('Foo');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(2)
+            .findAll('div.dropdown-item')[2]
             .text()
-        ).to.equal('Bar');
+        ).toEqual('Bar');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(3)
+            .findAll('div.dropdown-item')[3]
             .text()
-        ).to.equal('Cake');
+        ).toEqual('Cake');
 
         //expect none of the checkboxes are checked
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(0)
-            .find('input[type="checkbox"]')
-            .is('input:not(:checked)')
-        ).to.be.true;
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[0]
+            .find('input[type="checkbox"]:not(:checked)')
+            .exists()
+        ).toBe(true);
 
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(1)
-            .find('input[type="checkbox"]')
-            .is('input:not(:checked)')
-        ).to.be.true;
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[1]
+            .find('input[type="checkbox"]:not(:checked)')
+            .exists()
+        ).toBe(true);
 
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(2)
-            .find('input[type="checkbox"]')
-            .is('input:not(:checked)')
-        ).to.be.true;
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[2]
+            .find('input[type="checkbox"]:not(:checked)')
+            .exists()
+        ).toBe(true);
 
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(3)
-            .find('input[type="checkbox"]')
-            .is('input:not(:checked)')
-        ).to.be.true;
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})
+            [3]
+            .find('input[type="checkbox"]:not(:checked)')
+            .exists()
+        ).toBe(true);
 
-        let selectAllCheckbox = wrapper.find('div.dropdown-menu')
-            .find('div.dropdown-content')
-            .find('div.dropdown-content-header-wrapper')
-            .find('div.dropdown-item')
-            .find({name: 'fe-checkbox'});
-        selectAllCheckbox.trigger('click');
-        await wrapper.vm.$nextTick();
+        let selectAllCheckbox = wrapper.findAllComponents({name: 'fe-checkbox'})[0]
+            .find('label.fe-checkbox');
+        await selectAllCheckbox.trigger('click');
 
         //expect all of the checkboxes are checked
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(0)
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[0]
             .find('input[type="checkbox"]:checked')
-            .is('input')
-        ).to.be.true;
+            .exists()
+        ).toBe(true);
 
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(1)
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[1]
             .find('input[type="checkbox"]:checked')
-            .is('input')
-        ).to.be.true;
+            .exists()
+        ).toBe(true);
 
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(2)
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[2]
             .find('input[type="checkbox"]:checked')
-            .is('input')
-        ).to.be.true;
+            .exists()
+        ).toBe(true);
 
-        expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(3)
+        expect(wrapper.findAllComponents({name: 'fe-checkbox'})[3]
             .find('input[type="checkbox"]:checked')
-            .is('input')
-        ).to.be.true;
+            .exists()
+        ).toBe(true);
     });
 
     it('render grouped multi select', async () => {
         const wrapper = mount(MultiSelect, {
-            localVue,
             propsData: {
                 dataSource: [
                     {id: 1, name: 'Apple', category: 'Fruit'},
@@ -168,68 +111,55 @@ describe('MultiSelect.vue', () => {
                 labelProperty: 'name',
                 groupByProperty: 'category'
             },
-            stubs: {
-                'fe-button': Button,
-                'fe-icon': Icon,
-                'fe-input': Input,
-                'fe-checkbox': Checkbox,
-            }
         });
-        expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
+        expect(wrapper.find('div').classes()).toContain('fe-multi-select');
+        expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
-        ).to.equal(6);
+        ).toEqual(6);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(0)
+            .findAll('div.dropdown-item')[0]
             .text()
-        ).to.equal('Select All');
+        ).toEqual('Select All');
 
         let fruitGroup = wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-group')
-            .at(0);
-        expect(fruitGroup.text()).to.equal('Fruit');
+            .findAll('div.dropdown-group')[0];
+        expect(fruitGroup.text()).toEqual('Fruit');
 
         let vegetableGroup = wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-group')
-            .at(1);
-        expect(vegetableGroup.text()).to.equal('Vegetable');
+            .findAll('div.dropdown-group')[1];
+        expect(vegetableGroup.text()).toEqual('Vegetable');
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.grouped-item')
-            .at(0)
+            .findAll('div.grouped-item')[0]
             .text()
-        ).to.equal('Apple');
+        ).toEqual('Apple');
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.grouped-item')
-            .at(1)
+            .findAll('div.grouped-item')[1]
             .text()
-        ).to.equal('Pineapple');
+        ).toEqual('Pineapple');
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.grouped-item')
-            .at(2)
+            .findAll('div.grouped-item')[2]
             .text()
-        ).to.equal('Carrot');
+        ).toEqual('Carrot');
     });
 
     it('select all the grouped item when group checkbox is checked', async () => {
         const wrapper = mount(MultiSelect, {
-            localVue,
             propsData: {
                 dataSource: [
                     {id: 1, name: 'Apple', category: 'Fruit'},
@@ -240,204 +170,176 @@ describe('MultiSelect.vue', () => {
                 labelProperty: 'name',
                 groupByProperty: 'category'
             },
-            stubs: {
-                'fe-button': Button,
-                'fe-icon': Icon,
-                'fe-input': Input,
-                'fe-checkbox': Checkbox,
-            }
         });
-        expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
+        expect(wrapper.find('div').classes()).toContain('fe-multi-select');
+        expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
-        ).to.equal(6);
+        ).toEqual(6);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(0)
+            .findAll('div.dropdown-item')[0]
             .text()
-        ).to.equal('Select All');
+        ).toEqual('Select All');
 
         let fruitGroup = wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-group')
-            .at(0);
-        expect(fruitGroup.text()).to.equal('Fruit');
+            .findAll('div.dropdown-group')[0];
+        expect(fruitGroup.text()).toEqual('Fruit');
 
         let vegetableGroup = wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-group')
-            .at(1);
-        expect(vegetableGroup.text()).to.equal('Vegetable');
+            .findAll('div.dropdown-group')[1];
+        expect(vegetableGroup.text()).toEqual('Vegetable');
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.grouped-item')
-            .at(0)
+            .findAll('div.grouped-item')[0]
             .text()
-        ).to.equal('Apple');
+        ).toEqual('Apple');
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.grouped-item')
-            .at(1)
+            .findAll('div.grouped-item')[1]
             .text()
-        ).to.equal('Pineapple');
+        ).toEqual('Pineapple');
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.grouped-item')
-            .at(2)
+            .findAll('div.grouped-item')[2]
             .text()
-        ).to.equal('Carrot');
+        ).toEqual('Carrot');
 
         //expect none of the checkboxes are checked
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(0)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[0]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(1)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[1]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(2)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[2]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(3)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[3]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(4)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[4]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(5)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[5]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
-        let fruitGroupCheckbox = fruitGroup.find({name: 'fe-checkbox'});
+        let fruitGroupCheckbox = fruitGroup.find('.fe-checkbox');
         fruitGroupCheckbox.trigger('click');
         await wrapper.vm.$nextTick();
 
         //expect all of the checkboxes under fruit group are checked
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(0)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[0]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(1)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.false;
+            .findAllComponents({name: 'fe-checkbox'})[1]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(false);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(2)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.false;
+            .findAllComponents({name: 'fe-checkbox'})[2]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(false);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(3)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.false;
+            .findAllComponents({name: 'fe-checkbox'})[3]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(false);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(4)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[4]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(5)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[5]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
-        fruitGroupCheckbox.trigger('click');
-        await wrapper.vm.$nextTick();
+        fruitGroup = wrapper.find('div.dropdown-menu')
+            .find('div.dropdown-content')
+            .findAll('div.dropdown-group')[0];
+        fruitGroupCheckbox = fruitGroup.find('.fe-checkbox');
+        await fruitGroupCheckbox.trigger('click');
 
         //expect all of the checkboxes to be unchecked
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(0)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[0]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(1)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[1]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(2)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[2]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(3)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[3]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(4)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[4]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
 
         expect(wrapper
-            .findAll({name: 'fe-checkbox'})
-            .at(5)
-            .find('input')
-            .is(':not(:checked)')
-        ).to.be.true;
+            .findAllComponents({name: 'fe-checkbox'})[5]
+            .find('input:not(:checked)')
+            .exists()
+        ).toBe(true);
     });
 
     it('filters items by the supplied search term', async () => {
         const wrapper = mount(MultiSelect, {
-            localVue,
             propsData: {
                 dataSource: [
                     {id: 1, name: 'Foo'},
@@ -449,62 +351,51 @@ describe('MultiSelect.vue', () => {
                 labelProperty: 'name',
                 searchable: true,
             },
-            stubs: {
-                'fe-button': Button,
-                'fe-icon': Icon,
-                'fe-input': Input,
-                'fe-checkbox': Checkbox,
-            }
         });
-        expect(wrapper.find('div').classes()).to.include('fe-multi-select');
-        expect(wrapper.find('div.placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.false;
+        expect(wrapper.find('div').classes()).toContain('fe-multi-select');
+        expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.dropdown-menu').exists()).to.be.true;
-        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).to.be.true;
+        expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
+        expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
-        ).to.equal(6);
+        ).toEqual(6);
         let searchInputWrapper = wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(0);
-        let searchInput = searchInputWrapper.find({name: 'fe-input'});
+            .findAll('div.dropdown-item')[0];
 
-        expect(searchInput.isVueInstance()).to.be.true;
+        let searchInput = searchInputWrapper.find('.fe-input');
+
+        expect(searchInput.exists()).toBe(true);
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(1)
+            .findAll('div.dropdown-item')[1]
             .text()
-        ).to.equal('Select All');
+        ).toEqual('Select All');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(2)
+            .findAll('div.dropdown-item')[2]
             .text()
-        ).to.equal('Foo');
+        ).toEqual('Foo');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(3)
+            .findAll('div.dropdown-item')[3]
             .text()
-        ).to.equal('Bar');
+        ).toEqual('Bar');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(4)
+            .findAll('div.dropdown-item')[4]
             .text()
-        ).to.equal('Cake');
+        ).toEqual('Cake');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(5)
+            .findAll('div.dropdown-item')[5]
             .text()
-        ).to.equal('Fake');
+        ).toEqual('Fake');
 
         //search for 'ake' and expect 'Cake' and 'Fake' to be in the system
         wrapper.setData({
@@ -515,20 +406,18 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
-        ).to.equal(3);
+        ).toEqual(3);
 
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(1)
+            .findAll('div.dropdown-item')[1]
             .text()
-        ).to.equal('Cake');
+        ).toEqual('Cake');
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(2)
+            .findAll('div.dropdown-item')[2]
             .text()
-        ).to.equal('Fake');
+        ).toEqual('Fake');
 
         //search for 'Boop' and expect 'No Records Found'
         wrapper.setData({
@@ -539,12 +428,11 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
-        ).to.equal(2);
+        ).toEqual(2);
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
-            .findAll('div.dropdown-item')
-            .at(1)
+            .findAll('div.dropdown-item')[1]
             .text()
-        ).to.equal('No Records Found');
+        ).toEqual('No Records Found');
     });
 });

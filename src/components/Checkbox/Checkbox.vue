@@ -1,158 +1,108 @@
 <template>
-    <label :class="[classObject, cssClass]"
-           ref="label"
-           :disabled="disabled"
-           :tabindex="disabled ? false : 0"
-           @keydown.prevent.enter.space="$refs.label.click()">
-        <input v-model="computedValue"
-               type="checkbox"
-               :id="id"
-               :name="name"
-               :disabled="disabled"
-               :class="inputClass"
-               :value="localValue"
-               :true-value="trueValue"
-               :false-value="falseValue">
-        <span :class="[checkClass]"></span>
-        <span class="control-label pl-2"><slot/></span>
-    </label>
+  <input type="checkbox"
+         :checked="isChecked"
+         :value="modelValue"
+         :disabled="disabled"
+         v-bind="$attrs"
+         class="hidden"
+         :true-value="trueValue"
+         :false-value="falseValue">
+  <label :class="[classObject, cssClass]"
+         :disabled="disabled"
+         :tabindex="disabled ? false : 0"
+         @click.prevent="check">
+    <span :class="[checkClass, color]"></span>
+    <span class="pl-2"><slot/></span>
+  </label>
 </template>
 
 <script>
-    import SizeMixin from "@/mixins/SizeMixin";
-    import optionsDefaults from '@/utils/options';
-    import CssClasses from "./CssClasses";
+import CssClasses from "./CssClasses";
 
-    export default {
-        name: 'fe-checkbox',
-        mixins: [SizeMixin],
-        props: {
-            id: {
-                type: String,
-                required: false,
-                default: null,
-            },
-            name: {
-                type: String,
-                required: false,
-                default: null,
-            },
-            value: {
-                type: [String, Number, Boolean],
-                required: false,
-            },
-            localValue: {
-                type: [String, Number, Boolean],
-                required: false,
-            },
-            trueValue: {
-                type: [String, Number, Boolean],
-                required: false,
-                default: true,
-            },
-            falseValue: {
-                type: [String, Number, Boolean],
-                required: false,
-                default: false,
-            },
-            disabled: {
-                type: Boolean,
-                required: false,
-            },
-            cssClass: {
-                type: String,
-                required: false,
-                default: ''
-            },
-            checkColorClass: {
-                type: String,
-                required: false,
-                default: ''
-            },
-            themeOptions: {
-                type: Object,
-                required: false,
-                default: function () {
-                    return optionsDefaults.themeOptions;
-                },
-            },
-        },
-        computed: {
-            /**
-             * set local value on change of the input
-             */
-            computedValue: {
-                get() {
-                    return this.value;
-                },
-                set(value) {
-                    this.$emit('input', value);
-                }
-            },
-            /**
-             * class names object
-             * @return {{"fe-checkbox": boolean}}
-             */
-            classObject() {
-                let classes =  ['fe-checkbox flex items-center', CssClasses.base];
-                if (this.disabled) {
-                    classes.push(CssClasses.disabled);
-                } else {
-                    classes.push(CssClasses.general);
-                }
-                classes.push(this.sizeClass);
-                return classes;
-            },
-            /**
-             * size class object
-             */
-            sizeClass() {
-                switch (this.size) {
-                    case 'is-xs':
-                        return CssClasses.sizeXs;
-                    case 'is-sm':
-                        return CssClasses.sizeSm;
-                    case 'is-md':
-                        return CssClasses.sizeMd;
-                    case 'is-lg':
-                        return CssClasses.sizeLg;
-                    default:
-                        return CssClasses.sizeMd;
-                }
-            },
-            /**
-             * check class object
-             * @return {string[]}
-             */
-            checkClass() {
-                let color = this.checkColorClass !== '' ? this.checkColorClass : `text-${this.themeOptions.color.primary}`;
-                return ['check', `${color}`, `hover:${color}`];
-            },
-            /**
-             * input class object
-             * @return {string[]}
-             */
-            inputClass() {
-                return [CssClasses.input];
-            },
-        },
-    }
+export default {
+  name: 'fe-checkbox',
+  emits: ['update:modelValue'],
+  props: {
+    modelValue: {
+      type: [String, Number, Boolean],
+      required: false,
+    },
+    trueValue: {
+      type: [String, Number, Boolean],
+      default: true,
+    },
+    falseValue: {
+      type: [String, Number, Boolean],
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    cssClass: {
+      type: String,
+      default: ''
+    },
+    color: {
+      type: String,
+      default: null
+    },
+  },
+  computed: {
+    isChecked() {
+      return this.modelValue === this.trueValue;
+    },
+    /**
+     * class names object
+     * @return {[string, string]}
+     */
+    classObject() {
+      let classes = ['fe-checkbox flex items-center', CssClasses.base];
+      if (this.isChecked) {
+        classes.push('checked');
+      }
+      if (this.disabled) {
+        classes.push(CssClasses.disabled);
+      } else {
+        classes.push(CssClasses.general);
+      }
+      return classes;
+    },
+    /**
+     * check class object
+     * @return {string[]}
+     */
+    checkClass() {
+      let color = this.color !== null ? this.color : `text-${this.$theme.color.primary}`;
+      return ['check', color, `hover:${color}`];
+    },
+  },
+  methods: {
+    check() {
+      if (this.disabled) {
+        return;
+      }
+      this.$emit('update:modelValue', this.isChecked ? this.falseValue : this.trueValue);
+    },
+  }
+}
 </script>
 
 <style scoped>
-.fe-checkbox .check {
+span.check {
   content: "";
+  font-size: 17px;
   transition: all .15s ease-out;
 }
 
-.fe-checkbox .check:before {
+span.check:before {
   font-family: "Font Awesome 5 Free";
   content: "\f0c8";
   transform: scale(0);
   transition: all .15s ease-out;
 }
 
-.fe-checkbox input[type=checkbox]:checked + .check:before {
+label.checked span.check:before {
   content: "\f14a";
   font-weight: 900;
   transform: scale(1);

@@ -1,10 +1,10 @@
 const ErDayjs = {
-    install(Vue, options) {
+    install(app, options) {
         if (!options.dayjs) {
             console.error("Please install dayjs");
             return;
         }
-        Vue.prototype.$dayjs = options.dayjs;
+        app.config.globalProperties.$dayjs = options.dayjs;
     }
 };
 

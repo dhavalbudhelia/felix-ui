@@ -1,67 +1,48 @@
-import {expect} from 'chai';
-import {createLocalVue, mount} from '@vue/test-utils';
+import {config, mount} from '@vue/test-utils';
 import Spinner from '@/components/Spinner/Spinner.vue';
+import options from "@/utils/options";
 
-let localVue = createLocalVue();
+config.global.mocks = {
+    $theme: options,
+}
 
 describe('Spinner.vue', () => {
-    it('is called', () => {
-        let wrapper = mount(Spinner, {
-            propsData: {
-                value: false,
-            }
-        });
-        expect(wrapper.name()).to.equal('fe-spinner');
-    });
-
-    it('is vue instance', () => {
-        const wrapper = mount(Spinner);
-        expect(wrapper.name()).to.equal('fe-spinner');
-        expect(wrapper.isVueInstance()).to.be.true;
-    });
-
     it('shows spinner', async () => {
         const wrapper = mount(Spinner, {
-            localVue,
             propsData: {
-                value: true,
+                modelValue: true,
             },
         });
-        await wrapper.vm.$nextTick();
-        expect(wrapper.name()).to.equal('fe-spinner');
+        await wrapper.setData({spinning: true});
         let spinnerWrapper = wrapper.find('div.fe-spinner');
-        expect(spinnerWrapper.isVisible()).to.be.true;
+        expect(spinnerWrapper.isVisible()).toBe(true);
     });
 
     it('hides spinner', async () => {
         const wrapper = mount(Spinner, {
-            localVue,
             propsData: {
-                value: true,
+                modelValue: true,
             },
         });
-        await wrapper.vm.$nextTick();
-        expect(wrapper.name()).to.equal('fe-spinner');
+        await wrapper.setData({spinning: true});
         let spinnerWrapper = wrapper.find('div.fe-spinner');
-        expect(spinnerWrapper.isVisible()).to.be.true;
-        await wrapper.setProps({ value: false });
-        expect(wrapper.find('div.fe-spinner').exists()).to.be.false;
+        expect(spinnerWrapper.isVisible()).toBe(true);
+        await wrapper.setProps({ modelValue: false });
+        expect(wrapper.find('div.fe-spinner').exists()).toBe(false);
     });
 
     it('shows custom spinner', async () => {
         const wrapper = mount(Spinner, {
-            localVue,
             propsData: {
-                value: true,
+                modelValue: true,
             },
             slots: {
                 default: '<i class="custom-spinner fas fa-4x fa-spinner text-red-500 opacity-100"></i>'
             },
         });
-        await wrapper.vm.$nextTick();
-        expect(wrapper.name()).to.equal('fe-spinner');
+        await wrapper.setData({spinning: true});
         let spinnerWrapper = wrapper.find('div.fe-spinner');
-        expect(spinnerWrapper.isVisible()).to.be.true;
-        expect(wrapper.find('.custom-spinner').exists()).to.be.true;
+        expect(spinnerWrapper.isVisible()).toBe(true);
+        expect(wrapper.find('.custom-spinner').exists()).toBe(true);
     });
 });

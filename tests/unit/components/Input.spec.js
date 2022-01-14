@@ -1,73 +1,46 @@
-import {expect} from 'chai';
-import {createLocalVue, shallowMount} from '@vue/test-utils';
-import Icon from '@/components/Icon/Icon.vue';
+import {config, shallowMount} from '@vue/test-utils';
 import Input from '@/components/Input/Input.vue';
-import lodash from 'lodash';
-import VueLodash from 'vue-lodash';
+import options from "@/utils/options";
 
-let localVue = createLocalVue();
-localVue.use(VueLodash, {lodash: lodash});
+config.global.mocks = {
+    $theme: options,
+}
 
 describe('Input.vue', () => {
-    it('is called', () => {
-        let wrapper = shallowMount(Input, {
-            localVue
-        });
-        expect(wrapper.name()).to.equal('fe-input');
-    });
-
-    it('is vue instance', () => {
-        const wrapper = shallowMount(Input, {
-            localVue
-        });
-        expect(wrapper.name()).to.equal('fe-input');
-        expect(wrapper.isVueInstance()).to.be.true;
-    });
-
     it('render simple input', () => {
-        const wrapper = shallowMount(Input, {
-            localVue
-        });
-        expect(wrapper.find('input').classes()).to.include('fe-input');
+        const wrapper = shallowMount(Input);
+        expect(wrapper.find('input').classes()).toContain('fe-input');
     });
 
     it('render simple input with icon on left', () => {
         const wrapper = shallowMount(Input, {
-            localVue,
             propsData: {
                 iconPackBefore: 'fas',
                 iconBefore: 'user',
             },
-            children: [Icon],
-            stubs: {
-                'fe-icon': Icon
-            }
         });
-        expect(wrapper.find('input').classes()).to.include('fe-input');
-        expect(wrapper.find({name: 'fe-icon'}).isVueInstance()).to.be.true;
-        expect(wrapper.find({name: 'fe-icon'}).props().icon).to.equal('user');
-        expect(wrapper.find({name: 'fe-icon'}).props().iconPack).to.equal('fas');
+        expect(wrapper.find('input').classes()).toContain('fe-input');
+        expect(wrapper.findComponent({name: 'fe-icon'}).props().icon).toEqual('user');
+        expect(wrapper.findComponent({name: 'fe-icon'}).props().iconPack).toEqual('fas');
     });
 
     it('render disabled input', () => {
         const wrapper = shallowMount(Input, {
-            localVue,
             attrs: {
                 disabled: true
             }
         });
-        expect(wrapper.find('input').classes()).to.include('fe-input');
-        expect(wrapper.find('input:disabled').exists()).to.be.true;
-        expect(wrapper.find('input:not([disabled])').exists()).to.be.false;
+        expect(wrapper.find('input').classes()).toContain('fe-input');
+        expect(wrapper.find('input:disabled').exists()).toBe(true);
+        expect(wrapper.find('input:not([disabled])').exists()).toBe(false);
     });
 
     it('render simple textarea', () => {
         const wrapper = shallowMount(Input, {
-            localVue,
             propsData: {
                 type: 'textarea',
             },
         });
-        expect(wrapper.find('textarea').classes()).to.include('fe-input');
+        expect(wrapper.find('textarea').classes()).toContain('fe-input');
     });
 });

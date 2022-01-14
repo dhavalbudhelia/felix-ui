@@ -1,49 +1,31 @@
-import {expect} from 'chai';
-import {createLocalVue, shallowMount} from '@vue/test-utils';
+import {config, shallowMount} from '@vue/test-utils';
 import Timepicker from '@/components/Timepicker/Timepicker.vue';
-import lodash from 'lodash';
-import VueLodash from "vue-lodash";
+import options from "@/utils/options";
 
-let localVue = createLocalVue();
-localVue.use(VueLodash, {lodash: lodash});
+config.global.mocks = {
+    $theme: options,
+}
 
 describe('Timepicker.vue', () => {
-    it('is called', () => {
-        let wrapper = shallowMount(Timepicker, {
-            localVue,
-        });
-        expect(wrapper.name()).to.equal('fe-timepicker');
-    });
-
-    it('is vue instance', () => {
-        let wrapper = shallowMount(Timepicker, {
-            localVue,
-        });
-        expect(wrapper.name()).to.equal('fe-timepicker');
-        expect(wrapper.isVueInstance()).to.be.true;
-    });
-
     it('render simple timepicker', async () => {
-        let wrapper = shallowMount(Timepicker, {
-            localVue,
-        });
-        expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
+        let wrapper = shallowMount(Timepicker);
+        expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(false);
         wrapper.setData({opened: true});
         await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(true);
         let timepickerWrapper = wrapper.find('div.fe-timepicker div.timepicker');
-        expect(timepickerWrapper.find('div.hours-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.minutes-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.seconds-selector').exists()).to.be.false;
-        expect(timepickerWrapper.find('div.meridiem-selector').exists()).to.be.true;
+        expect(timepickerWrapper.find('div.hours-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.minutes-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.seconds-selector').exists()).toBe(false);
+        expect(timepickerWrapper.find('div.meridiem-selector').exists()).toBe(true);
 
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
         //test hours selector
         let hoursSelector = timepickerWrapper.find('div.hours-selector');
@@ -51,19 +33,19 @@ describe('Timepicker.vue', () => {
         let hoursDown = hoursSelector.find('div.hour-down');
 
         hoursUp.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(2);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(2);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
         hoursDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
         hoursDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(12);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(12);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual('AM');
         hoursUp.trigger('click');
 
         //test minutes selector
@@ -72,111 +54,107 @@ describe('Timepicker.vue', () => {
         let minutesDown = minutesSelector.find('div.minute-down');
 
         minutesUp.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(1);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(1);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
         minutesDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
         minutesDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(59);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(59);
+        expect(wrapper.vm.meridiem).toEqual('AM');
         minutesUp.trigger('click');
     });
 
     it('render timepicker with seconds', async () => {
         let wrapper = shallowMount(Timepicker, {
-            localVue,
             propsData: {
                 showSeconds: true
             },
         });
-        expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
-        wrapper.setData({opened: true});
-        await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(false);
+        await wrapper.setData({opened: true});
+        expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(true);
         let timepickerWrapper = wrapper.find('div.fe-timepicker div.timepicker');
-        expect(timepickerWrapper.find('div.hours-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.minutes-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.seconds-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.meridiem-selector').exists()).to.be.true;
+        expect(timepickerWrapper.find('div.hours-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.minutes-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.seconds-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.meridiem-selector').exists()).toBe(true);
 
         //test seconds selector
         let secondsSelector = timepickerWrapper.find('div.seconds-selector');
         let secondsUp = secondsSelector.find('div.second-up');
         let secondsDown = secondsSelector.find('div.second-down');
 
-        secondsUp.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.second).to.be.equal(1);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        await secondsUp.trigger('click');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.second).toEqual(1);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
-        secondsDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.second).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        await secondsDown.trigger('click');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.second).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual('AM');
 
-        secondsDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.second).to.be.equal(59);
-        expect(wrapper.vm.meridiem).to.be.equal('AM');
+        await secondsDown.trigger('click');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.second).toEqual(59);
+        expect(wrapper.vm.meridiem).toEqual('AM');
     });
 
     it('render timepicker with 24 hours format', async () => {
         let wrapper = shallowMount(Timepicker, {
-            localVue,
             propsData: {
                 hourFormat: 24
             },
         });
-        expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.false;
-        wrapper.setData({opened: true});
-        await wrapper.vm.$nextTick();
-        expect(wrapper.find('div.fe-timepicker').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).to.be.true;
-        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).to.be.true;
+        expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(false);
+        await wrapper.setData({opened: true});
+        expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
+        expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(true);
         let timepickerWrapper = wrapper.find('div.fe-timepicker div.timepicker');
-        expect(timepickerWrapper.find('div.hours-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.minutes-selector').exists()).to.be.true;
-        expect(timepickerWrapper.find('div.seconds-selector').exists()).to.be.false;
-        expect(timepickerWrapper.find('div.meridiem-selector').exists()).to.be.false;
+        expect(timepickerWrapper.find('div.hours-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.minutes-selector').exists()).toBe(true);
+        expect(timepickerWrapper.find('div.seconds-selector').exists()).toBe(false);
+        expect(timepickerWrapper.find('div.meridiem-selector').exists()).toBe(false);
 
-        expect(wrapper.vm.hour).to.be.equal(0);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal(null);
+        expect(wrapper.vm.hour).toEqual(0);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual(null);
 
         //test hours selector
         let hoursSelector = timepickerWrapper.find('div.hours-selector');
         let hoursUp = hoursSelector.find('div.hour-up');
         let hoursDown = hoursSelector.find('div.hour-down');
 
-        hoursUp.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(1);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal(null);
+        await hoursUp.trigger('click');
+        expect(wrapper.vm.hour).toEqual(1);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual(null);
 
-        hoursDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(0);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal(null);
+        await hoursDown.trigger('click');
+        expect(wrapper.vm.hour).toEqual(0);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual(null);
 
-        hoursDown.trigger('click');
-        expect(wrapper.vm.hour).to.be.equal(23);
-        expect(wrapper.vm.minute).to.be.equal(0);
-        expect(wrapper.vm.meridiem).to.be.equal(null);
-        hoursUp.trigger('click');
+        await hoursDown.trigger('click');
+        expect(wrapper.vm.hour).toEqual(23);
+        expect(wrapper.vm.minute).toEqual(0);
+        expect(wrapper.vm.meridiem).toEqual(null);
+        await hoursUp.trigger('click');
     });
 });
