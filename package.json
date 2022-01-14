@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "license": "MIT",
   "private": false,
-  "description": "UI components for Vue.js based on Tailwind CSS",
+  "description": "UI components for Vue.js based on Tailwind CSS ",
   "author": "Dhaval Budhelia <budhelia.dhaval@gmail.com>",
   "homepage": "https://github.com/dhavalbudhelia/felix-ui",
   "repository": {
