@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import IconMixin from "@/mixins/IconMixin";
+import IconMixin from "../../mixins/IconMixin.js";
 import FeIcon from '@/components/Icon/Icon.vue';
 import CssClasses from "./CssClasses";
 

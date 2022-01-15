@@ -35,7 +35,7 @@
 
 <script>
 import FeInput from '@/components/Input/Input.vue';
-import IconMixin from "@/mixins/IconMixin";
+import IconMixin from "../../mixins/IconMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {

@@ -67,8 +67,8 @@ import FeButton from '@/components/Button/Button.vue';
 import FeIcon from '@/components/Icon/Icon.vue';
 import FeInput from '@/components/Input/Input.vue';
 import FeSelect from '@/components/Select/Select.vue';
-import IconMixin from "@/mixins/IconMixin";
-import SizeMixin from "@/mixins/SizeMixin";
+import IconMixin from "../../mixins/IconMixin.js";
+import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {

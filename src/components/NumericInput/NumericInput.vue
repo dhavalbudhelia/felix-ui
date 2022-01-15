@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import FeIcon from "../Icon/Icon";
-import SizeMixin from "@/mixins/SizeMixin";
+import FeIcon from "@/components/Icon/Icon.vue";
+import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {

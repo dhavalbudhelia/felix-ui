@@ -27,7 +27,7 @@
 
 <script>
 import FeButton from "@/components/Button/Button.vue";
-import SizeMixin from "@/mixins/SizeMixin";
+import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {

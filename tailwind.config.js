@@ -1,23 +1,10 @@
-// tailwind.config.js
-const colors = require('tailwindcss/colors');
-
 module.exports = {
-    purge: [
-        './src/**/*.vue',
+    content: [
+        './src/**/*.{js,jsx,ts,tsx,vue}',
     ],
-    darkMode: false, // or 'media' or 'class'
-    theme: {
-        extend: {
-            colors: {
-                orange: colors.orange,
-            }
+    safelist: [
+        {
+            pattern: /(bg|text|border)-(red|indigo|gray|blue)-(100|200|300|400|500|600|700|800|900)/,
         },
-    },
-    variants: {
-        extend: {
-            cursor: ['hover'],
-            margin: ['first', 'last'],
-        }
-    },
-    plugins: [],
+    ],
 }
