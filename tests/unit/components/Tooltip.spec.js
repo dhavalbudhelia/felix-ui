@@ -9,14 +9,14 @@ config.global.mocks = {
 
 describe('Tooltip.vue', () => {
     it('shows on left side', async () => {
-        const wrapper = shallowMount(Tooltip, {
+        const wrapper = mount(Tooltip, {
             propsData: {
                 position: 'is-left',
                 content: 'Tooltip',
                 active: true
             },
             slots: {
-                default: '<Button :plain="true">Show Tooltip</Button>'
+                default: '<button type="button">Show Tooltip</button>'
             }
         });
         await wrapper.vm.$nextTick();
@@ -29,14 +29,14 @@ describe('Tooltip.vue', () => {
     });
 
     it('shows on right side', async () => {
-        const wrapper = shallowMount(Tooltip, {
+        const wrapper = mount(Tooltip, {
             propsData: {
                 position: 'is-right',
                 content: 'Tooltip',
                 active: true
             },
             slots: {
-                default: '<Button :plain="true">Show Tooltip</Button>'
+                default: '<button type="button">Show Tooltip</button>'
             }
         });
         await wrapper.vm.$nextTick();
@@ -49,14 +49,14 @@ describe('Tooltip.vue', () => {
     });
 
     it('shows on top side', async () => {
-        const wrapper = shallowMount(Tooltip, {
+        const wrapper = mount(Tooltip, {
             propsData: {
                 position: 'is-top',
                 content: 'Tooltip',
                 active: true
             },
             slots: {
-                default: '<Button :plain="true">Show Tooltip</Button>'
+                default: '<button type="button">Show Tooltip</button>'
             }
         });
         await wrapper.vm.$nextTick();
@@ -69,14 +69,14 @@ describe('Tooltip.vue', () => {
     });
 
     it('shows on bottom side', async () => {
-        const wrapper = shallowMount(Tooltip, {
+        const wrapper = mount(Tooltip, {
             propsData: {
                 position: 'is-bottom',
                 content: 'Tooltip',
                 active: true
             },
             slots: {
-                default: '<Button :plain="true">Show Tooltip</Button>'
+                default: '<button type="button">Show Tooltip</button>'
             }
         });
         await wrapper.vm.$nextTick();
@@ -90,11 +90,6 @@ describe('Tooltip.vue', () => {
 
     it('triggers on click', async () => {
         const wrapper = mount(Tooltip, {
-            global: {
-                stubs: {
-                    'fe-button': Button,
-                }
-            },
             propsData: {
                 position: 'is-right',
                 content: 'Tooltip',
@@ -102,7 +97,7 @@ describe('Tooltip.vue', () => {
                 active: false
             },
             slots: {
-                default: '<fe-button :plain="true">Show Tooltip</fe-button>'
+                default: '<button type="button">Show Tooltip</button>'
             }
         });
         let triggerButton = wrapper.find('button');

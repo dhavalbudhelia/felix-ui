@@ -72,7 +72,7 @@
 <script>
 import FeIcon from '@/components/Icon/Icon.vue';
 import FeInput from '@/components/Input/Input.vue';
-import SizeMixin from "@/mixins/SizeMixin";
+import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {

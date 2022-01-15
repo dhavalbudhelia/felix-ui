@@ -22,7 +22,7 @@
                      :disabled="!hasPreviousMonth"
                      icon-pack="fas"
                      icon="chevron-left"
-                     css-class="-mr-px rounded-r-none h-full flex-grow-0"
+                     css-class="-mr-px rounded-r-none h-full grow-0"
                      plain
           ></fe-button>
           <fe-select v-model="month"
@@ -45,7 +45,7 @@
                      icon-pack="fas"
                      icon="chevron-right"
                      :size="size"
-                     css-class="rounded-l-none h-full flex-grow-0"
+                     css-class="rounded-l-none h-full grow-0"
                      plain
           ></fe-button>
         </div>
@@ -85,10 +85,10 @@
 <script>
 import {MONTH, MONTH_DATA, WEEK} from "@/utils/date";
 import FeDatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
-import FeInput from "@/components/Input/Input";
-import FeButton from "@/components/Button/Button";
+import FeInput from "@/components/Input/Input.vue";
+import FeButton from "@/components/Button/Button.vue";
 import FeSelect from '@/components/Select/Select.vue';
-import SizeMixin from "@/mixins/SizeMixin";
+import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {

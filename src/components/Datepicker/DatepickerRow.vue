@@ -23,7 +23,7 @@ export default {
   props: {
     weeks: {
       type: Array,
-      default: [],
+      default: () => [],
     },
     dayNames: {
       type: Array,
@@ -31,7 +31,7 @@ export default {
     },
     selectedDay: {
       type: Object,
-      default: null,
+      default: () => {},
     },
     size: {
       type: String,

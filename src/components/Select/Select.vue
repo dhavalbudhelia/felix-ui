@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import FeIcon from "../Icon/Icon";
+import FeIcon from "@/components/Icon/Icon.vue";
 import CssClasses from "./CssClasses";
 
 export default {
