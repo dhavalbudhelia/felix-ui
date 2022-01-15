@@ -35,7 +35,7 @@ describe('Toast.vue', () => {
         expect(wrapper.emitted()['update:modelValue'].length).toEqual(1);
     });
 
-    it('hides toast', async (done) => {
+    it('hides toast', async () => {
         const wrapper = mount(Toast, {
             propsData: {
                 modelValue: true,
@@ -47,7 +47,6 @@ describe('Toast.vue', () => {
         await wrapper.setProps({ modelValue: false });
         setTimeout(() => {
             expect(wrapper.find('div.fe-toast-wrapper').exists()).toBe(false);
-            done()
         }, 250);
     });
 
