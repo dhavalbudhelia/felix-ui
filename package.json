@@ -18,14 +18,16 @@
   "files": [
     "dist/*",
     "src/*",
-    "public/*",
-    "*.json",
     "*.js"
   ],
   "exports": {
     ".": {
       "import": "./dist/felix-ui.es.js",
       "require": "./dist/felix-ui.umd.js"
+    },
+    "./dist/style.css": {
+      "require": "./dist/style.css",
+      "import": "./dist/style.css"
     }
   },
   "dependencies": {
