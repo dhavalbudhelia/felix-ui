@@ -9,7 +9,6 @@ const cssClasses = {
     sizeSm: 'my-1 text-sm',
     sizeMd: 'my-1 text-base',
     sizeLg: 'my-2 text-lg',
-    icon: 'text-gray-400 pointer-events-none',
     wrapperSizeXs: 'h-5',
     wrapperSizeSm: 'h-6',
     wrapperSizeMd: 'h-8',

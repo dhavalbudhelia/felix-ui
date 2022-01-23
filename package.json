@@ -11,6 +11,7 @@
     "build-storybook": "build-storybook",
     "storybook": "start-storybook -p 6006",
     "test": "npm run unit",
+    "test-watch": "jest --watch",
     "unit": "jest"
   },
   "main": "./dist/felix-ui.umd.js",
@@ -38,7 +39,7 @@
     "@babel/core": "^7.16.7",
     "@babel/plugin-transform-runtime": "^7.16.8",
     "@babel/preset-env": "^7.16.8",
-    "@fortawesome/fontawesome-free": "^5.5.0",
+    "@heroicons/vue": "^1.0.5",
     "@storybook/addon-actions": "^6.5.0-alpha.17",
     "@storybook/addon-essentials": "^6.5.0-alpha.17",
     "@storybook/addon-links": "^6.5.0-alpha.17",

@@ -7,39 +7,24 @@
           :name="name"
   >
     <template v-if="!iconOnly">
-      <fe-icon v-if="iconBefore"
-               :class="iconClass"
-               :icon-pack="iconPackBefore"
-               :icon="iconBefore"
-               :size="size"
-      ></fe-icon>
+      <slot name="iconBefore"/>
       <div class="mx-2">
         <slot></slot>
       </div>
-      <fe-icon v-if="iconAfter"
-               :class="iconClass"
-               :icon-pack="iconPackAfter"
-               :icon="iconAfter"
-               :size="size"
-      ></fe-icon>
+      <slot name="iconAfter"/>
     </template>
-    <fe-icon v-else :class="iconClass" :icon-pack="iconPack" :icon="icon" :size="size"></fe-icon>
+    <slot v-else/>
   </button>
 </template>
 
 <script>
-import FeIcon from '@/components/Icon/Icon.vue';
-import IconMixin from "../../mixins/IconMixin.js";
 import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {
   name: 'fe-button',
   emits: ['click'],
-  components: {
-    FeIcon,
-  },
-  mixins: [IconMixin, SizeMixin],
+  mixins: [SizeMixin],
   props: {
     id: {
       type: String,
@@ -53,10 +38,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    inverted: {
-      type: Boolean,
-      default: false,
-    },
     plain: {
       type: Boolean,
       default: false,
@@ -65,6 +46,10 @@ export default {
       type: String,
       default: ''
     },
+    iconOnly: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
     /**
@@ -72,9 +57,7 @@ export default {
      */
     classObject() {
       let classes = ['fe-button flex items-center', CssClasses.base];
-      if (this.inverted && !this.disabled) {
-        classes.push(CssClasses.inverted);
-      } else if (this.plain && !this.disabled) {
+      if (this.plain && !this.disabled) {
         classes.push(CssClasses.plain);
       } else if (this.disabled) {
         classes.push(CssClasses.disabled);
@@ -108,11 +91,7 @@ export default {
     colorClass() {
       let primary = `bg-${this.$theme.color.primary}`;
       let primaryDark = `bg-${this.$theme.color.primaryDark}`;
-      if (this.inverted) {
-        primary = `bg-white`;
-        let darkInverted = `bg-${this.$theme.color.tertiaryDark}`;
-        primaryDark = `hover:${darkInverted} active:${darkInverted} focus:${darkInverted}`;
-      } else if (this.plain) {
+      if (this.plain) {
         primary = `bg-white`;
         primaryDark = `hover:bg-white active:bg-white focus:bg-white`;
       } else if (this.disabled) {
@@ -120,12 +99,6 @@ export default {
         primaryDark = `bg-${this.$theme.color.tertiary}`;
       }
       return `${primary} hover:${primaryDark} focus:ring-${primary} active:${primaryDark}`;
-    },
-    /**
-     * icon class object
-     */
-    iconClass() {
-      return CssClasses.icon;
     },
   },
   methods: {

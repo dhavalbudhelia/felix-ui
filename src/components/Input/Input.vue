@@ -1,11 +1,6 @@
 <template>
   <div :class="[wrapperClass]">
-    <fe-icon v-if="iconBefore && type === 'text'"
-             :icon-pack="iconPackBefore"
-             :icon="iconBefore"
-             :class="[iconClass]"
-    ></fe-icon>
-
+    <slot name="iconBefore"/>
     <component
         :is="type === 'text' ? 'input' : 'textarea'"
         :type="type === 'text' ? 'text' : 'textarea'"
@@ -21,27 +16,16 @@
         @focus="onFocus"
         :rows="rows"
     ></component>
-
-    <fe-icon v-if="iconAfter && type === 'text'"
-             :icon-pack="iconPackAfter"
-             :icon="iconAfter"
-             :class="[iconClass]"
-    ></fe-icon>
+    <slot name="iconAfter"/>
   </div>
 </template>
 
 <script>
-import IconMixin from "../../mixins/IconMixin.js";
-import FeIcon from '@/components/Icon/Icon.vue';
 import CssClasses from "./CssClasses";
 
 export default {
   name: 'fe-input',
   emits: ['update:modelValue', 'blur', 'focus'],
-  components: {
-    FeIcon,
-  },
-  mixins: [IconMixin],
   props: {
     id: {
       type: String,
@@ -111,10 +95,10 @@ export default {
       if (this.disabled) {
         classes.push(CssClasses.disabled);
       }
-      if (this.iconBefore) {
+      if (this.$slots.iconBefore) {
         classes.push('pl-2');
       }
-      if (this.iconAfter) {
+      if (this.$slots.iconAfter) {
         classes.push('pr-2');
       }
       classes.push(CssClasses.sizeMd);
@@ -132,12 +116,6 @@ export default {
         primary = `bg-white`;
       }
       return `${primary}`;
-    },
-    /**
-     * icon class object
-     */
-    iconClass() {
-      return CssClasses.icon;
     },
     /**
      * set local value on change of the input

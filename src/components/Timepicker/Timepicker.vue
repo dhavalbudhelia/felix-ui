@@ -10,10 +10,14 @@
         <input class="hidden" type="hidden" :id="id" :name="name" :value="formattedTime"/>
       </div>
       <div v-if="changed && clearable" @click.stop.prevent="clearValues" :class="clearClassObject">
-        <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </div>
       <div :class="timePickerIconClassObject">
-        <fe-icon :icon-pack="iconPack" :icon="icon" :size="size"></fe-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
       </div>
     </div>
 
@@ -21,33 +25,45 @@
       <div class="has-addons" :class="addonsClassObject">
         <div class="hours-selector" :class="hoursMinutesSecondsSelectorClassObject">
           <div class="hour-up" :class="upDownIconsClassObject" @click.prevent.stop="hourIncrement()">
-            <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
           </div>
           <div class="hour" :class="formattedValueClassObject">{{ formattedHour }}</div>
           <div class="hour-down" :class="upDownIconsClassObject" @click.prevent.stop="hourDecrement()">
-            <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
         </div>
 
         <div :class="timeSeparatorClassObject">{{ separator }}</div>
         <div class="minutes-selector" :class="hoursMinutesSecondsSelectorClassObject">
           <div class="minute-up" :class="upDownIconsClassObject" @click.prevent.stop="minuteIncrement()">
-            <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
           </div>
           <div class="minute" :class="formattedValueClassObject">{{ formattedMinute }}</div>
           <div class="minute-down" :class="upDownIconsClassObject" @click.prevent.stop="minuteDecrement()">
-            <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
         </div>
 
         <div v-if="showSeconds" :class="timeSeparatorClassObject">{{ separator }}</div>
         <div v-if="showSeconds" class="seconds-selector" :class="hoursMinutesSecondsSelectorClassObject">
           <div class="second-up" :class="upDownIconsClassObject" @click.prevent.stop="secondIncrement()">
-            <fe-icon icon-pack="fas" icon="chevron-up" :size="size"></fe-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+            </svg>
           </div>
           <div class="second" :class="formattedValueClassObject">{{ formattedSecond }}</div>
           <div class="second-down" :class="upDownIconsClassObject" @click.prevent.stop="secondDecrement()">
-            <fe-icon icon-pack="fas" icon="chevron-down" :size="size"></fe-icon>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
           </div>
         </div>
 
@@ -64,10 +80,8 @@
 
 <script>
 import FeButton from '@/components/Button/Button.vue';
-import FeIcon from '@/components/Icon/Icon.vue';
 import FeInput from '@/components/Input/Input.vue';
 import FeSelect from '@/components/Select/Select.vue';
-import IconMixin from "../../mixins/IconMixin.js";
 import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
@@ -75,11 +89,10 @@ export default {
   name: 'fe-timepicker',
   components: {
     FeButton,
-    FeIcon,
     FeInput,
     FeSelect
   },
-  mixins: [IconMixin, SizeMixin],
+  mixins: [SizeMixin],
   emits: ['update:modelValue'],
   props: {
     id: {

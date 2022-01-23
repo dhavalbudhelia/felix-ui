@@ -22,25 +22,18 @@
       >{{ option.label }}
       </option>
     </select>
-    <fe-icon v-if="icon"
-             :class="iconClass"
-             :icon="icon"
-             :icon-pack="iconPack"
-    ></fe-icon>
-    <fe-icon icon="chevron-down" icon-pack="fas" :class="caretClass"></fe-icon>
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6" :class="caretClass" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+    </svg>
   </div>
 </template>
 
 <script>
-import FeIcon from "@/components/Icon/Icon.vue";
 import CssClasses from "./CssClasses";
 
 export default {
   name: 'fe-select',
   emits: ['update:modelValue'],
-  components: {
-    FeIcon
-  },
   props: {
     id: {
       type: String,
@@ -58,12 +51,6 @@ export default {
       type: Array
     },
     placeholder: {
-      type: String,
-    },
-    icon: {
-      type: String,
-    },
-    iconPack: {
       type: String,
     },
     expanded: {
@@ -120,9 +107,6 @@ export default {
       if (this.expanded) {
         classes.push('w-full');
       }
-      if (this.icon) {
-        classes.push('pl-8');
-      }
 
       classes.push('pr-8');
 
@@ -137,12 +121,6 @@ export default {
       } else {
         return '';
       }
-    },
-    /**
-     * icon class object
-     */
-    iconClass() {
-      return CssClasses.icon;
     },
     /**
      * caret class object

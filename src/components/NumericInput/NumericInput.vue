@@ -12,25 +12,25 @@
            @focus="onFocus">
     <div v-if="!disabled" class="flex flex-row right-0 absolute items-center h-full">
       <div :class="caretDownClass" @click.stop="decrement()">
-        <fe-icon icon="minus" icon-pack="fas" :size="size"></fe-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+        </svg>
       </div>
       <div :class="caretUpClass" @click.stop="increment()">
-        <fe-icon icon="plus" icon-pack="fas" :size="size"></fe-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import FeIcon from "@/components/Icon/Icon.vue";
 import SizeMixin from "../../mixins/SizeMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {
   name: 'fe-numeric-input',
-  components: {
-    FeIcon
-  },
   mixins: [SizeMixin],
   emits: ['update:modelValue', 'blur', 'focus'],
   props: {
@@ -137,12 +137,6 @@ export default {
         primary = `bg-white`;
       }
       return `${primary}`;
-    },
-    /**
-     * icon class object
-     */
-    iconClass() {
-      return CssClasses.icon;
     },
     /**
      * caret class object

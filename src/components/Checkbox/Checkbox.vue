@@ -11,7 +11,14 @@
          :disabled="disabled"
          :tabindex="disabled ? false : 0"
          @click.prevent="check">
-    <span :class="[checkClass, color]"></span>
+    <svg xmlns="http://www.w3.org/2000/svg"
+         :class="[checkClass, color]"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+    </svg>
     <span class="pl-2"><slot/></span>
   </label>
 </template>
@@ -73,8 +80,16 @@ export default {
      * @return {string[]}
      */
     checkClass() {
-      let color = this.color !== null ? this.color : `text-${this.$theme.color.primary}`;
-      return ['check', color, `hover:${color}`];
+      let color = this.color !== null ?
+          this.color :
+          `text-${this.$theme.color.primary} border-${this.$theme.color.primary}`;
+      return [
+        'check',
+        color,
+        'border',
+        'rounded-sm',
+        `hover:${color}`,
+      ];
     },
   },
   methods: {
@@ -89,23 +104,13 @@ export default {
 </script>
 
 <style scoped>
-span.check {
-  content: "";
-  font-size: 17px;
-  transition: all .15s ease-out;
+.fe-checkbox .check {
+  height: 20px;
+  width: 20px;
 }
 
-span.check:before {
-  font-family: "Font Awesome 5 Free";
-  content: "\f0c8";
-  transform: scale(0);
-  transition: all .15s ease-out;
-}
-
-label.checked span.check:before {
-  content: "\f14a";
-  font-weight: 900;
-  transform: scale(1);
+input[type="checkbox"]:not(:checked) + label path {
+  display: none;
 }
 
 </style>

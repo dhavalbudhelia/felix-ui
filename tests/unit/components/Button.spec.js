@@ -14,85 +14,80 @@ describe('Button.vue', () => {
 
     it('render button with a fontawesome icon on left', () => {
         const wrapper = shallowMount(Button, {
-            propsData: {
-                iconPackBefore: 'fas',
-                iconBefore: 'user',
-            },
             slots: {
-                default: 'Foo'
+                default: 'Foo',
+                iconBefore: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+                    '  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />\n' +
+                    '</svg>',
             }
         });
         expect(wrapper.find('button').classes()).toContain('fe-button');
         expect(wrapper.find('button').text()).toContain('Foo');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().icon).toEqual('user');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().iconPack).toEqual('fas');
+        expect(wrapper.find('svg').exists()).toBe(true);
     });
 
     it('render button with a fontawesome icon on right', () => {
         const wrapper = shallowMount(Button, {
-            propsData: {
-                iconPackAfter: 'fas',
-                iconAfter: 'user',
-            },
             slots: {
-                default: 'Foo'
+                default: 'Foo',
+                iconAfter: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+                    '  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />\n' +
+                    '</svg>',
             }
         });
         expect(wrapper.find('button').classes()).toContain('fe-button');
         expect(wrapper.find('button').text()).toContain('Foo');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().icon).toEqual('user');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().iconPack).toEqual('fas');
+        expect(wrapper.find('svg').exists()).toBe(true);
     });
 
     it('render button with a fontawesome icon on left and right', () => {
         const wrapper = shallowMount(Button, {
-            propsData: {
-                iconPackBefore: 'fas',
-                iconBefore: 'globe-americas',
-                iconPackAfter: 'fas',
-                iconAfter: 'user',
-            },
             slots: {
-                default: 'Foo'
+                default: 'Foo',
+                iconBefore: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+                    '  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />\n' +
+                    '</svg>',
+                iconAfter: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+                    '  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />\n' +
+                    '</svg>',
             }
         });
         expect(wrapper.find('button').classes()).toContain('fe-button');
         expect(wrapper.find('button').text()).toContain('Foo');
-        expect(wrapper.findAllComponents({name: 'fe-icon'})[0].props().icon).toEqual('globe-americas');
-        expect(wrapper.findAllComponents({name: 'fe-icon'})[0].props().iconPack).toEqual('fas');
-        expect(wrapper.findAllComponents({name: 'fe-icon'})[1].props().icon).toEqual('user');
-        expect(wrapper.findAllComponents({name: 'fe-icon'})[1].props().iconPack).toEqual('fas');
+        expect(wrapper.find('svg').exists()).toBe(true);
     });
 
     it('render a fontawesome icon only button', () => {
         const wrapper = shallowMount(Button, {
             propsData: {
-                iconPack: 'fas',
-                icon: 'globe-americas',
                 iconOnly: true,
             },
+            slots: {
+                default: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+                    '  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />\n' +
+                    '</svg>',
+            }
         });
         expect(wrapper.find('button').classes()).toContain('fe-button');
         expect(wrapper.find('button').text()).toContain('');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().icon).toEqual('globe-americas');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().iconPack).toEqual('fas');
+        expect(wrapper.find('svg').exists()).toBe(true);
     });
 
     it('render inverted button', () => {
         const wrapper = shallowMount(Button, {
             propsData: {
-                iconPackBefore: 'fas',
-                iconBefore: 'globe-americas',
                 inverted: true,
             },
             slots: {
-                default: 'Foo'
+                default: 'Foo',
+                iconBefore: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +
+                    '  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />\n' +
+                    '</svg>',
             }
         });
         expect(wrapper.find('button').classes()).toContain('fe-button');
         expect(wrapper.find('button').text()).toContain('Foo');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().icon).toEqual('globe-americas');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().iconPack).toEqual('fas');
+        expect(wrapper.find('svg').exists()).toBe(true);
     });
 
     it('render disabled button', () => {

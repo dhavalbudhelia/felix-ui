@@ -9,10 +9,14 @@
         </div>
       </div>
       <div v-if="selectValueDislay !== ''" @click.stop.prevent="clearValues" :class="clearClassObject">
-        <fe-icon icon-pack="fas" icon="times" :size="size"></fe-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
       </div>
       <div :class="caretClassObject">
-        <fe-icon icon-pack="fas" icon="caret-down" size="is-lg"></fe-icon>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
       </div>
     </div>
     <select aria-hidden="true" :class="selectClassObject" :id="id" :name="name">
@@ -26,15 +30,21 @@
               <fe-input ref="search"
                         v-model="searchTerm"
                         placeholder="Search..."
-                        icon-pack-before="fas"
-                        icon-before="search"
                         class="w-full"
-              ></fe-input>
+              >
+                <template #iconBefore>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </template>
+              </fe-input>
               <div v-if="searchTerm !== ''"
                    @click.stop.prevent="clearSearch"
                    :class="searchClearClassObject"
               >
-                <fe-icon icon-pack="fas" icon="times" size="is-sm"></fe-icon>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </div>
             </div>
 
@@ -92,7 +102,6 @@
 </template>
 
 <script>
-import FeIcon from '@/components/Icon/Icon.vue';
 import FeInput from '@/components/Input/Input.vue';
 import FeCheckbox from '@/components/Checkbox/Checkbox.vue';
 import SizeMixin from "../../mixins/SizeMixin.js";
@@ -102,7 +111,6 @@ export default {
   name: 'fe-multi-select',
   components: {
     FeInput,
-    FeIcon,
     FeCheckbox
   },
   mixins: [SizeMixin],

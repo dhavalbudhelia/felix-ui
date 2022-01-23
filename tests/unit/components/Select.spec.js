@@ -12,7 +12,7 @@ describe('Select.vue', () => {
         expect(wrapper.find('select').classes()).toContain('select');
     });
 
-    it('render simple select with icon', () => {
+    it('render simple select', () => {
         const wrapper = mount(Select, {
             propsData: {
                 options: [
@@ -33,14 +33,9 @@ describe('Select.vue', () => {
                         label: 'Cake',
                     },
                 ],
-                iconPack: 'fas',
-                icon: 'user',
             },
         });
         expect(wrapper.find('select').classes()).toContain('select');
-        expect(wrapper.findComponent({name: 'fe-icon'}).exists()).toBe(true);
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().icon).toEqual('user');
-        expect(wrapper.findComponent({name: 'fe-icon'}).props().iconPack).toEqual('fas');
     });
 
     it('render disabled select', () => {

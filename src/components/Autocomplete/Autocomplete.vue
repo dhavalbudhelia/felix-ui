@@ -4,11 +4,14 @@
               v-model="searchTerm"
               :id="id"
               :name="name"
-              :icon-pack-before="iconPackBefore"
-              :icon-before="iconBefore"
-              :icon-pack-after="iconPackAfter"
-              :icon-after="iconAfter"
-    ></fe-input>
+    >
+      <template #iconBefore>
+        <slot name="iconBefore"/>
+      </template>
+      <template #iconAfter>
+        <slot name="iconAfter"/>
+      </template>
+    </fe-input>
     <div :class="[dropdownClassObject]">
       <transition name="fade">
         <div :class="dropDownMenuClassObject">
@@ -35,7 +38,6 @@
 
 <script>
 import FeInput from '@/components/Input/Input.vue';
-import IconMixin from "../../mixins/IconMixin.js";
 import CssClasses from "./CssClasses";
 
 export default {
@@ -44,7 +46,6 @@ export default {
   components: {
     FeInput,
   },
-  mixins: [IconMixin],
   props: {
     id: {
       type: String,

@@ -10,9 +10,13 @@
               @change.native="onChange"
               @focus="triggerFocused"
               @blur="triggerBlurred"
-              icon-before="calendar-alt"
-              icon-pack-before="far"
-    ></fe-input>
+    >
+      <template #iconBefore>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </template>
+    </fe-input>
     <div v-if="opened" @click.stop.prevent :class="calendarClassObject">
       <div v-if="showHeader" :class="headerClassObject">
         <div class="has-addons" :class="[headerControlClassObject, addonsClassObject]">
@@ -20,11 +24,13 @@
                      :size="size"
                      @click.stop.prevent="decrementMonth"
                      :disabled="!hasPreviousMonth"
-                     icon-pack="fas"
-                     icon="chevron-left"
                      css-class="-mr-px rounded-r-none h-full grow-0"
                      plain
-          ></fe-button>
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </fe-button>
           <fe-select v-model="month"
                      :options="monthNames"
                      @update:modelValue="emitMonthChange"
@@ -42,12 +48,14 @@
           <fe-button :icon-only="true"
                      @click.stop.prevent="incrementMonth"
                      :disabled="!hasNextMonth"
-                     icon-pack="fas"
-                     icon="chevron-right"
                      :size="size"
                      css-class="rounded-l-none h-full grow-0"
                      plain
-          ></fe-button>
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </fe-button>
         </div>
       </div>
       <fe-datepicker-row :weeks="weeks"
@@ -59,21 +67,29 @@
       <div v-if="showFooter" :class="footerClassObject">
         <div class="text-gray-500 text-left">
           <fe-button @click.stop.prevent="selectToday"
-                     icon-pack-before="fas"
-                     icon-before="calendar-day"
                      :disabled="!isTodaySelectable()"
                      :size="size"
                      plain
-          >Today
+          >
+            <template #iconBefore>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </template>
+            Today
           </fe-button>
         </div>
         <div class="text-gray-500 text-left">
           <fe-button @click.stop.prevent="clearDate"
-                     icon-pack-before="far"
-                     icon-before="times-circle"
                      :size="size"
                      plain
-          >Clear
+          >
+            <template #iconBefore>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </template>
+            Clear
           </fe-button>
         </div>
       </div>
@@ -117,10 +133,6 @@ export default {
     modelValue: {
       type: String,
       default: '',
-    },
-    displayIcon: {
-      type: Boolean,
-      default: true,
     },
     dayNames: {
       type: Array,

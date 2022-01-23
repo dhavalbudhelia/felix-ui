@@ -4,7 +4,6 @@ const cssClasses = {
     disabled: 'appearance-none outline-none pl-2 cursor-not-allowed bg-gray-200 border-gray-300 text-gray-600',
     select: 'appearance-none outline-none rounded pl-2 cursor-pointer bg-white items-center max-w-full h-full hover:border-gray-500 hover:text-gray-700 focus:shadow active:shadow',
     option: 'whitespace-pre min-h-full',
-    icon: 'h-full pl-2 text-gray-400 pointer-events-none absolute top-0 left-0 inline-flex items-center',
     caret: 'inline-flex items-center h-full pr-2 right-0 absolute pointer-events-none',
 };
 
