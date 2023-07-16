@@ -142,13 +142,11 @@ export default defineComponent({
      * color class object
      */
     const colorClass = computed(() => {
-      let primary = '';
       if (props.disabled) {
-        primary = `bg-${$theme.color.tertiary}`;
+        return `bg-${$theme.color.tertiary}`;
       } else {
-        primary = `bg-white`;
+        return `bg-white`;
       }
-      return `${primary}`;
     });
 
     /**

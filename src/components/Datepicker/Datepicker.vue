@@ -345,7 +345,7 @@ export default defineComponent({
      * @return {[]}
      */
     const monthNames = computed<Array<{ label: string, key?: string, value: number }>>(() => {
-      let months = [];
+      let months;
       if (minDayjsDate.value !== null || maxDayjsDate.value !== null) {
         let minDayjsMonth = minDayjsDate.value !== null ? minDayjsDate.value.month() : 0;
         let maxDayjsMonth = maxDayjsDate.value !== null ? maxDayjsDate.value.month() : 0;

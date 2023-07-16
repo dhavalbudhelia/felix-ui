@@ -9,7 +9,7 @@ config.global.provide = {
 
 describe('MultiSelect.vue', () => {
     const transitionStub = () => ({
-        render: function (h) {
+        render: function () {
             return this.$options._renderChildren
         }
     });

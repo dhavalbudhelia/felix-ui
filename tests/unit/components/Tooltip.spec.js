@@ -9,7 +9,7 @@ config.global.provide = {
 
 describe('Tooltip.vue', () => {
     const transitionStub = () => ({
-        render: function (h) {
+        render: function () {
             return this.$options._renderChildren
         }
     });
