@@ -15,12 +15,11 @@
   </label>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent,computed, inject} from "vue";
 
-import CssClasses from "./CssClasses";
-
-export default {
-  name: 'fe-toggle-switch',
+export default defineComponent({
+  name: 'FeToggleSwitch',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -48,56 +47,67 @@ export default {
       default: ''
     },
   },
-  computed: {
-    isChecked() {
-      return this.modelValue === this.trueValue;
-    },
-    /**
-     * class names object
-     */
-    classObject() {
-      let classes = ['fe-toggle-switch', CssClasses.base];
-      let checkColor = `bg-${this.$theme.color.tertiary}`;
-      let hoverColor = `hover:bg-${this.$theme.color.tertiaryDark}`;
-      if (this.modelValue) {
-        if (this.color !== '') {
-          checkColor = this.color;
-          hoverColor = `hover:${checkColor}`;
-        } else {
-          checkColor = `bg-${this.$theme.color.primary}`;
-          hoverColor = `hover:bg-${this.$theme.color.primaryDark}`;
-        }
-      }
-      if (this.isChecked) {
-        classes.push('checked');
-      }
-      if (this.disabled) {
-        classes.push(CssClasses.disabled);
-      } else {
-        classes.push(CssClasses.general);
-        classes.push(hoverColor);
-      }
-      classes.push(checkColor);
-      return classes;
-    },
+  setup(props, {emit}) {
+    const $theme = inject('$theme');
+
+    const isChecked = computed(() => {
+      return props.modelValue === props.trueValue;
+    });
+
     /**
      * check class object
      * @return {string[]}
      */
-    checkClass() {
-      let checkColor = 'bg-white';
-      return ['check', checkColor, CssClasses.check];
-    },
-  },
-  methods: {
-    check() {
-      if (this.disabled) {
+    const checkClass = computed(() => {
+      return ['check bg-white absolute inset-0 rounded-full bg-white shadow-md'];
+    })
+
+
+    /**
+     * class names object
+     */
+    const classObject = computed(() => {
+      let classes = ['fe-toggle-switch outline-none select-none relative inline-block shadow-inner rounded-full'];
+      let checkColor = `bg-${$theme.color.tertiary}`;
+      let hoverColor = `hover:bg-${$theme.color.tertiaryDark}`;
+      if (props.modelValue) {
+        if (props.color !== '') {
+          checkColor = props.color;
+          hoverColor = `hover:${checkColor}`;
+        } else {
+          checkColor = `bg-${$theme.color.primary}`;
+          hoverColor = `hover:bg-${$theme.color.primaryDark}`;
+        }
+      }
+      if (isChecked.value) {
+        classes.push('checked');
+      }
+      if (props.disabled) {
+        classes.push('opacity-50 cursor-not-allowed');
+      } else {
+        classes.push('cursor-pointer');
+        classes.push(hoverColor);
+      }
+      classes.push(checkColor);
+      return classes;
+    });
+
+    const check = () => {
+      if (props.disabled) {
         return;
       }
-      this.$emit('update:modelValue', this.isChecked ? this.falseValue : this.trueValue);
-    },
-  }
-}
+      emit('update:modelValue', isChecked.value ? props.falseValue : props.trueValue);
+    };
+
+    return {
+      isChecked,
+      checkClass,
+      classObject,
+      check,
+    }
+
+  },
+})
 </script>
 
 <style scoped>

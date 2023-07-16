@@ -78,21 +78,11 @@
   </div>
 </template>
 
-<script>
-import FeButton from '@/components/Button/Button.vue';
-import FeInput from '@/components/Input/Input.vue';
-import FeSelect from '@/components/Select/Select.vue';
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent,ref, onMounted, computed} from "vue";
 
-export default {
-  name: 'fe-timepicker',
-  components: {
-    FeButton,
-    FeInput,
-    FeSelect
-  },
-  mixins: [SizeMixin],
+export default defineComponent({
+  name: 'FeTimepicker',
   emits: ['update:modelValue'],
   props: {
     id: {
@@ -114,7 +104,7 @@ export default {
     hourFormat: {
       type: Number,
       default: 12,
-      validator: function (value) {
+      validator: function (value: number) {
         return [12, 24].includes(value);
       },
     },
@@ -130,372 +120,440 @@ export default {
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String,
+      default: 'is-md',
+      validator: function (value: string) {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
+    },
   },
-  data() {
-    return {
-      hour: this.hourFormat === 12 ? 1 : 0,
-      minute: 0,
-      second: 0,
-      meridiem: this.hourFormat === 12 ? 'AM' : null,
-      opened: false,
-      changed: false,
-    }
-  },
-  computed: {
+  setup(props, {emit}) {
+    const hour = ref(1);
+    const minute = ref(0);
+    const second = ref(0);
+    const meridiem = ref(props.hourFormat === 12 ? 'AM' : null);
+    const opened = ref(false);
+    const changed = ref(false);
+
+    onMounted(() => {
+      hour.value = props.hourFormat === 12 ? 1 : 0
+      decodeValue();
+    });
+
     /**
      * timepicker wrapper class object
      */
-    classObject() {
-      let classes = ['fe-timepicker', CssClasses.base];
-      switch (this.size) {
+    const classObject = computed(() => {
+      let classes = ['fe-timepicker outline-none leading-normal block'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.sizeXs);
+          classes.push('w-32');
           break;
         case 'is-sm':
-          classes.push(CssClasses.sizeSm);
+          classes.push('w-40');
           break;
         case 'is-md':
-          classes.push(CssClasses.sizeMd);
+          classes.push('w-48');
           break;
         case 'is-lg':
-          classes.push(CssClasses.sizeLg);
+          classes.push('w-56');
           break;
         default:
-          classes.push(CssClasses.sizeMd);
+          classes.push('w-48');
       }
       return classes;
-    },
+    });
+
     /**
      * addons class object
      */
-    addonsClassObject() {
+    const addonsClassObject = computed(() => {
       return ['flex justify-center items-center'];
-    },
+    });
+
     /**
      * timepicker class object
      */
-    timepickerClassObject() {
-      return [CssClasses.timepicker, 'timepicker', 'timepicker-center-position', 'md:normal-position'];
-    },
+    const timepickerClassObject = computed(() => {
+      return [
+        'p-2 px-4 select-none z-20 mt-1 bg-white rounded border border-gray-400 shadow',
+        'timepicker',
+        'timepicker-center-position',
+        'md:normal-position'
+      ];
+    });
+
     /**
      * placeholder wrapper class object
      */
-    placeholderWrapperClassObject() {
-      let classes = ['timepicker-placeholder-wrapper', CssClasses.placeholderWrapper];
-      switch (this.size) {
+    const placeholderWrapperClassObject = computed(() => {
+      let classes = ['timepicker-placeholder-wrapper border rounded flex flex-nowrap items-center cursor-pointer border-gray-400 hover:border-gray-500'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.placeholderWrapperXs);
+          classes.push('h-6 text-xs');
           break;
         case 'is-sm':
-          classes.push(CssClasses.placeholderWrapperSm);
+          classes.push('h-6 text-sm');
           break;
         case 'is-md':
-          classes.push(CssClasses.placeholderWrapperMd);
+          classes.push('h-8 text-base');
           break;
         case 'is-lg':
-          classes.push(CssClasses.placeholderWrapperLg);
+          classes.push('h-10 text-lg');
           break;
         default:
-          classes.push(CssClasses.placeholderWrapperMd);
+          classes.push('h-8 text-base');
       }
       return classes;
-    },
+    });
+
     /**
      * placeholder value wrapper class object
      */
-    placeholderValueWrapperClassObject() {
-      return CssClasses.placeholderValueWrapper;
-    },
+    const placeholderValueWrapperClassObject = computed(() => {
+      return 'flex-1 appearance-none outline-none flex flex-nowrap items-center';
+    });
+
     /**
      * clear icon class object
      */
-    clearClassObject() {
-      let classes = [CssClasses.clear];
-      switch (this.size) {
+    const clearClassObject = computed(() => {
+      let classes = ['flex items-center justify-center cursor-pointer h-full text-gray-500 hover:text-gray-600'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.clearXs);
+          classes.push('w-4');
           break;
         case 'is-sm':
-          classes.push(CssClasses.clearSm);
+          classes.push('w-5');
           break;
         case 'is-md':
-          classes.push(CssClasses.clearMd);
+          classes.push('w-6');
           break;
         case 'is-lg':
-          classes.push(CssClasses.clearLg);
+          classes.push('w-8');
           break;
         default:
-          classes.push(CssClasses.clearMd);
+          classes.push('w-6');
       }
       return classes;
-    },
+    });
+
     /**
      * time separator class object
      */
-    timeSeparatorClassObject() {
-      return CssClasses.timeSeparator;
-    },
+    const timeSeparatorClassObject = computed(() => {
+      return 'px-2 font-bold text-lg text-gray-500';
+    });
+
     /**
      * selectors class object
      */
-    hoursMinutesSecondsSelectorClassObject() {
-      let classes = [CssClasses.hoursMinutesSecondsSelector];
-      switch (this.size) {
+    const hoursMinutesSecondsSelectorClassObject = computed(() => {
+      let classes = ['flex flex-col font-bold'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.hmsSelectorXs);
+          classes.push('px-0 text-sm');
           break;
         case 'is-sm':
-          classes.push(CssClasses.hmsSelectorSm);
+          classes.push('px-1 text-base');
           break;
         case 'is-md':
-          classes.push(CssClasses.hmsSelectorMd);
+          classes.push('px-2 text-lg');
           break;
         case 'is-lg':
-          classes.push(CssClasses.hmsSelectorLg);
+          classes.push('px-3 text-xl');
           break;
         default:
-          classes.push(CssClasses.hmsSelectorMd);
+          classes.push('px-2 text-lg');
       }
       return classes;
-    },
+    });
+
     /**
      * formatted display value class object
      */
-    formattedValueClassObject() {
-      let classes = [];
-      switch (this.size) {
+    const formattedValueClassObject = computed(() => {
+      let classes = ['py-1'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.formattedValueXs);
+          classes.push('py-0');
           break;
         case 'is-sm':
-          classes.push(CssClasses.formattedValueSm);
-          break;
-        case 'is-md':
-          classes.push(CssClasses.formattedValueMd);
+          classes.push('py-0');
           break;
         case 'is-lg':
-          classes.push(CssClasses.formattedValueLg);
+          classes.push('py-2');
           break;
-        default:
-          classes.push(CssClasses.formattedValueMd);
       }
       return classes;
-    },
+    });
+
     /**
      * chevron up and down class object
      */
-    upDownIconsClassObject() {
-      return CssClasses.upDownIcons;
-    },
+    const upDownIconsClassObject = computed(() => {
+      return 'text-gray-500 text-center hover:text-gray-800 hover:cursor-pointer';
+    });
+
     /**
      * timepicker icon class object
      */
-    timePickerIconClassObject() {
-      let classes = [CssClasses.caret];
-      switch (this.size) {
+    const timePickerIconClassObject = computed(() => {
+      let classes = ['flex items-center justify-center border-l border-gray-300 h-full'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.caretXs);
+          classes.push('w-5');
           break;
         case 'is-sm':
-          classes.push(CssClasses.caretSm);
+          classes.push('w-6');
           break;
         case 'is-md':
-          classes.push(CssClasses.caretMd);
+          classes.push('w-8');
           break;
         case 'is-lg':
-          classes.push(CssClasses.caretLg);
+          classes.push('w-10');
           break;
         default:
-          classes.push(CssClasses.caretMd);
+          classes.push('w-8');
       }
       return classes;
-    },
+    });
+
     /**
      * backdrop class object
      */
-    backdropClassObject() {
-      return CssClasses.backdrop;
-    },
+    const backdropClassObject = computed(() => {
+      return 'fixed w-full h-full top-0 left-0 z-10 md:bg-white md:opacity-0 bg-black opacity-75';
+    });
+
     /**
      * meridiem class object
      */
-    meridiemSelectorClassObject() {
-      return CssClasses.meridiemSelector;
-    },
+    const meridiemSelectorClassObject = computed(() => {
+      return 'inline-block border rounded outline-none select-none font-bold text-right p-1 w-10 tracking-widest hover:bg-gray-200 hover:cursor-pointer';
+    });
+
     /**
      * computed prop to display formatted time string
      */
-    formattedTime() {
+    const formattedTime = computed(() => {
       let formattedTimeString = '';
-      if (this.hour !== null && this.minute !== null) {
-        formattedTimeString = `${this.formattedHour}${this.separator}${this.formattedMinute}`;
-        if (this.showSeconds && this.second !== null) {
-          formattedTimeString = `${formattedTimeString}${this.separator}${this.formattedSecond}`;
+      if (hour.value !== null && minute.value !== null) {
+        formattedTimeString = `${formattedHour.value}${props.separator}${formattedMinute.value}`;
+        if (props.showSeconds && second.value !== null) {
+          formattedTimeString = `${formattedTimeString}${props.separator}${formattedSecond.value}`;
         }
-        if (this.hourFormat === 12 && this.meridiem !== null) {
-          formattedTimeString = `${formattedTimeString} ${this.meridiem}`;
+        if (props.hourFormat === 12 && meridiem.value !== null) {
+          formattedTimeString = `${formattedTimeString} ${meridiem.value}`;
         }
       }
       return formattedTimeString;
-    },
+    });
+
     /**
      * padded hour value
      */
-    formattedHour() {
-      return this.hour.toString().padStart(2, '0');
-    },
+    const formattedHour = computed(() => {
+      return hour.value.toString().padStart(2, '0');
+    });
+
     /**
      * padded minute value
      */
-    formattedMinute() {
-      return this.minute.toString().padStart(2, '0');
-    },
+    const formattedMinute = computed(() => {
+      return minute.value.toString().padStart(2, '0');
+    });
+
     /**
      * padded second value
      */
-    formattedSecond() {
-      return this.second.toString().padStart(2, '0');
-    },
-  },
-  methods: {
+    const formattedSecond = computed(() => {
+      return second.value.toString().padStart(2, '0');
+    });
+
     /**
      * open timepicker on trigger focused
      */
-    triggerFocused() {
-      this.opened = true;
-    },
+    const triggerFocused = () => {
+      opened.value = true;
+    };
+
     /**
      * increment an hour value by one
      */
-    hourIncrement() {
-      if (this.hourFormat === 12) {
-        this.hour = (this.hour === 12) ? 1 : (this.hour + 1);
+    const hourIncrement = () => {
+      if (props.hourFormat === 12) {
+        hour.value = (hour.value === 12) ? 1 : (hour.value + 1);
       } else {
-        this.hour = (this.hour === 23) ? 0 : (this.hour + 1);
+        hour.value = (hour.value === 23) ? 0 : (hour.value + 1);
       }
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * decrement an hour value by one
      */
-    hourDecrement() {
-      if (this.hourFormat === 12) {
-        this.hour = (this.hour === 1) ? 12 : (this.hour - 1);
+    const hourDecrement = () => {
+      if (props.hourFormat === 12) {
+        hour.value = (hour.value === 1) ? 12 : (hour.value - 1);
       } else {
-        this.hour = (this.hour === 0) ? 23 : (this.hour - 1);
+        hour.value = (hour.value === 0) ? 23 : (hour.value - 1);
       }
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * increment a minute value by one
      */
-    minuteIncrement() {
-      this.minute = (this.minute === 59) ? 0 : this.minute + 1;
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+    const minuteIncrement = () => {
+      minute.value = (minute.value === 59) ? 0 : minute.value + 1;
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * decrement a minute value by one
      */
-    minuteDecrement() {
-      this.minute = (this.minute === 0) ? 59 : this.minute - 1;
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+    const minuteDecrement = () => {
+      minute.value = (minute.value === 0) ? 59 : minute.value - 1;
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * increment a second value by one
      */
-    secondIncrement() {
-      this.second = (this.second === 59) ? 0 : this.second + 1;
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+    const secondIncrement = () => {
+      second.value = (second.value === 59) ? 0 : second.value + 1;
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * decrement a second value by one
      */
-    secondDecrement() {
-      this.second = (this.second === 0) ? 59 : this.second - 1;
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+    const secondDecrement = () => {
+      second.value = (second.value === 0) ? 59 : second.value - 1;
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * toggle meridiem value
      */
-    toggleMeridiem() {
-      this.meridiem = (this.meridiem === 'AM') ? 'PM' : 'AM';
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = true;
-    },
+    const toggleMeridiem = () => {
+      meridiem.value = (meridiem.value === 'AM') ? 'PM' : 'AM';
+      emit('update:modelValue', formattedTime.value);
+      changed.value = true;
+    };
+
     /**
      * on clear set hour, minute, second and meridiem values to their default
      */
-    clearValues() {
-      this.hour = (this.hourFormat === 12) ? 1 : 0;
-      this.minute = 0;
-      this.second = 0;
-      this.meridiem = (this.hourFormat === 12) ? 'AM' : null;
-      this.$emit('update:modelValue', this.formattedTime);
-      this.changed = false;
-    },
+    const clearValues = () => {
+      hour.value = (props.hourFormat === 12) ? 1 : 0;
+      minute.value = 0;
+      second.value = 0;
+      meridiem.value = (props.hourFormat === 12) ? 'AM' : '';
+      emit('update:modelValue', formattedTime.value);
+      changed.value = false;
+    };
+
     /**
      * Close dropdown if clicked outside.
      */
-    clickedOutside() {
-      this.opened = false;
-    },
+    const clickedOutside = () => {
+      opened.value = false;
+    };
+
     /**
      * decode initial value on mounted and initialise hour/minute/seconds/meridiem values
      */
-    decodeValue() {
-      let parts = this.modelValue.split(this.separator);
-      if (this.modelValue !== '' && parts.length > 1) {
-        this.hour = parseInt(parts[0]);
-        if (parts.length === 3 && this.showSeconds) {
-          this.minute = parseInt(parts[1]);
+    const decodeValue = () => {
+      let parts = props.modelValue.split(props.separator);
+      if (props.modelValue !== '' && parts.length > 1) {
+        hour.value = parseInt(parts[0]);
+        if (parts.length === 3 && props.showSeconds) {
+          minute.value = parseInt(parts[1]);
           let secondsAndMeridiem = parts[2].split(' ');
-          this.second = (secondsAndMeridiem.length >= 1) ? parseInt(secondsAndMeridiem[0]) : this.second;
-          this.meridiem = (secondsAndMeridiem.length === 2) ? secondsAndMeridiem[1].toUpperCase() : this.meridiem;
+          second.value = (secondsAndMeridiem.length >= 1) ? parseInt(secondsAndMeridiem[0]) : second.value;
+          meridiem.value = (secondsAndMeridiem.length === 2) ? secondsAndMeridiem[1].toUpperCase() : meridiem.value;
         } else if (parts.length === 2) {
           let minutedAndMeridiem = parts[1].split(' ');
-          this.minute = (minutedAndMeridiem.length >= 1) ? parseInt(minutedAndMeridiem[0]) : this.minute;
-          this.meridiem = (minutedAndMeridiem.length === 2) ? minutedAndMeridiem[1].toUpperCase() : this.meridiem;
+          minute.value = (minutedAndMeridiem.length >= 1) ? parseInt(minutedAndMeridiem[0]) : minute.value;
+          meridiem.value = (minutedAndMeridiem.length === 2) ? minutedAndMeridiem[1].toUpperCase() : meridiem.value;
         }
-        if (Number.isNaN(this.hour)) {
-          this.hour = this.hourFormat === 12 ? 1 : 0;
+        if (Number.isNaN(hour.value)) {
+          hour.value = props.hourFormat === 12 ? 1 : 0;
         } else {
-          this.hour = (this.hourFormat === 12 && this.hour > 12) ? 12 : this.hour;
-          this.hour = (this.hourFormat === 24 && this.hour > 23) ? 23 : this.hour;
-          this.hour = (this.hour < 1 && this.hourFormat === 12) ? 1 : this.hour;
-          this.hour = (this.hour < 0 && this.hourFormat === 24) ? 0 : this.hour;
+          hour.value = (props.hourFormat === 12 && hour.value > 12) ? 12 : hour.value;
+          hour.value = (props.hourFormat === 24 && hour.value > 23) ? 23 : hour.value;
+          hour.value = (hour.value < 1 && props.hourFormat === 12) ? 1 : hour.value;
+          hour.value = (hour.value < 0 && props.hourFormat === 24) ? 0 : hour.value;
         }
-        if (Number.isNaN(this.minute)) {
-          this.minute = 0;
+        if (Number.isNaN(minute.value)) {
+          minute.value = 0;
         } else {
-          this.minute = (this.minute > 59) ? 59 : this.minute;
-          this.minute = (this.minute < 1) ? 0 : this.minute;
+          minute.value = (minute.value > 59) ? 59 : minute.value;
+          minute.value = (minute.value < 1) ? 0 : minute.value;
         }
 
-        if (Number.isNaN(this.second)) {
-          this.second = 0;
+        if (Number.isNaN(second.value)) {
+          second.value = 0;
         } else {
-          this.second = (this.second > 59) ? 59 : this.second;
-          this.second = (this.second < 0) ? 0 : this.second;
+          second.value = (second.value > 59) ? 59 : second.value;
+          second.value = (second.value < 0) ? 0 : second.value;
         }
 
-        if (this.meridiem !== 'AM' && this.meridiem !== 'PM') {
-          this.meridiem = this.hourFormat === 12 ? 'AM' : null;
+        if (meridiem.value !== 'AM' && meridiem.value !== 'PM') {
+          meridiem.value = props.hourFormat === 12 ? 'AM' : '';
         }
       } else {
-        this.$emit('update:modelValue', this.formattedTime);
+        emit('update:modelValue', formattedTime.value);
       }
-    },
+    };
+
+    return {
+      hour,
+      minute,
+      second,
+      meridiem,
+      opened,
+      changed,
+      classObject,
+      addonsClassObject,
+      timepickerClassObject,
+      placeholderWrapperClassObject,
+      placeholderValueWrapperClassObject,
+      clearClassObject,
+      timeSeparatorClassObject,
+      hoursMinutesSecondsSelectorClassObject,
+      formattedValueClassObject,
+      upDownIconsClassObject,
+      timePickerIconClassObject,
+      backdropClassObject,
+      meridiemSelectorClassObject,
+      formattedTime,
+      formattedHour,
+      formattedMinute,
+      formattedSecond,
+      triggerFocused,
+      hourIncrement,
+      hourDecrement,
+      minuteIncrement,
+      minuteDecrement,
+      secondIncrement,
+      secondDecrement,
+      toggleMeridiem,
+      clearValues,
+      clickedOutside,
+      decodeValue,
+    }
   },
-  mounted() {
-    this.decodeValue();
-  },
-}
+})
 </script>
 
 <style scoped>

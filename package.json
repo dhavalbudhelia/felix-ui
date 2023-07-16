@@ -10,9 +10,8 @@
     "preview": "vite preview",
     "build-storybook": "build-storybook",
     "storybook": "start-storybook -p 6006",
-    "test": "npm run unit",
-    "test-watch": "jest --watch",
-    "unit": "jest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "main": "./dist/felix-ui.umd.js",
   "module": "/dist/felix-ui.es.js",
@@ -36,7 +35,7 @@
     "vue": "^3.2.26"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.7",
+    "@babel/core": "^7.21.4",
     "@babel/plugin-transform-runtime": "^7.16.8",
     "@babel/preset-env": "^7.16.8",
     "@heroicons/vue": "^1.0.5",
@@ -48,36 +47,18 @@
     "@vitejs/plugin-vue": "^2.0.1",
     "@vue/compiler-sfc": "^3.2.26",
     "@vue/component-compiler-utils": "^3.1.2",
-    "@vue/test-utils": "^2.0.0-rc.4",
+    "@vue/test-utils": "^2.3.2",
     "autoprefixer": "^10.4.2",
     "axios": "^0.21.1",
-    "babel-jest": "^27.4.6",
     "babel-loader": "^8.2.3",
-    "jest": "^27.4.7",
+    "jsdom": "^21.1.1",
     "postcss": "^8.4.5",
     "storybook-builder-vite": "^0.1.13",
     "tailwindcss": "^3.0.13",
-    "vite": "^2.7.12",
-    "vue-loader": "^16.8.3",
-    "vue3-jest": "^27.0.0-alpha.1"
-  },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "moduleFileExtensions": [
-      "js",
-      "vue"
-    ],
-    "modulePaths": [
-      "<rootDir>/src",
-      "<rootDir>/node_modules"
-    ],
-    "transform": {
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/vue3-jest"
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
-    }
+    "typescript": "^4.9.4",
+    "vite": "^2.9.15",
+    "vitest": "^0.29.8",
+    "vue-loader": "^16.8.3"
   },
   "homepage": "https://github.com/dhavalbudhelia/felix-ui",
   "license": "MIT",

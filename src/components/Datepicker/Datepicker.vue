@@ -1,114 +1,130 @@
 <template>
-  <div :class="[classObject, size]">
-    <fe-input :model-value="formattedDate"
-              :id="id"
-              :name="name"
-              :readonly="!editable"
-              :placeholder="placeholder"
-              ref="trigger"
-              :size="size"
-              @change.native="onChange"
-              @focus="triggerFocused"
-              @blur="triggerBlurred"
+  <div :class="['fe-datepicker block leading-normal', size]">
+    <FeInput :model-value="formattedDate"
+             :id="id"
+             :name="name"
+             :readonly="!editable"
+             :placeholder="placeholder"
+             ref="trigger"
+             :size="size"
+             @change.native="onChange"
+             @focus="triggerFocused"
+             @blur="triggerBlurred"
     >
       <template #iconBefore>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
       </template>
-    </fe-input>
+    </FeInput>
     <div v-if="opened" @click.stop.prevent :class="calendarClassObject">
-      <div v-if="showHeader" :class="headerClassObject">
-        <div class="has-addons" :class="[headerControlClassObject, addonsClassObject]">
-          <fe-button :icon-only="true"
-                     :size="size"
-                     @click.stop.prevent="decrementMonth"
-                     :disabled="!hasPreviousMonth"
-                     css-class="-mr-px rounded-r-none h-full grow-0"
-                     plain
+      <div v-if="showHeader" class="datepicker-header flex justify-between pb-4 border-b">
+        <div class="has-addons header-control w-full flex justify-center items-center">
+          <FeButton :icon-only="true"
+                    :size="size"
+                    @click.stop.prevent="decrementMonth"
+                    :disabled="!hasPreviousMonth"
+                    css-class="-mr-px rounded-r-none h-full grow-0"
+                    plain
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
             </svg>
-          </fe-button>
-          <fe-select v-model="month"
-                     :options="monthNames"
-                     @update:modelValue="emitMonthChange"
-                     :size="size"
-                     css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
-                     expanded
-          ></fe-select>
-          <fe-select v-model="year"
-                     :options="yearNames"
-                     @update:modelValue="emitYearChange"
-                     :size="size"
-                     css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
-                     expanded
-          ></fe-select>
-          <fe-button :icon-only="true"
-                     @click.stop.prevent="incrementMonth"
-                     :disabled="!hasNextMonth"
-                     :size="size"
-                     css-class="rounded-l-none h-full grow-0"
-                     plain
+          </FeButton>
+          <FeSelect v-model="month"
+                    :options="monthNames"
+                    @update:modelValue="emitMonthChange"
+                    :size="size"
+                    css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
+                    expanded
+          ></FeSelect>
+          <FeSelect v-model="year"
+                    :options="yearNames"
+                    @update:modelValue="emitYearChange"
+                    :size="size"
+                    css-class="-mr-px rounded-r-none rounded-l-none h-full flex-grow"
+                    expanded
+          ></FeSelect>
+          <FeButton :icon-only="true"
+                    @click.stop.prevent="incrementMonth"
+                    :disabled="!hasNextMonth"
+                    :size="size"
+                    css-class="rounded-l-none h-full grow-0"
+                    plain
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
             </svg>
-          </fe-button>
+          </FeButton>
         </div>
       </div>
-      <fe-datepicker-row :weeks="weeks"
-                         :day-names="dayNames"
-                         :selected-day="selectedDay"
-                         :size="size"
-                         @select="select"
-      ></fe-datepicker-row>
-      <div v-if="showFooter" :class="footerClassObject">
+      <FeDatepickerRow :weeks="weeks"
+                       :day-names="dayNames"
+                       :selected-day="selectedDay"
+                       :size="size"
+                       @select="select"
+      ></FeDatepickerRow>
+      <div v-if="showFooter" class="datepicker-footer flex justify-between pt-4 border-t">
         <div class="text-gray-500 text-left">
-          <fe-button @click.stop.prevent="selectToday"
-                     :disabled="!isTodaySelectable()"
-                     :size="size"
-                     plain
+          <FeButton @click.stop.prevent="selectToday"
+                    :disabled="!isTodaySelectable()"
+                    :size="size"
+                    plain
           >
             <template #iconBefore>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
               </svg>
             </template>
             Today
-          </fe-button>
+          </FeButton>
         </div>
         <div class="text-gray-500 text-left">
-          <fe-button @click.stop.prevent="clearDate"
-                     :size="size"
-                     plain
+          <FeButton @click.stop.prevent="clearDate"
+                    :size="size"
+                    plain
           >
             <template #iconBefore>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
             </template>
             Clear
-          </fe-button>
+          </FeButton>
         </div>
       </div>
     </div>
-    <div v-if="opened" @click="clickedOutside" :class="backdropClassObject"></div>
+    <div v-if="opened" @click="clickedOutside"
+         class="fixed w-full h-full top-0 left-0 md:bg-white md:opacity-0 bg-black opacity-75 z-10"></div>
   </div>
 </template>
 
-<script>
-import {MONTH, MONTH_DATA, WEEK} from "@/utils/date";
-import FeDatepickerRow from "@/components/Datepicker/DatepickerRow.vue";
-import FeInput from "@/components/Input/Input.vue";
-import FeButton from "@/components/Button/Button.vue";
+<script lang="ts">
+import {defineComponent, ref, computed, onMounted} from 'vue';
+import dayjs, {Dayjs} from 'dayjs';
+import {MONTH, MONTH_DATA, WEEK} from '@/utils/date.js';
+import FeDatepickerRow from '@/components/Datepicker/DatepickerRow.vue';
+import FeInput from '@/components/Input/Input.vue';
+import FeButton from '@/components/Button/Button.vue';
 import FeSelect from '@/components/Select/Select.vue';
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
 
-export default {
-  name: 'fe-datepicker',
+interface CalendarDay {
+  date: any;
+  unselectable?: boolean;
+  previous?: boolean;
+  following?: boolean;
+}
+
+export default defineComponent({
+  name: 'FeDatepicker',
   emits: ['month-change', 'year-change', 'update:modelValue'],
   components: {
     FeButton,
@@ -116,7 +132,6 @@ export default {
     FeDatepickerRow,
     FeSelect,
   },
-  mixins: [SizeMixin],
   props: {
     id: {
       type: String,
@@ -180,133 +195,114 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  data() {
-    return {
-      month: parseInt(this.$dayjs().format('M')),
-      year: parseInt(this.$dayjs().format('YYYY')),
-      opened: false,
-      triggerFocus: false,
-      selectedDay: null,
-    }
-  },
-  computed: {
-    /**
-     * class names object
-     */
-    classObject() {
-      return ['fe-datepicker', CssClasses.base];
+    size: {
+      type: String,
+      default: 'is-md',
+      validator: function (value: string) {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
     },
+  },
+  setup(props, {emit}) {
+    const month = ref(parseInt(dayjs().format('M')));
+    const year = ref(parseInt(dayjs().format('YYYY')));
+    const opened = ref(false);
+    const triggerFocus = ref(false);
+    const selectedDay = ref<CalendarDay | null>(null);
+
     /**
      * calendar class object
      */
-    calendarClassObject() {
-      let classes = ['datepicker-calendar opened datepicker-center-position md:normal-position', CssClasses.calendar];
-      if (this.showFooter) {
+    const calendarClassObject = computed(() => {
+      let classes = ['datepicker-calendar opened datepicker-center-position md:normal-position block z-20 mt-1 bg-white rounded border border-gray-400 shadow'];
+      if (props.showFooter) {
         classes.push('has-footer');
       }
-      if (this.showHeader) {
+      if (props.showHeader) {
         classes.push('has-header');
       }
 
-      switch (this.size) {
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.calendarXs);
+          classes.push('p-2');
           break;
         case 'is-sm':
-          classes.push(CssClasses.calendarSm);
+          classes.push('p-2');
           break;
         case 'is-md':
-          classes.push(CssClasses.calendarMd);
+          classes.push('p-3');
           break;
         case 'is-lg':
-          classes.push(CssClasses.calendarLg);
+          classes.push('p-2');
           break;
         default:
-          classes.push(CssClasses.calendarMd);
+          classes.push('p-3');
       }
 
       return classes;
-    },
-    /**
-     * header class object
-     */
-    headerClassObject() {
-      return ['datepicker-header', CssClasses.header];
-    },
-    /**
-     * header control class object
-     */
-    headerControlClassObject() {
-      return ['header-control', CssClasses.headerControl];
-    },
-    /**
-     * addons class object
-     */
-    addonsClassObject() {
-      return ['flex justify-center items-center'];
-    },
-    /**
-     * footer class object
-     */
-    footerClassObject() {
-      return ['datepicker-footer', CssClasses.footer];
-    },
-    /**
-     * backdrop class object
-     */
-    backdropClassObject() {
-      return CssClasses.backdrop;
-    },
+    });
+
     /**
      * dayjs object for the first day of the current month
      * @return {*}
      */
-    firstDayOfTheCurrentMonth() {
-      return this.$dayjs(`${this.year}-${this.month}-1`, 'YYYY-M-D').startOf('month').startOf('day');
-    },
+    const firstDayOfTheCurrentMonth = computed<Dayjs>(() => {
+      return dayjs(`${year.value}-${month.value}-1`, 'YYYY-M-D').startOf('month').startOf('day');
+    });
+
     /**
      * dayjs object for the last day of the current month
      */
-    lastDayOfTheCurrentMonth() {
-      return this.$dayjs(`${this.year}-${this.month}-1`, 'YYYY-M-D').endOf('month').startOf('day');
-    },
+    const lastDayOfTheCurrentMonth = computed<Dayjs>(() => {
+      return dayjs(`${year.value}-${month.value}-1`, 'YYYY-M-D').endOf('month').startOf('day');
+    });
+
     /**
      * dayjs object for the last day of the previous month
      */
-    lastDayOfThePreviousMonth() {
-      return this.$dayjs(`${this.year}-${this.month}-1`, 'YYYY-M-D')
-          .subtract(1, 'month')
-          .endOf('month')
-          .startOf('day');
-    },
+    const lastDayOfThePreviousMonth = computed<Dayjs>(() => {
+      return dayjs(`${year.value}-${month.value}-1`, 'YYYY-M-D')
+        .subtract(1, 'month')
+        .endOf('month')
+        .startOf('day');
+    });
+
     /**
      * dayjs object for the first day of the next month
      */
-    firstDayOfTheNextMonth() {
-      return this.$dayjs(`${this.year}-${this.month}-1`, 'YYYY-M-D')
-          .add(1, 'month')
-          .startOf('month')
-          .startOf('day');
-    },
+    const firstDayOfTheNextMonth = computed<Dayjs>(() => {
+      return dayjs(`${year.value}-${month.value}-1`, 'YYYY-M-D')
+        .add(1, 'month')
+        .startOf('month')
+        .startOf('day');
+    });
+
     /**
      * array of dayjs object for days
      * @return {[]}
      */
-    days() {
-      let days = [];
-      for(let day = this.firstDayOfTheCurrentMonth.format('D'); day <= parseInt(this.lastDayOfTheCurrentMonth.format('D')); day++){
-        let date = this.$dayjs(`${this.year}-${this.month}-${day}`, 'YYYY-M-D');
+    const days = computed<Array<CalendarDay>>(() => {
+      let days: Array<CalendarDay> = [];
+      for (
+        let day = parseInt(firstDayOfTheCurrentMonth.value.format('D'));
+        day <= parseInt(lastDayOfTheCurrentMonth.value.format('D'));
+        day++
+      ) {
+        let date = dayjs(`${year.value}-${month.value}-${day}`, 'YYYY-M-D');
         days.push({
           'date': date,
-          'unselectable': !this.isDateSelectable(date)
+          'unselectable': !isDateSelectable(date)
         });
       }
 
       // Add previous days
-      let currentDay = this.firstDayOfTheCurrentMonth;
-      for(let week = WEEK.SUNDAY; week < this.firstDayOfTheCurrentMonth.format('d'); week++){
-        currentDay = this.$dayjs(currentDay.subtract(1, 'days'));
+      let currentDay = firstDayOfTheCurrentMonth.value;
+      for (
+        let week = WEEK.SUNDAY;
+        week < firstDayOfTheCurrentMonth.value.format('d');
+        week++
+      ) {
+        currentDay = dayjs(currentDay.subtract(1, 'days'));
         days.unshift({
           'date': currentDay,
           'unselectable': true,
@@ -315,9 +311,13 @@ export default {
       }
 
       // Add following days
-      currentDay = this.lastDayOfTheCurrentMonth;
-      for(let week = parseInt(this.lastDayOfTheCurrentMonth.format('d')) + 1; week <= WEEK.SATURDAY; week++){
-        currentDay = this.$dayjs(currentDay.add(1, 'days'));
+      currentDay = lastDayOfTheCurrentMonth.value;
+      for (
+        let week = parseInt(lastDayOfTheCurrentMonth.value.format('d')) + 1;
+        week <= WEEK.SATURDAY;
+        week++
+      ) {
+        currentDay = dayjs(currentDay.add(1, 'days'));
         days.push({
           'date': currentDay,
           'unselectable': true,
@@ -325,45 +325,47 @@ export default {
         });
       }
       return days;
-    },
+    });
+
     /**
      * chunked array of days by weeks
      * @return {Array|*}
      */
-    weeks() {
-      return this.days.reduce((week, day, i) => {
+    const weeks = computed(() => {
+      return days.value ? days.value.reduce((week: Array<Array<CalendarDay>>, day, i) => {
         if (i % WEEK.NO_OF_DAYS_IN_WEEK === 0) {
-          week.push(this.days.slice(i, i + WEEK.NO_OF_DAYS_IN_WEEK))
+          week.push(days.value.slice(i, i + WEEK.NO_OF_DAYS_IN_WEEK))
         }
         return week
-      }, []);
-    },
+      }, []) : [];
+    });
+
     /**
      * array of month data
      * @return {[]}
      */
-    monthNames() {
+    const monthNames = computed<Array<{ label: string, key?: string, value: number }>>(() => {
       let months = [];
-      if (this.minDayjsDate !== null || this.maxDayjsDate !== null) {
-        let minDayjsMonth = this.minDayjsDate !== null ? this.minDayjsDate.month() : null;
-        let maxDayjsMonth = this.maxDayjsDate !== null ? this.maxDayjsDate.month() : null;
+      if (minDayjsDate.value !== null || maxDayjsDate.value !== null) {
+        let minDayjsMonth = minDayjsDate.value !== null ? minDayjsDate.value.month() : 0;
+        let maxDayjsMonth = maxDayjsDate.value !== null ? maxDayjsDate.value.month() : 0;
         months = MONTH_DATA.filter((monthData) => {
           let monthValue = monthData.value;
-          let firstDay = this.$dayjs(`${this.year}-${monthValue}-1`, 'YYYY-M-D').startOf('month');
-          let lastDay = this.$dayjs(`${this.year}-${monthValue}-1`, 'YYYY-M-D').endOf('month');
+          let firstDay = dayjs(`${year.value}-${monthValue}-1`, 'YYYY-M-D').startOf('month');
+          let lastDay = dayjs(`${year.value}-${monthValue}-1`, 'YYYY-M-D').endOf('month');
           let allow = false;
           if ((minDayjsMonth + 1) === monthValue || (maxDayjsMonth + 1) === monthValue) {
             allow = true;
-          } else if (this.minDayjsDate !== null && this.maxDayjsDate !== null) {
-            if (firstDay.isBetween(this.minDayjsDate, this.maxDayjsDate, null, this.inclusivity) ||
-                lastDay.isBetween(this.minDayjsDate, this.maxDayjsDate, null, this.inclusivity)
+          } else if (minDayjsDate.value !== null && maxDayjsDate.value !== null) {
+            if (firstDay.isBetween(minDayjsDate.value, maxDayjsDate.value, null, inclusivity.value) ||
+              lastDay.isBetween(minDayjsDate.value, maxDayjsDate.value, null, inclusivity.value)
             ) {
               allow = true;
             }
-          } else if (this.minDayjsDate !== null) {
-            allow = lastDay.isSameOrAfter(this.minDayjsDate);
-          } else if (this.maxDayjsDate !== null) {
-            allow = firstDay.isSameOrBefore(this.maxDayjsDate);
+          } else if (minDayjsDate.value !== null) {
+            allow = lastDay.isSameOrAfter(minDayjsDate.value);
+          } else if (maxDayjsDate.value !== null) {
+            allow = firstDay.isSameOrBefore(maxDayjsDate.value);
           }
 
           return allow;
@@ -372,15 +374,16 @@ export default {
         months = MONTH_DATA;
       }
       return months;
-    },
+    });
+
     /**
      * array of year data
      * @return {[]}
      */
-    yearNames() {
-      let earliestYear = (this.minDate) ? this.minDate.getFullYear() : 1900;
-      let latestYear = (this.maxDate) ? this.maxDate.getFullYear() : this.year + 5;
-      let years = [];
+    const yearNames = computed<Array<{ value: number, label: number }>>(() => {
+      let earliestYear = (props.minDate) ? props.minDate.getFullYear() : 1900;
+      let latestYear = (props.maxDate) ? props.maxDate.getFullYear() : year.value + 5;
+      let years: Array<{ value: number, label: number }> = [];
       if (earliestYear === latestYear) {
         years.push({
           value: earliestYear,
@@ -395,249 +398,308 @@ export default {
         }
       }
       return years;
-    },
+    });
+
     /**
      * dayjs object of the minimum date if set
      * @return {null|*}
      */
-    minDayjsDate() {
-      if (this.minDate instanceof Date) {
-        return this.$dayjs(
-            `${this.minDate.getFullYear()}-${this.minDate.getMonth() + 1}-${this.minDate.getDate()}`,
-            'YYYY-M-D'
+    const minDayjsDate = computed<Dayjs | null>(() => {
+      if (props.minDate instanceof Date) {
+        return dayjs(
+          `${props.minDate.getFullYear()}-${props.minDate.getMonth() + 1}-${props.minDate.getDate()}`,
+          'YYYY-M-D'
         ).startOf('day');
       }
       return null;
-    },
+    });
+
     /**
      * dayjs object of the maximum date if set
      * @return {null|*}
      */
-    maxDayjsDate() {
-      if (this.maxDate instanceof Date) {
-        return this.$dayjs(
-            `${this.maxDate.getFullYear()}-${this.maxDate.getMonth() + 1}-${this.maxDate.getDate()}`,
-            'YYYY-M-D'
+    const maxDayjsDate = computed<Dayjs | null>(() => {
+      if (props.maxDate instanceof Date) {
+        return dayjs(
+          `${props.maxDate.getFullYear()}-${props.maxDate.getMonth() + 1}-${props.maxDate.getDate()}`,
+          'YYYY-M-D'
         ).endOf('day');
       }
       return null;
-    },
+    });
+
     /**
      * check if previous month is not disabled
      * @return {boolean|*}
      */
-    hasPreviousMonth() {
-      return this.minDayjsDate === null || this.lastDayOfThePreviousMonth.isSameOrAfter(this.minDayjsDate);
-    },
+    const hasPreviousMonth = computed<boolean>(() => {
+      return !minDayjsDate.value ||
+        (
+          lastDayOfThePreviousMonth.value &&
+          lastDayOfThePreviousMonth.value?.isSameOrAfter(minDayjsDate.value)
+        );
+    });
+
     /**
      * check if next month is not disabled
      * @return {boolean|*}
      */
-    hasNextMonth() {
-      return this.maxDayjsDate === null || this.firstDayOfTheNextMonth.isSameOrBefore(this.maxDayjsDate);
-    },
+    const hasNextMonth = computed<boolean>(() => {
+      return !maxDayjsDate.value || firstDayOfTheNextMonth.value?.isSameOrBefore(maxDayjsDate.value);
+    });
+
     /**
      * return inclusivity syntax for dayjs object
      * @return {string}
      */
-    inclusivity() {
-      return this.inclusive ? '[]' : '()';
-    },
+    const inclusivity = computed(() => {
+      return props.inclusive ? '[]' : '()';
+    });
+
     /**
      * a formatted date is date is selected
      * @return {string}
      */
-    formattedDate() {
-      return this.selectedDay !== null ? this.selectedDay.date.format(this.displayFormat) : '';
-    }
-  },
-  methods: {
+    const formattedDate = computed(() => {
+      return selectedDay.value ? selectedDay.value.date.format(props.displayFormat) : '';
+    });
+
     /**
      * open datepicker dropdown on focus
      */
-    triggerFocused() {
-      this.triggerFocus = true;
-      this.opened = true;
-    },
+    const triggerFocused = () => {
+      triggerFocus.value = true;
+      opened.value = true;
+    };
+
     /**
      * mark trigger blurred
      */
-    triggerBlurred() {
-      this.triggerFocus = false;
-    },
+    const triggerBlurred = () => {
+      triggerFocus.value = false;
+    };
+
     /**
      * close datepicker dropdown
      */
-    closeCalendar() {
-      this.opened = false;
-    },
+    const closeCalendar = () => {
+      opened.value = false;
+    };
+
     /**
      * if clicked anywhere else other than datepicker dropdown
      */
-    clickedOutside() {
-      if (!this.triggerFocus) {
-        this.closeCalendar();
+    const clickedOutside = () => {
+      if (!triggerFocus.value) {
+        closeCalendar();
       }
-    },
+    };
+
     /**
      * emit month select box change event
      */
-    emitMonthChange() {
-      this.$emit('month-change');
-    },
+    const emitMonthChange = () => {
+      emit('month-change');
+    };
+
     /**
      * emit year select box change event
      */
-    emitYearChange() {
+    const emitYearChange = () => {
       //force change to a valid month if selected month is not available in the newly selected year
-      let firstMonthInThisYear = this.monthNames[0].value;
-      let lastMonthInThisYear = this.monthNames[this.monthNames.length - 1].value;
-      if (this.month < firstMonthInThisYear) {
-        this.month = firstMonthInThisYear;
-      } else if (this.month > lastMonthInThisYear) {
-        this.month = lastMonthInThisYear;
+      let firstMonthInThisYear = monthNames.value[0].value;
+      let lastMonthInThisYear = monthNames.value[monthNames.value.length - 1].value;
+      if (month.value < firstMonthInThisYear) {
+        month.value = firstMonthInThisYear;
+      } else if (month.value > lastMonthInThisYear) {
+        month.value = lastMonthInThisYear;
       }
-      this.$emit('year-change');
-    },
+      emit('year-change');
+    };
+
     /**
      * go to previous month
      */
-    decrementMonth() {
-      if (this.month === MONTH.JANUARY) {
-        this.month = MONTH.DECEMBER;
-        this.year--;
-        this.emitYearChange();
+    const decrementMonth = () => {
+      if (month.value === MONTH.JANUARY) {
+        month.value = MONTH.DECEMBER;
+        year.value--;
+        emitYearChange();
       } else {
-        this.month--;
+        month.value--;
       }
-      this.emitMonthChange();
-    },
+      emitMonthChange();
+    };
+
     /**
      * got to next month
      */
-    incrementMonth() {
-      if (this.month === MONTH.DECEMBER) {
-        this.month = MONTH.JANUARY;
-        this.year++;
-        this.emitYearChange();
+    const incrementMonth = () => {
+      if (month.value === MONTH.DECEMBER) {
+        month.value = MONTH.JANUARY;
+        year.value++;
+        emitYearChange();
       } else {
-        this.month++;
+        month.value++;
       }
-      this.emitMonthChange();
-    },
+      emitMonthChange();
+    };
+
     /**
      * select day and close datepicker dropdown
      * @param day
      */
-    select(day) {
-      this.selectedDay = day;
-      this.month = parseInt(day.date.format('M'));
-      this.year = parseInt(day.date.format('YYYY'));
-      this.$emit('update:modelValue', day.date.format(this.inputFormat));
-      this.closeCalendar();
-    },
+    const select = (day: CalendarDay) => {
+      selectedDay.value = day;
+      month.value = parseInt(day.date.format('M'));
+      year.value = parseInt(day.date.format('YYYY'));
+      emit('update:modelValue', day.date.format(props.inputFormat));
+      closeCalendar();
+    };
+
     /**
      * quick select today's date
      */
-    selectToday() {
-      this.select({
-        'date': this.$dayjs()
+    const selectToday = () => {
+      select({
+        'date': dayjs()
       });
-    },
+    };
+
     /**
      * check if today's date is not disabled
      * @return {boolean}
      */
-    isTodaySelectable() {
-      let today = this.$dayjs();
+    const isTodaySelectable = () => {
+      let today = dayjs();
       let selectable = false;
-      if (this.minDayjsDate === null && this.maxDayjsDate === null) {
+      if (minDayjsDate.value === null && maxDayjsDate.value === null) {
         selectable = true;
-      } else if (this.minDayjsDate !== null && this.maxDayjsDate !== null) {
-        selectable = today.isBetween(this.minDayjsDate, this.maxDayjsDate, null, this.inclusivity);
-      } else if (this.minDayjsDate !== null) {
-        selectable = today.isSameOrAfter(this.minDayjsDate);
-      } else if (this.maxDayjsDate !== null) {
-        selectable = today.isSameOrBefore(this.maxDayjsDate);
+      } else if (minDayjsDate.value !== null && maxDayjsDate.value !== null) {
+        selectable = today.isBetween(minDayjsDate.value, maxDayjsDate.value, null, inclusivity.value);
+      } else if (minDayjsDate.value !== null) {
+        selectable = today.isSameOrAfter(minDayjsDate.value);
+      } else if (maxDayjsDate.value !== null) {
+        selectable = today.isSameOrBefore(maxDayjsDate.value);
       }
       return selectable;
-    },
+    };
+
     /**
      * clear selected date
      */
-    clearDate() {
-      this.selectedDay = null;
-      this.month = parseInt(this.$dayjs().format('M'));
-      this.year = parseInt(this.$dayjs().format('YYYY'));
-      this.$emit('update:modelValue', '');
-      this.closeCalendar();
-    },
+    const clearDate = () => {
+      selectedDay.value = null;
+      month.value = parseInt(dayjs().format('M'));
+      year.value = parseInt(dayjs().format('YYYY'));
+      emit('update:modelValue', '');
+      closeCalendar();
+    };
+
     /**
      * check if supplied date is not disabled
      * @param date
      * @return {boolean}
      */
-    isDateSelectable(date) {
+    const isDateSelectable = (date) => {
       let selectable = false;
-      let month = parseInt(date.format('M'));
-      let isDateInCurrentMonth = (month === this.month);
-      if (this.minDayjsDate === null && this.maxDayjsDate === null) {
+      let currentMonth = parseInt(date.format('M'));
+      let isDateInCurrentMonth = (currentMonth === month.value);
+      if (minDayjsDate.value === null && maxDayjsDate.value === null) {
         selectable = true;
       } else if (isDateInCurrentMonth) {
-        if (this.minDayjsDate !== null && this.maxDayjsDate !== null) {
-          selectable = date.isBetween(this.minDayjsDate, this.maxDayjsDate, null, this.inclusivity);
-        } else if (this.minDayjsDate !== null) {
-          selectable = date.isSameOrAfter(this.minDayjsDate);
-        } else if (this.maxDayjsDate !== null) {
-          selectable = date.isSameOrBefore(this.maxDayjsDate);
+        if (minDayjsDate.value !== null && maxDayjsDate.value !== null) {
+          selectable = date.isBetween(minDayjsDate.value, maxDayjsDate.value, null, inclusivity.value);
+        } else if (minDayjsDate.value !== null) {
+          selectable = date.isSameOrAfter(minDayjsDate.value);
+        } else if (maxDayjsDate.value !== null) {
+          selectable = date.isSameOrBefore(maxDayjsDate.value);
         }
       }
       return selectable;
-    },
+    };
+
     /**
      * on change of the editable date select the date if valid otherwise clear the date
      * @param event
      */
-    onChange(event) {
-      let parsedDate = this.$dayjs(event.target.value, this.displayFormat);
-      if (parsedDate.isValid() && this.isDateSelectable(parsedDate)) {
-        this.select({
+    const onChange = (event) => {
+      let parsedDate = dayjs(event.target.value, props.displayFormat);
+      if (parsedDate.isValid() && isDateSelectable(parsedDate)) {
+        select({
           'date': parsedDate
         });
       } else {
-        this.clearDate();
-        this.$refs.trigger.localValue = this.formattedDate;
+        clearDate();
       }
-    },
+    };
+
+    onMounted(() => {
+      //set minimum month and year allowed
+      if (props.minDate) {
+        year.value = (year.value < props.minDate.getFullYear()) ? props.minDate.getFullYear() : year.value;
+        let minDateMonth = props.minDate.getMonth() + 1;
+        if (year.value === props.minDate.getFullYear() && month.value < minDateMonth) {
+          month.value = minDateMonth;
+        }
+      }
+      //set maximum month and year allowed
+      if (props.maxDate) {
+        year.value = (year.value > props.maxDate.getFullYear()) ? props.maxDate.getFullYear() : year.value;
+        let maxDateMonth = props.maxDate.getMonth() + 1;
+        if (year.value === props.maxDate.getFullYear() && month.value > maxDateMonth) {
+          month.value = maxDateMonth;
+        }
+      }
+      if (props.modelValue !== '') {
+        let parsedDate = dayjs(props.modelValue, props.inputFormat);
+        if (parsedDate.isValid() && isDateSelectable(parsedDate)) {
+          select({
+            'date': parsedDate,
+            'unselectable': false
+          });
+        }
+      }
+    });
+
+    return {
+      month,
+      year,
+      opened,
+      triggerFocus,
+      selectedDay,
+      calendarClassObject,
+      firstDayOfTheCurrentMonth,
+      lastDayOfTheCurrentMonth,
+      lastDayOfThePreviousMonth,
+      firstDayOfTheNextMonth,
+      days,
+      weeks,
+      monthNames,
+      yearNames,
+      minDayjsDate,
+      maxDayjsDate,
+      hasPreviousMonth,
+      hasNextMonth,
+      inclusivity,
+      formattedDate,
+      triggerFocused,
+      triggerBlurred,
+      closeCalendar,
+      clickedOutside,
+      emitMonthChange,
+      emitYearChange,
+      decrementMonth,
+      incrementMonth,
+      select,
+      selectToday,
+      isTodaySelectable,
+      clearDate,
+      isDateSelectable,
+      onChange,
+    }
   },
-  mounted() {
-    //set minimum month and year allowed
-    if (this.minDate) {
-      this.year = (this.year < this.minDate.getFullYear()) ? this.minDate.getFullYear() : this.year;
-      let minDateMonth = this.minDate.getMonth() + 1;
-      if (this.year === this.minDate.getFullYear() && this.month < minDateMonth) {
-        this.month = minDateMonth;
-      }
-    }
-    //set maximum month and year allowed
-    if (this.maxDate) {
-      this.year = (this.year > this.maxDate.getFullYear()) ? this.maxDate.getFullYear() : this.year;
-      let maxDateMonth = this.maxDate.getMonth() + 1;
-      if (this.year === this.maxDate.getFullYear() && this.month > maxDateMonth) {
-        this.month = maxDateMonth;
-      }
-    }
-    if (this.modelValue !== '') {
-      let parsedDate = this.$dayjs(this.modelValue, this.inputFormat);
-      if (parsedDate.isValid() && this.isDateSelectable(parsedDate)) {
-        this.select({
-          'date': parsedDate,
-          'unselectable': false
-        });
-      }
-    }
-  },
-}
+})
 </script>
 
 <style scoped>

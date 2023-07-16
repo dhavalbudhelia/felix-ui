@@ -2,7 +2,7 @@ import {config,shallowMount, mount} from '@vue/test-utils';
 import Modal from '@/components/Modal/Modal.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 

@@ -1,14 +1,14 @@
 <template>
   <div :class="[classObject, cssClass]">
-    <select v-model="computedValue"
+    <select v-model="selectedValue"
             :id="id"
             :name="name"
             :class="selectClass"
             ref="select"
             v-bind="$attrs"
     >
-      <option v-if="placeholder && (computedValue === null || computedValue === '')"
-              :value="computedValue"
+      <option v-if="placeholder && (selectedValue === null || selectedValue === '')"
+              :value="selectedValue"
               selected
               disabled
               hidden
@@ -28,11 +28,11 @@
   </div>
 </template>
 
-<script>
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent,ref, computed, inject, watch} from "vue";
 
-export default {
-  name: 'fe-select',
+export default defineComponent({
+  name: 'FeSelect',
   emits: ['update:modelValue'],
   props: {
     id: {
@@ -66,77 +66,71 @@ export default {
       default: '',
     },
   },
-  data() {
-    return {
-      selectedValue: this.modelValue,
-    };
-  },
-  computed: {
-    computedValue: {
-      get() {
-        return this.selectedValue;
-      },
-      set(newValue) {
-        this.selectedValue = newValue;
-        this.$emit('update:modelValue', newValue);
-      }
-    },
+  setup(props, {emit, attrs}) {
+    const $theme = inject('$theme');
+    const selectedValue = ref(props.modelValue);
+
     /**
      * class object
      */
-    classObject() {
-      let classes = ['fe-select', CssClasses.base];
-      if (this.$attrs.disabled === undefined || !this.$attrs.disabled) {
-        classes.push(CssClasses.general);
+    const classObject = computed(() => {
+      let classes = ['fe-select inline-flex max-w-full relative text-left h-8'];
+      if (attrs.disabled === undefined || !attrs.disabled) {
+        classes.push('appearance-none bg-white border border-solid border-gray-400 rounded shadow-none text-gray-600 hover:border-gray-500');
       }
-      if (this.expanded) {
+      if (props.expanded) {
         classes.push('w-full');
       }
       return classes;
-    },
+    });
+
     /**
      * select class object
      */
-    selectClass() {
+    const selectClass = computed(() => {
       let classes = ['select'];
-      if (this.$attrs.disabled !== undefined) {
-        classes.push(CssClasses.disabled);
+      if (attrs.disabled !== undefined) {
+        classes.push('appearance-none outline-none pl-2 cursor-not-allowed bg-gray-200 border-gray-300 text-gray-600');
       } else {
-        classes.push(CssClasses.select);
+        classes.push('appearance-none outline-none rounded pl-2 cursor-pointer bg-white items-center max-w-full h-full hover:border-gray-500 hover:text-gray-700 focus:shadow active:shadow');
       }
-      if (this.expanded) {
+      if (props.expanded) {
         classes.push('w-full');
       }
-
       classes.push('pr-8');
-
       return classes;
-    },
+    });
+
     /**
      * option class object
      */
-    optionClass() {
-      if (this.$attrs.disabled !== undefined) {
-        return CssClasses.option;
+    const optionClass = computed(() => {
+      if (attrs.disabled !== undefined) {
+        return 'whitespace-pre min-h-full';
       } else {
         return '';
       }
-    },
+    });
+
     /**
      * caret class object
      */
-    caretClass() {
-      let color = this.color !== '' ? this.color : `text-${this.$theme.color.primary}`;
-      return [CssClasses.caret, color];
-    },
+    const caretClass = computed(() => {
+      let color = props.color !== '' ? props.color : `text-${$theme.color.primary}`;
+      return ['inline-flex items-center h-full pr-2 right-0 absolute pointer-events-none', color];
+    });
+
+    watch(() => selectedValue.value, (newValue) => {
+      emit('update:modelValue', newValue);
+    });
+
+    return {
+      selectedValue,
+      classObject,
+      selectClass,
+      optionClass,
+      caretClass,
+    }
   },
-  watch: {
-    /**
-     * When v-model change, set internal value.
-     */
-    modelValue(value) {
-      this.selectedValue = value;
-    },
-  }
-}
+})
 </script>

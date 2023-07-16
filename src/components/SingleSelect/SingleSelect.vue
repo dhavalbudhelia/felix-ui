@@ -24,7 +24,7 @@
         <div :class="dropdownContentClassObject">
           <div class="dropdown-content-header-wrapper">
             <div v-if="searchable" :class="dropdownItemClassObject" class="border-b p-1 px-2">
-              <fe-input ref="search"
+              <FeInput ref="search"
                         v-model="searchTerm"
                         placeholder="Search..."
                         class="w-full"
@@ -34,7 +34,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </template>
-              </fe-input>
+              </FeInput>
               <div v-if="searchTerm !== ''"
                    @click.stop.prevent="clearSearch"
                    :class="searchClearClassObject"
@@ -79,17 +79,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent,ref, computed, nextTick, inject, onMounted, watch} from "vue";
 import FeInput from '@/components/Input/Input.vue';
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
 
-export default {
-  name: 'fe-single-select',
+interface SelectedItem {
+  id: string;
+  text: string;
+}
+
+export default defineComponent({
+  name: 'FeSingleSelect',
   components: {
     FeInput,
   },
-  mixins: [SizeMixin],
   emits: ['update:modelValue'],
   props: {
     id: {
@@ -138,327 +141,401 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  data() {
-    return {
-      indexedDataSource: [],
-      opened: false,
-      filteredItems: [],
-      selectedItem: null,
-      searchTerm: '',
-    }
-  },
-  computed: {
-    wrapperClassObject() {
-      return [CssClasses.wrapper];
+    size: {
+      type: String,
+      default: 'is-md',
+      validator: function (value: string) {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
     },
+  },
+  setup(props, {emit}) {
+    const $theme = inject('$theme');
+    const indexedDataSource = ref<Array<{feIndex: number;}>>([]);
+    const opened = ref(false);
+    const filteredItems = ref<Array<{feIndex: number;}>>([]);
+    const selectedItem = ref<SelectedItem|null>(null);
+    const searchTerm = ref('');
+
+    const wrapperClassObject = computed(() => {
+      return ['border rounded flex flex-nowrap items-center cursor-pointer border-gray-400 hover:border-gray-500'];
+    });
+
     /**
      * class object
      */
-    classObject() {
-      let classes = ['fe-single-select', CssClasses.base];
-      if (this.expanded) {
+    const classObject = computed(() => {
+      let classes = ['fe-single-select outline-none block'];
+      if (props.expanded) {
         classes.push('expanded w-full');
       }
-      if (this.opened) {
+      if (opened.value) {
         classes.push('opened')
       }
       return classes;
-    },
+    });
+
     /**
      * class names object for dropdown menu
      */
-    dropDownMenuClassObject() {
+    const dropDownMenuClassObject = computed(() => {
       let classes = ['dropdown-menu'];
-      if (this.opened) {
-        classes.push(CssClasses.menu);
+      if (opened.value) {
+        classes.push('block z-20');
         classes.push('singleselect-center-position md:normal-position');
       } else {
         classes.push('hidden');
       }
       return classes;
-    },
+    });
+
     /**
      * dropdown content class object
      */
-    dropdownContentClassObject() {
-      return ['dropdown-content', CssClasses.dropdownContent];
-    },
+    const dropdownContentClassObject = computed(() => {
+      return ['dropdown-content bg-white rounded border border-gray-400 shadow'];
+    });
+
     /**
      * dropdown item wrapper class object
      */
-    dropdownContentItemWrapperClassObject() {
-      return ['dropdown-content-items-wrapper', CssClasses.dropdownContentItemWrapper];
-    },
+    const dropdownContentItemWrapperClassObject = computed(() => {
+      return ['dropdown-content-items-wrapper left-0 overflow-y-scroll z-20'];
+    });
+
     /**
      * dropdown item class object
      */
-    dropdownItemClassObject() {
-      let classes = ['dropdown-item', CssClasses.dropdownItem];
-      switch (this.size) {
+    const dropdownItemClassObject = computed(() => {
+      let classes = ['dropdown-item text-gray-800 block relative'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.dropdownItemXs);
+          classes.push('leading-tight');
           break;
         case 'is-sm':
-          classes.push(CssClasses.dropdownItemSm);
+          classes.push('leading-snug');
           break;
         case 'is-md':
-          classes.push(CssClasses.dropdownItemMd);
+          classes.push('leading-normal');
           break;
         case 'is-lg':
-          classes.push(CssClasses.dropdownItemLg);
+          classes.push('leading-relaxed');
           break;
         default:
-          classes.push(CssClasses.dropdownItemMd);
+          classes.push('leading-normal');
       }
       return classes;
-    },
+    });
+
     /**
      * dropdown item hover effect class object
      */
-    dropdownItemHoverClassObject() {
-      return CssClasses.dropdownItemHover;
-    },
+    const dropdownItemHoverClassObject = computed(() => {
+      return 'hover:bg-gray-100 hover:cursor-pointer';
+    });
+
     /**
      * checkbox class object
      */
-    itemClassObject() {
-      return CssClasses.item;
-    },
+    const itemClassObject = computed(() => {
+      return 'w-full h-full py-2 px-4';
+    });
+
     /**
      * checkbox class object
      */
-    groupClassObject() {
-      return CssClasses.group;
-    },
+    const groupClassObject = computed(() => {
+      return 'w-full h-full py-2 px-3 bg-gray-200 text-gray-600 hover:cursor-default';
+    });
+
     /**
      * select element class object
      */
-    selectClassObject() {
-      return CssClasses.select;
-    },
+    const selectClassObject = computed(() => {
+      return 'hidden';
+    });
+
     /**
      * clear icon class object
      */
-    clearClassObject() {
-      return CssClasses.clear;
-    },
+    const clearClassObject = computed(() => {
+      return 'float-right grow-0 flex items-center cursor-pointer w-6 text-gray-500';
+    });
+
     /**
      * search clear icon class object
      */
-    searchClearClassObject() {
-      return ['single-select-search-clear', CssClasses.searchClear];
-    },
+    const searchClearClassObject = computed(() => {
+      return ['single-select-search-clear absolute top-0 right-0 py-2 cursor-pointer w-8 text-gray-500'];
+    });
+
     /**
      * placeholder wrapper class object
      */
-    placeholderWrapperClassObject() {
-      let classes = ['placeholder-wrapper', CssClasses.placeholderWrapper];
-      switch (this.size) {
+    const placeholderWrapperClassObject = computed(() => {
+      let classes = ['placeholder-wrapper flex-1 outline-none flex flex-nowrap items-center'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.placeholderWrapperXs);
+          classes.push('text-xs');
           break;
         case 'is-sm':
-          classes.push(CssClasses.placeholderWrapperSm);
+          classes.push('text-sm');
           break;
         case 'is-md':
-          classes.push(CssClasses.placeholderWrapperMd);
+          classes.push('text-base');
           break;
         case 'is-lg':
-          classes.push(CssClasses.placeholderWrapperLg);
+          classes.push('text-lg');
           break;
         default:
-          classes.push(CssClasses.placeholderWrapperMd);
+          classes.push('text-base');
       }
       return classes;
-    },
+    });
+
     /**
      * placeholder class object
      */
-    placeholderClassObject() {
-      return CssClasses.placeholder;
-    },
+    const placeholderClassObject = computed(() => {
+      return 'px-2 text-gray-400';
+    });
+
     /**
      * display value placeholder class object
      */
-    displayValuePlaceholderClassObject() {
-      return CssClasses.displayValuePlaceholder;
-    },
+    const displayValuePlaceholderClassObject = computed(() => {
+      return 'px-2';
+    });
+
     /**
      * dropdown caret icon class object
      */
-    caretClassObject() {
-      let classes = ['caret', CssClasses.caret];
-      switch (this.size) {
+    const caretClassObject = computed(() => {
+      let classes = ['caret grow-0 border-l border-gray-300 h-full px-2 text-center'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.caretXs);
+          classes.push('py-0');
           break;
         case 'is-sm':
-          classes.push(CssClasses.caretSm);
+          classes.push('py-0');
           break;
         case 'is-md':
-          classes.push(CssClasses.caretMd);
+          classes.push('py-1');
           break;
         case 'is-lg':
-          classes.push(CssClasses.caretLg);
+          classes.push('py-2 w-10');
           break;
         default:
-          classes.push(CssClasses.caretMd);
+          classes.push('py-1');
       }
       return classes;
-    },
+    });
+
     /**
      * backdrop class object
      */
-    backdropClassObject() {
-      return CssClasses.backdrop;
-    },
+    const backdropClassObject = computed(() => {
+      return 'fixed w-full h-full top-0 left-0 z-10 md:bg-white md:opacity-0 bg-black opacity-75';
+    });
+
     /**
      * computed prop for item data
      */
-    items() {
-      return this.filteredItems.map((itemData) => {
-        let id = itemData[this.valueProperty];
+    const items = computed(() => {
+      return filteredItems.value.map((itemData) => {
+        let id = itemData[props.valueProperty];
         return {
           id: id,
-          text: itemData[this.labelProperty],
-          groupLabel: itemData[this.groupByProperty],
+          text: itemData[props.labelProperty],
+          groupLabel: itemData[props.groupByProperty],
           isGroupItem: false,
-          selected: this.selectedItem !== null && this.selectedItem.id === id,
+          selected: selectedItem.value !== null && selectedItem.value.id === id,
           feIndex: itemData['feIndex']
         };
       });
-    },
+    });
+
     /**
      * computed prop for grouped item
      */
-    groups() {
-      if (this.groupByProperty !== null) {
-        return this.groupBy(this.items, 'groupLabel');
+    const groups = computed(() => {
+      if (props.groupByProperty !== null) {
+        return groupBy('groupLabel');
       }
       return [];
-    },
+    });
+
     /**
      * collection of display text of all selected items
      */
-    selectedText() {
-      return this.selectedItem !== null ? this.selectedItem.text : '';
-    },
-  },
-  watch: {
-    /**
-     * filter item list if singleselect is set to searchable
-     */
-    searchTerm(value) {
-      if (this.searchable) {
-        if (value !== '') {
-          this.filteredItems = this.indexedDataSource.filter((itemData) => {
-            return itemData[this.labelProperty].toLowerCase().includes(value.toLowerCase());
-          });
-        } else {
-          this.filteredItems = this.indexedDataSource;
-        }
-      }
-    }
-  },
-  methods: {
-    groupBy(items, key) {
-      return items.reduce(function (group, item) {
+    const selectedText = computed(() => {
+      return selectedItem.value !== null ? selectedItem.value.text : '';
+    });
+
+    const groupBy = (key) => {
+      return items.value.reduce(function (group, item) {
         item.isGroupItem = true;
         (group[item[key]] = group[item[key]] || []).push(item);
         return group;
       }, {});
-    },
+    };
 
     /**
      * toggle opening of singleselect.
      */
-    toggleTrigger() {
-      if (!this.opened) {
+    const toggleTrigger = () => {
+      if (!opened.value) {
         // if not opened, toggle after clickOutside event
         // this fixes toggling programmatic
-        this.searchTerm = '';
-        this.$nextTick(() => {
-          this.opened = true;
-          if (this.searchable) {
-            this.$nextTick(() => {
-              this.$refs.search.$refs.input.focus();
-            });
-          }
+        searchTerm.value = '';
+        nextTick(() => {
+          opened.value = true;
         });
       } else {
-        this.opened = false;
+        opened.value = false;
       }
-    },
+    };
+
     /**
      * Close dropdown if clicked outside.
      */
-    clickedOutside() {
-      this.opened = false;
-    },
+    const clickedOutside = () => {
+      opened.value = false;
+    };
+
     /**
      * check if supplied item is selected
      * @param item
      * @return {boolean}
      */
-    isItemSelected(item) {
-      return this.selectedItem !== null && this.selectedItem.id === item.id;
-    },
+    const isItemSelected = (item) =>  {
+      return selectedItem.value !== null && selectedItem.value.id === item.id;
+    };
+
     /**
      * select supplied item if checked
      * @param item
      */
-    selectItem(item) {
-      this.selectedItem = item;
-      this.$emit('update:modelValue', this.selectedItem.id);
-      this.clickedOutside();
-    },
+    const selectItem = (item: SelectedItem) => {
+      console.log('selecting item');
+      selectedItem.value = item;
+      emit('update:modelValue', item.id);
+      clickedOutside();
+    };
+
     /**
      * clear values
      */
-    clearValues() {
-      this.selectedItem = null;
-      this.$emit('update:modelValue', '');
-    },
+    const clearValues = () => {
+      selectedItem.value = null;
+      emit('update:modelValue', '');
+    };
+
     /**
      * clear search term input
      */
-    clearSearch() {
-      this.searchTerm = '';
-    },
-    getItemClassObject(item) {
-      let selectedClass = this.isItemSelected(item) ? CssClasses.dropdownItemSelected : '';
-      let color = this.isItemSelected(item) ? `text-white bg-${this.$theme.color.primary}` : '';
-      let itemClass = (this.groupByProperty !== null) ? CssClasses.groupItem : CssClasses.item;
-      return [itemClass, selectedClass, color];
-    },
-  },
-  mounted() {
-    let mappedDataSource = this.dataSource.map((item, key) => {
-      return Object.assign(item, {
-        feIndex: key
+    const clearSearch = () => {
+      searchTerm.value = '';
+    };
+
+    const getItemClassObject = (item) => {
+      let selectedClass = isItemSelected(item) ? 'bg-gray-200' : '';
+      let color = isItemSelected(item) ? `selected-item text-white bg-${$theme.color.primary}` : '';
+      let itemClass = (props.groupByProperty !== null) ? 'w-full h-full py-2 px-6' : 'w-full h-full py-2 px-4';
+      return [itemClass, selectedClass, color, 'item'];
+    };
+
+    onMounted(() => {
+      let mappedDataSource = props.dataSource.map((item: any, key) => {
+        return Object.assign(item, {
+          feIndex: key
+        });
       });
-    });
-    this.indexedDataSource = mappedDataSource.sort((current, next) => {
-      if (current.feIndex > next.feIndex) {
-        return 1;
-      }
-      if (next.feIndex > current.feIndex) {
-        return -1;
-      }
-      return 0;
-    });
-    this.filteredItems = this.indexedDataSource;
-    if (this.modelValue !== '') {
-      let selectedItem = this.items.find((item) => {
-        return item.id === this.modelValue;
+      indexedDataSource.value = mappedDataSource.sort((current, next) => {
+        if (current.feIndex > next.feIndex) {
+          return 1;
+        }
+        if (next.feIndex > current.feIndex) {
+          return -1;
+        }
+        return 0;
       });
-      if (selectedItem !== undefined) {
-        this.selectedItem = selectedItem;
+      filteredItems.value = indexedDataSource.value;
+      if (props.modelValue !== '') {
+        let foundItem = items.value.find((item) => {
+          return item.id === props.modelValue;
+        });
+        if (foundItem !== undefined) {
+          selectedItem.value = foundItem;
+        }
       }
+    });
+
+    /**
+     * filter item list if singleselect is set to searchable
+     */
+    watch(() => searchTerm.value, (value) => {
+      if (props.searchable) {
+        if (value !== '') {
+          filteredItems.value = indexedDataSource.value.filter((itemData) => {
+            return itemData[props.labelProperty].toLowerCase().includes(value.toLowerCase());
+          });
+        } else {
+          filteredItems.value = indexedDataSource.value;
+        }
+      }
+    });
+
+    watch(() => opened.value, (newValue) => {
+      if (newValue && props.searchable) {
+        nextTick(() => {
+          if (
+              document.getElementsByClassName('fe-input').length > 0 &&
+              document.getElementsByClassName('fe-input')[0]
+          ) {
+            document.getElementsByClassName('fe-input')[0]?.focus();
+          }
+        });
+      }
+    });
+
+    return {
+      indexedDataSource,
+      opened,
+      filteredItems,
+      selectedItem,
+      searchTerm,
+      wrapperClassObject,
+      classObject,
+      dropDownMenuClassObject,
+      dropdownContentClassObject,
+      dropdownContentItemWrapperClassObject,
+      dropdownItemClassObject,
+      dropdownItemHoverClassObject,
+      itemClassObject,
+      groupClassObject,
+      selectClassObject,
+      clearClassObject,
+      searchClearClassObject,
+      placeholderWrapperClassObject,
+      placeholderClassObject,
+      displayValuePlaceholderClassObject,
+      caretClassObject,
+      backdropClassObject,
+      items,
+      groups,
+      selectedText,
+      groupBy,
+      toggleTrigger,
+      clickedOutside,
+      isItemSelected,
+      selectItem,
+      clearValues,
+      clearSearch,
+      getItemClassObject,
     }
-  }
-}
+  },
+});
 </script>
 
 <style scoped>

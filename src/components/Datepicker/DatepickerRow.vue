@@ -14,11 +14,12 @@
   </div>
 </template>
 
-<script>
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent, computed, inject} from "vue";
+import dayjs from 'dayjs';
 
-export default {
-  name: 'fe-datepicker-row',
+export default defineComponent({
+  name: 'FeDatepickerRow',
   emits: ['select'],
   props: {
     weeks: {
@@ -27,7 +28,7 @@ export default {
     },
     dayNames: {
       type: Array,
-      required: true,
+      required: false,
     },
     selectedDay: {
       type: Object,
@@ -36,55 +37,59 @@ export default {
     size: {
       type: String,
       default: 'is-md',
-      validator: function (value) {
+      validator: function (value: string) {
         return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
       },
     },
   },
-  computed: {
-    datepickerClassObject() {
-      return ['datepicker', CssClasses.row, this.size];
-    },
-    weekLabelClassObject() {
-      let classes = ['week-label font-medium', CssClasses.dayWeekCell];
-      switch (this.size) {
+  setup(props, {emit}) {
+    const $theme = inject('$theme');
+
+    const datepickerClassObject = computed(() => {
+      return ['datepicker w-full bg-white', props.size];
+    });
+
+    const weekLabelClassObject = computed(() => {
+      let classes = ['week-label font-medium flex-1 text-center align-middle'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.dayXs);
+          classes.push('text-xs py-1 px-2');
           break;
         case 'is-sm':
-          classes.push(CssClasses.daySm);
+          classes.push('text-sm py-1 px-2');
           break;
         case 'is-md':
-          classes.push(CssClasses.dayMd);
+          classes.push('text-base py-2 px-3');
           break;
         case 'is-lg':
-          classes.push(CssClasses.dayLg);
+          classes.push('text-lg py-2 px-3');
           break;
         default:
-          classes.push(CssClasses.dayMd);
+          classes.push('text-base py-2 px-3');
       }
       return classes;
-    },
-  },
-  methods: {
+    });
+
     /**
      * check if the supplied day is selected
      */
-    isDaySelected(day) {
-      return this.selectedDay !== null && day.date.isSame(this.selectedDay.date.format('YYYY-MM-DD'));
-    },
+    const isDaySelected = (day) => {
+      return props.selectedDay !== null && day.date.isSame(props.selectedDay.date.format('YYYY-MM-DD'));
+    };
+
     /**
      * check if the supplied day is today
      */
-    isDayIsToday(day) {
-      return day.date.isSame(this.$dayjs().format('YYYY-MM-DD'));
-    },
+    const isDayIsToday = (day) => {
+      return day.date.isSame(dayjs().format('YYYY-MM-DD'));
+    };
+
     /**
      * class object
      * @param day
      */
-    dayClassObject(day) {
-      let classes = ['day', CssClasses.day, CssClasses.dayWeekCell];
+    const dayClassObject = (day) => {
+      let classes = ['day font-thin border rounded-full flex-1 text-center align-middle'];
       if (day.previous) {
         classes.push('previous');
       }
@@ -93,62 +98,76 @@ export default {
       }
       if (day.unselectable) {
         classes.push('unselectable');
-        if (!this.isDaySelected(day)) {
+        if (!isDaySelected(day)) {
           classes.push('text-gray-500');
         }
       }
-      if (this.isDaySelected(day)) {
+      if (isDaySelected(day)) {
         classes.push('selected');
-        classes.push(CssClasses.selectedDay);
-        let primary = `bg-${this.$theme.color.primary} border-${this.$theme.color.primary}`;
+        classes.push('text-white cursor-pointer border-blue-600');
+        let primary = `bg-${$theme.color.primary} border-${$theme.color.primary}`;
         classes.push(primary);
-      }
-      if (this.isDayIsToday(day)) {
+      } else if (isDayIsToday(day)) {
         classes.push('today');
+      } else {
+        classes.push('border-white');
       }
-      classes.push(this.hoverClassObject(day));
-      switch (this.size) {
+      classes.push(hoverClassObject(day));
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.dayXs);
+          classes.push('text-xs py-1 px-2');
           break;
         case 'is-sm':
-          classes.push(CssClasses.daySm);
+          classes.push('text-sm py-1 px-2');
           break;
         case 'is-md':
-          classes.push(CssClasses.dayMd);
+          classes.push('text-base py-2 px-3');
           break;
         case 'is-lg':
-          classes.push(CssClasses.dayLg);
+          classes.push('text-lg py-2 px-3');
           break;
         default:
-          classes.push(CssClasses.dayMd);
+          classes.push('text-base py-2 px-3');
       }
       return classes;
-    },
+    };
+
     /**
      * return hover classes for supplied day
      */
-    hoverClassObject(day) {
+    const hoverClassObject = (day) => {
       let classes = '';
-      if (!this.isDaySelected(day) && !day.unselectable && !this.isDayIsToday(day)) {
-        classes = CssClasses.dayHover;
-      } else if (this.isDayIsToday(day) && !this.isDaySelected(day)) {
-        classes = `border-${this.$theme.color.primary}`;
+      if (!isDaySelected(day) && !day.unselectable && !isDayIsToday(day)) {
+        classes = 'hover:bg-gray-300 hover:cursor-pointer hover:border-gray-300';
+      } else if (isDayIsToday(day) && !isDaySelected(day)) {
+        classes = `border-${$theme.color.primary}`;
         if (!day.unselectable) {
           classes = classes + ' hover:bg-gray-300 hover:cursor-pointer';
         }
       }
       return classes;
-    },
+    };
+
     /**
      * emit select day event to the parent component
      * @param day
      */
-    emitSelect(day) {
+    const emitSelect = (day) => {
       if (!day.unselectable) {
-        this.$emit('select', day);
+        emit('select', day);
       }
+    };
+
+
+    return {
+      datepickerClassObject,
+      weekLabelClassObject,
+      isDaySelected,
+      isDayIsToday,
+      dayClassObject,
+      hoverClassObject,
+      emitSelect,
     }
   },
-}
+})
 </script>

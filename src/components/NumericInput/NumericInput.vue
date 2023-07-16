@@ -5,18 +5,19 @@
            :class="[inputObject]"
            :placeholder="placeholder"
            type="text"
+           data-testid="numeric-input"
            :value="modelValue"
            :disabled="disabled"
            @input="onInput"
            @blur="onBlur"
            @focus="onFocus">
     <div v-if="!disabled" class="flex flex-row right-0 absolute items-center h-full">
-      <div :class="caretDownClass" @click.stop="decrement()">
+      <div :class="caretDownClass" @click.stop="decrement()" data-testid="numeric-input-decrement-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
         </svg>
       </div>
-      <div :class="caretUpClass" @click.stop="increment()">
+      <div :class="caretUpClass" @click.stop="increment()" data-testid="numeric-input-increment-button">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
@@ -25,13 +26,11 @@
   </div>
 </template>
 
-<script>
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent,computed, inject, nextTick} from "vue";
 
-export default {
-  name: 'fe-numeric-input',
-  mixins: [SizeMixin],
+export default defineComponent({
+  name: 'FeNumericInput',
   emits: ['update:modelValue', 'blur', 'focus'],
   props: {
     id: {
@@ -65,130 +64,162 @@ export default {
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String,
+      default: 'is-md',
+      required: false,
+      validator: function (value: string) {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
+    },
   },
-  computed: {
+  setup(props, {emit}) {
+    const $theme = inject('$theme');
+
     /**
      * class object for wrapper div
      */
-    wrapperClass() {
-      let classes = ['fe-numeric-input-wrapper', CssClasses.base];
-      if (this.disabled) {
-        classes.push(CssClasses.disabled);
+    const wrapperClass = computed(() => {
+      let classes = ['fe-numeric-input-wrapper flex items-center pl-2 text-left relative rounded'];
+      if (props.disabled) {
+        classes.push('shadow-none cursor-not-allowed');
       } else {
-        classes.push(CssClasses.general);
-        classes.push(`focus-within:border-${this.$theme.color.primary} active:border-${this.$theme.color.primary}`);
+        classes.push('border border-solid border-gray-400 focus-within:outline-none hover:border-gray-500');
+        classes.push(`focus-within:border-${$theme.color.primary} active:border-${$theme.color.primary}`);
       }
-      classes.push(this.colorClass);
-      switch (this.size) {
+      classes.push(colorClass.value);
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.wrapperSizeXs);
+          classes.push('h-5');
           break;
         case 'is-sm':
-          classes.push(CssClasses.wrapperSizeSm);
+          classes.push('h-6');
           break;
         case 'is-md':
-          classes.push(CssClasses.wrapperSizeMd);
+          classes.push('h-8');
           break;
         case 'is-lg':
-          classes.push(CssClasses.wrapperSizeLg);
+          classes.push('h-10');
           break;
         default:
-          classes.push(CssClasses.wrapperSizeMd);
+          classes.push('h-8');
       }
       return classes;
-    },
-    /**
-     * class object for input
-     */
-    inputObject() {
-      let classes = ['fe-numeric-input w-full', CssClasses.input];
-      if (this.disabled) {
-        classes.push(CssClasses.disabled);
-      }
-      classes.push(this.sizeClass);
-      classes.push(this.colorClass);
-      return classes;
-    },
+    });
+
     /**
      * size class object
      */
-    sizeClass() {
-      switch (this.size) {
+    const sizeClass = computed(() => {
+      switch (props.size) {
         case 'is-xs':
-          return CssClasses.sizeXs;
+          return 'my-px text-xs';
         case 'is-sm':
-          return CssClasses.sizeSm;
+          return 'my-1 text-sm';
         case 'is-md':
-          return CssClasses.sizeMd;
+          return 'my-1 text-base';
         case 'is-lg':
-          return CssClasses.sizeLg;
+          return 'my-2 text-lg';
         default:
-          return CssClasses.sizeMd;
+          return 'my-1 text-base';
       }
-    },
+    });
+
+    /**
+     * class object for input
+     */
+    const inputObject = computed(() => {
+      let classes = ['fe-numeric-input w-full focus:outline-none active:outline-none'];
+      if (props.disabled) {
+        classes.push('shadow-none cursor-not-allowed');
+      }
+      classes.push(sizeClass.value);
+      classes.push(colorClass.value);
+      return classes;
+    });
+
     /**
      * color class object
      */
-    colorClass() {
+    const colorClass = computed(() => {
       let primary = '';
-      if (this.disabled) {
-        primary = `bg-${this.$theme.color.tertiary}`;
+      if (props.disabled) {
+        primary = `bg-${$theme.color.tertiary}`;
       } else {
         primary = `bg-white`;
       }
       return `${primary}`;
-    },
+    });
+
     /**
      * caret class object
      */
-    caretDownClass() {
-      return CssClasses.caretDown;
-    },
+    const caretDownClass = computed(() => {
+      return 'flex items-center border-l h-full px-2 cursor-pointer select-none hover:bg-gray-200 rounded-r';
+    })
+
     /**
      * caret class object
      */
-    caretUpClass() {
-      return CssClasses.caretUp;
-    },
-  },
-  methods: {
-    decrement() {
-      if (Number.isNaN(parseFloat(this.modelValue))) {
-        this.$emit('update:modelValue', 0);
-      } else if (this.minValue === null || (parseFloat(this.modelValue) - this.step) >= this.minValue) {
-        this.$emit('update:modelValue', (parseFloat(this.modelValue) - this.step));
+    const caretUpClass = computed(() => {
+      return 'flex items-center border-l h-full px-2 cursor-pointer select-none hover:bg-gray-200';
+    });
+
+    const decrement = () => {
+      if (Number.isNaN(parseFloat(props.modelValue.toString()))) {
+        emit('update:modelValue', 0);
+      } else if (props.minValue === null || (parseFloat(props.modelValue.toString()) - props.step) >= props.minValue) {
+        emit('update:modelValue', (parseFloat(props.modelValue.toString()) - props.step));
       }
-    },
-    increment() {
-      if (Number.isNaN(parseFloat(this.modelValue))) {
-        this.$emit('update:modelValue', 0);
-      } else if (this.maxValue === null || (parseFloat(this.modelValue) + this.step) <= this.maxValue) {
-        this.$emit('update:modelValue', (parseFloat(this.modelValue) + this.step));
+    };
+
+    const increment = () => {
+      if (Number.isNaN(parseFloat(props.modelValue.toString()))) {
+        emit('update:modelValue', 0);
+      } else if (props.maxValue === null || (parseFloat(props.modelValue.toString()) + props.step) <= props.maxValue) {
+        emit('update:modelValue', (parseFloat(props.modelValue.toString()) + props.step));
       }
-    },
+    };
+
     /**
      * Input's 'input' event listener, 'nextTick' is used to prevent event firing
      * before ui update, helps when using masks (Cleavejs and potentially others).
      */
-    onInput(event) {
-      this.$nextTick(() => {
-        this.$emit('update:modelValue', event.target.value);
+    const onInput = (event) => {
+      nextTick(() => {
+        emit('update:modelValue', event.target.value);
       });
-    },
+    };
+
     /**
      * emit blur event
-     * @param $event
+     * @param event
      */
-    onBlur($event) {
-      this.$emit('blur', $event);
-    },
+    const onBlur = (event) => {
+      emit('blur', event);
+    };
+
     /**
      * emit focus event
-     * @param $event
+     * @param event
      */
-    onFocus($event) {
-      this.$emit('focus', $event);
-    },
-  }
-}
+    const onFocus = (event) => {
+      emit('focus', event);
+    }
+
+    return {
+      wrapperClass,
+      sizeClass,
+      inputObject,
+      colorClass,
+      caretDownClass,
+      caretUpClass,
+      decrement,
+      increment,
+      onInput,
+      onBlur,
+      onFocus,
+    }
+  },
+})
 </script>

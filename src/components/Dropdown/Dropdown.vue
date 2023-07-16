@@ -1,43 +1,46 @@
 <template>
-  <div :class="[classObject, size]" @mouseover="hovered(true)" @mouseout="hovered(false)">
+  <div :class="[classObject, sizeClass, size]" @mouseover="hovered(true)" @mouseout="hovered(false)">
     <div class="dropdown-trigger" @click="toggleTrigger">
       <slot name="trigger">
-        <fe-button :size="size" :disabled="disabled">
+        <FeButton :size="size" :disabled="disabled">
           <template #iconAfter>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
           </template>
           <template v-if="selectedItem">{{ selectedItem }}</template>
           <template v-else>{{ triggerButtonText }}</template>
-        </fe-button>
+        </FeButton>
       </slot>
     </div>
     <transition name="fade">
       <div v-if="opened || hoverable" :class="dropDownMenuClassObject">
-        <div :class="contentClassObject">
+        <div class="dropdown-content bg-white rounded border border-gray-400 shadow py-2">
           <a v-for="item in items"
              :key="item"
              @click="selectItem(item)"
-             :class="itemClassObject"
+             class="dropdown-item text-gray-800 block leading-normal py-1 px-4 relative hover:bg-gray-200 hover:cursor-pointer"
           >
             <slot name="item" :item="item">{{ item }}</slot>
           </a>
         </div>
       </div>
     </transition>
-    <div v-if="opened && !hoverable" @click="clickedOutside" :class="backdropClassObject"></div>
+    <div
+      v-if="opened && !hoverable"
+      @click="clickedOutside"
+      class="fixed w-full h-full top-0 left-0 z-10 md:bg-white md:opacity-0 bg-black opacity-75"
+    ></div>
   </div>
 </template>
 
-<script>
-import FeButton from "@/components/Button/Button.vue";
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent, ref, nextTick, watch, computed} from 'vue';
+import FeButton from '@/components/Button/Button.vue';
 
-export default {
-  name: 'fe-dropdown',
-  mixins: [SizeMixin],
+export default defineComponent({
+  name: 'FeDropdown',
   emits: ['update:modelValue', 'opened-change', 'change'],
   components: {
     FeButton,
@@ -62,145 +65,130 @@ export default {
       type: Boolean,
       default: false
     },
+    size: {
+      type: String,
+      default: 'is-md',
+      required: false,
+      validator: function (value: string) {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
+    },
   },
-  data() {
-    return {
-      opened: false,
-      selectedItem: this.modelValue,
-    }
-  },
-  watch: {
-    /**
-     * When v-model is changed set the new selected item.
-     */
-    modelValue(value) {
-      this.selectedItem = value;
-    },
-    /**
-     * Emit event when opened value is changed.
-     */
-    opened(value) {
-      this.$emit('opened-change', value);
-    }
-  },
-  computed: {
-    /**
-     * class names object form dropdown wrapper
-     */
-    classObject() {
-      let classes = ['fe-dropdown', CssClasses.base];
-      if (this.opened) {
-        classes.push('opened')
-      }
-      classes.push(this.sizeClass);
-      return classes;
-    },
-    /**
-     * class names object for dropdown menu
-     */
-    dropDownMenuClassObject() {
-      let classes = ['dropdown-menu'];
-      if (this.opened) {
-        classes.push(CssClasses.menu);
-        if (this.hoverable) {
-          classes.push('md:normal-position');
-        } else {
-          classes.push('center-position md:normal-position');
-        }
-      } else {
-        classes.push('hidden');
-      }
-      return classes;
-    },
-    /**
-     * content class object
-     */
-    contentClassObject() {
-      return ['dropdown-content', CssClasses.content];
-    },
-    /**
-     * item class object
-     */
-    itemClassObject() {
-      return ['dropdown-item', CssClasses.item];
-    },
+  setup(props, {emit}) {
+    const opened = ref(false);
+    const selectedItem = ref(props.modelValue);
+
     /**
      * size class object
      */
-    sizeClass() {
-      switch (this.size) {
+    const sizeClass = computed(() => {
+      switch (props.size) {
         case 'is-xs':
-          return CssClasses.sizeXs;
+          return 'text-xs';
         case 'is-sm':
-          return CssClasses.sizeSm;
+          return 'text-sm';
         case 'is-md':
-          return CssClasses.sizeMd;
+          return 'text-base';
         case 'is-lg':
-          return CssClasses.sizeLg;
+          return 'text-lg';
         default:
-          return CssClasses.sizeMd;
+          return 'text-base';
       }
-    },
+    });
+
     /**
-     * backdrop class object
+     * class names object form dropdown wrapper
      */
-    backdropClassObject() {
-      return CssClasses.backdrop;
-    },
-  },
-  methods: {
+    const classObject = computed(() => {
+      return {
+        'fe-dropdown block align-top': true,
+        'opened': opened.value,
+      }
+    });
+
+    /**
+     * class names object for dropdown menu
+     */
+    const dropDownMenuClassObject = computed(() => {
+      return {
+        'dropdown-menu': true,
+        'block z-20 pt-1': opened.value,
+        'hidden': !opened.value,
+        'md:normal-position': opened.value && props.hoverable,
+        'center-position md:normal-position': opened.value && !props.hoverable,
+      }
+    });
+
     /**
      * toggle triggering
      */
-    toggleTrigger() {
-      if (this.hoverable || this.disabled) {
+    function toggleTrigger() {
+      if (props.hoverable || props.disabled) {
         return;
       }
-      if (!this.opened) {
+      if (!opened.value) {
         // if not opened, toggle after clickOutside event
         // this fixes toggling programmatic
-        this.$nextTick(() => {
-          this.opened = !this.opened;
+        nextTick(() => {
+          opened.value = !opened.value;
         });
       } else {
-        this.opened = !this.opened;
+        opened.value = !opened.value;
       }
-    },
+    }
+
     /**
      * Close dropdown if clicked outside.
      */
-    clickedOutside() {
-      this.opened = (!this.hoverable) ? false : this.opened;
-    },
+    const clickedOutside = () => {
+      opened.value = (!props.hoverable) ? false : opened.value;
+    }
+
     /**
      * select item and close the dropdown
      * @param value
      */
-    selectItem(value) {
-      if (this.selectedItem !== value) {
-        this.$emit('change', value);
-        this.selectedItem = value;
+    const selectItem = (value) => {
+      if (selectedItem.value !== value) {
+        emit('change', value);
+        selectedItem.value = value;
       }
-      this.$emit('update:modelValue', value);
-      this.opened = false;
-    },
+      emit('update:modelValue', value);
+      opened.value = false;
+    }
+
     /**
      * toggle dropdown on hover of the trigger if hoverable setting is set
      * @param enter
      */
-    hovered(enter) {
-      if (this.hoverable) {
-        if (enter && !this.opened) {
-          this.opened = true;
-        } else if (!enter && this.opened) {
-          this.opened = false;
+    const hovered = (enter) => {
+      if (props.hoverable) {
+        if (enter && !opened.value) {
+          opened.value = true;
+        } else if (!enter && opened.value) {
+          opened.value = false;
         }
       }
-    },
-  },
-}
-</script>
+    }
 
+    watch(opened, async (newValue) => {
+      emit('opened-change', newValue);
+    });
+
+    return {
+      opened,
+      selectedItem,
+      sizeClass,
+      classObject,
+      dropDownMenuClassObject,
+      toggleTrigger,
+      clickedOutside,
+      selectItem,
+      hovered,
+    }
+  },
+})
+</script>
 
 <style scoped>
 @media (min-width: 768px) {

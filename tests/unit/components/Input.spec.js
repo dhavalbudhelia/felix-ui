@@ -2,7 +2,7 @@ import {config, shallowMount} from '@vue/test-utils';
 import Input from '@/components/Input/Input.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 
@@ -12,7 +12,7 @@ describe('Input.vue', () => {
         expect(wrapper.find('input').classes()).toContain('fe-input');
     });
 
-    it.only('render simple input with icon on left', () => {
+    it('render simple input with icon on left', () => {
         const wrapper = shallowMount(Input, {
             slots: {
                 iconBefore: '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">\n' +

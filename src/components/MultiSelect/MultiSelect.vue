@@ -1,92 +1,104 @@
 <template>
   <div :class="[classObject, size]">
-    <div :class="wrapperClassObject" @click="toggleTrigger">
+    <div class="border rounded flex flex-nowrap items-center cursor-pointer border-gray-400 hover:border-gray-500" @click="toggleTrigger">
       <div :class="placeholderWrapperClassObject">
-        <div v-if="selectValueDislay === ''" :class="placeholderClassObject">{{ placeholder }}</div>
-        <div :class="displayValuePlaceholderClassObject">{{ selectValueDislay }}</div>
-        <div v-if="!allItemSelected" :class="remainingValuePlaceholderClassObject">
+        <div v-if="selectValueDisplay === ''" class="px-2 text-gray-400">{{ placeholder }}</div>
+        <div class="px-2">{{ selectValueDisplay }}</div>
+        <div v-if="!allItemSelected" class="text-gray-600">
           {{ selectedValueDisplayRemaining }}
         </div>
       </div>
-      <div v-if="selectValueDislay !== ''" @click.stop.prevent="clearValues" :class="clearClassObject">
+      <div v-if="selectValueDisplay !== ''" @click.stop.prevent="clearValues"
+           class="float-right grow-0 flex items-center cursor-pointer w-6 text-gray-500">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </div>
       <div :class="caretClassObject">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
         </svg>
       </div>
     </div>
-    <select aria-hidden="true" :class="selectClassObject" :id="id" :name="name">
+    <select aria-hidden="true" class="hidden" :id="id" :name="name">
       <option v-for="(item, key) in selectedItems" :key="key" :value="item.id" selected>{{ key }}</option>
     </select>
+    <div>{{ opened }}</div>
     <transition name="fade">
       <div v-if="opened" :class="dropDownMenuClassObject" @click.stop>
-        <div :class="dropdownContentClassObject">
+        <div class="dropdown-content bg-white rounded border border-gray-400 shadow">
           <div class="dropdown-content-header-wrapper">
             <div v-if="searchable" :class="dropdownItemClassObject" class="border-b p-1 px-2">
-              <fe-input ref="search"
-                        v-model="searchTerm"
-                        placeholder="Search..."
-                        class="w-full"
+              <FeInput
+                  ref="search"
+                  v-model="searchTerm"
+                  placeholder="Search..."
+                  class="w-full"
+                  data-testid="search-input"
               >
                 <template #iconBefore>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                   </svg>
                 </template>
-              </fe-input>
-              <div v-if="searchTerm !== ''"
-                   @click.stop.prevent="clearSearch"
-                   :class="searchClearClassObject"
+              </FeInput>
+              <div
+                  v-if="searchTerm !== ''"
+                  @click.stop.prevent="clearSearch"
+                  class="multi-select-search-clear absolute top-0 right-0 py-2 cursor-pointer w-8 text-gray-500"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
               </div>
             </div>
 
             <div v-if="items.length > 0 && searchTerm === ''" :class="dropdownItemClassObject"
                  class="border-b">
-              <fe-checkbox key="selectAll"
-                           v-model="selectAllValue"
-                           @update:modelValue="selectAll"
-                           :css-class="checkboxClassObject"
+              <FeCheckbox
+                  key="selectAll"
+                  :model-value="allItemSelected"
+                  @update:modelValue="selectAll"
+                  css-class="w-full h-full py-1 px-4"
               >Select All
-              </fe-checkbox>
+              </FeCheckbox>
             </div>
           </div>
-          <div :class="dropdownContentItemWrapperClassObject">
+          <div class="dropdown-content-items-wrapper left-0 overflow-y-scroll z-20">
             <div v-if="groupByProperty === null" v-for="item in items"
-                 :class="[dropdownItemClassObject, dropdownItemHoverClassObject]">
-              <fe-checkbox :key="item.id"
-                           v-model="item.selected"
-                           @update:modelValue="selectItem(item, $event)"
-                           :css-class="checkboxClassObject"
+                 :class="[dropdownItemClassObject, 'hover:bg-gray-200 hover:cursor-pointer']">
+              <FeCheckbox
+                  :key="item.id"
+                  v-model="item.selected"
+                  @update:modelValue="selectItem(item, $event)"
+                  css-class="w-full h-full py-1 px-4"
               >{{ item.text }}
-              </fe-checkbox>
+              </FeCheckbox>
             </div>
             <template v-if="groupByProperty !== null" v-for="(group, groupName) in groups">
-              <div :class="[dropdownItemClassObject, dropdownItemHoverClassObject]"
+              <div :class="[dropdownItemClassObject, 'hover:bg-gray-200 hover:cursor-pointer']"
                    class="dropdown-group">
-                <fe-checkbox :key="groupName"
-                             @update:modelValue="selectGroup(groupName, $event)"
-                             v-model="group.selected"
-                             :css-class="checkboxClassObject"
+                <FeCheckbox
+                    :key="groupName"
+                    @update:modelValue="selectGroup(groupName, $event)"
+                    v-model="group.selected"
+                    css-class="w-full h-full py-1 px-4"
                 >{{ groupName }}
-                </fe-checkbox>
+                </FeCheckbox>
               </div>
               <div v-for="groupItem in group.items"
-                   :class="[dropdownItemClassObject, dropdownItemHoverClassObject]"
+                   :class="[dropdownItemClassObject, 'hover:bg-gray-200 hover:cursor-pointer']"
                    class="grouped-item pl-3">
-                <fe-checkbox :key="groupItem.id"
-                             v-model="groupItem.selected"
-                             @update:modelValue="selectItem(groupItem, $event)"
-                             :css-class="checkboxClassObject"
+                <FeCheckbox
+                    :key="groupItem.id"
+                    v-model="groupItem.selected"
+                    @update:modelValue="selectItem(groupItem, $event)"
+                    css-class="w-full h-full py-1 px-4"
                 >{{ groupItem.text }}
-                </fe-checkbox>
+                </FeCheckbox>
               </div>
             </template>
             <div v-if="searchable && filteredItems.length === 0" :class="dropdownItemClassObject"
@@ -97,23 +109,21 @@
         </div>
       </div>
     </transition>
-    <div v-if="opened" @click="clickedOutside" :class="backdropClassObject"></div>
+    <div v-if="opened" @click="clickedOutside" class="fixed w-full h-full top-0 left-0 z-10 md:bg-white md:opacity-0 bg-black opacity-75"></div>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, ref, computed, onMounted, nextTick, watch} from "vue";
 import FeInput from '@/components/Input/Input.vue';
 import FeCheckbox from '@/components/Checkbox/Checkbox.vue';
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
 
-export default {
-  name: 'fe-multi-select',
+export default defineComponent({
+  name: 'FeMultiSelect',
   components: {
     FeInput,
     FeCheckbox
   },
-  mixins: [SizeMixin],
   emits: ['update:modelValue'],
   props: {
     id: {
@@ -162,217 +172,159 @@ export default {
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String,
+      default: 'is-md',
+      required: false,
+      validator: (value: string) => {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
+    },
   },
-  data() {
-    return {
-      indexedDataSource: [],
-      opened: false,
-      filteredItems: [],
-      selectedItems: [],
-      searchTerm: '',
-    }
-  },
-  computed: {
+  setup(props, {emit}) {
+    const indexedDataSource = ref([]);
+    const opened = ref(false);
+    const filteredItems = ref([]);
+    const selectedItems = ref([]);
+    const searchTerm = ref('');
+
     /**
      * determine maximum display count as per the size of this component
      */
-    maxDisplayLength() {
-      if (this.size === 'is-xs') {
+    const maxDisplayLength = computed(() => {
+      if (props.size === 'is-xs') {
         return 15;
-      } else if (this.size === 'is-sm') {
+      } else if (props.size === 'is-sm') {
         return 18;
-      } else if (this.size === 'is-md') {
-        return 20;
-      } else if (this.size === 'is-lg') {
+      } else if (props.size === 'is-lg') {
         return 22;
+      } else {
+        return 20;
       }
+    });
 
-    },
-    wrapperClassObject() {
-      return [CssClasses.wrapper];
-    },
     /**
      * class object
      */
-    classObject() {
-      let classes = ['fe-multi-select', CssClasses.base];
-      if (this.opened) {
+    const classObject = computed(() => {
+      let classes = ['fe-multi-select outline-none block'];
+      if (opened.value) {
         classes.push('opened')
       }
       return classes;
-    },
+    });
+
     /**
      * class names object for dropdown menu
      */
-    dropDownMenuClassObject() {
+    const dropDownMenuClassObject = computed(() => {
       let classes = ['dropdown-menu'];
-      if (this.opened) {
-        classes.push(CssClasses.menu);
+      if (opened.value) {
+        classes.push('block z-20');
         classes.push('multiselect-center-position md:normal-position');
       } else {
         classes.push('hidden');
       }
       return classes;
-    },
-    /**
-     * dropdown content class object
-     */
-    dropdownContentClassObject() {
-      return ['dropdown-content', CssClasses.dropdownContent];
-    },
-    /**
-     * dropdown item wrapper class object
-     */
-    dropdownContentItemWrapperClassObject() {
-      return ['dropdown-content-items-wrapper', CssClasses.dropdownContentItemWrapper];
-    },
+    });
+
     /**
      * dropdown item class object
      */
-    dropdownItemClassObject() {
-      let classes = ['dropdown-item', CssClasses.dropdownItem];
-      switch (this.size) {
+    const dropdownItemClassObject = computed(() => {
+      let classes = ['dropdown-item text-gray-800 block relative'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.dropdownItemXs);
+          classes.push('leading-tight');
           break;
         case 'is-sm':
-          classes.push(CssClasses.dropdownItemSm);
+          classes.push('leading-snug');
           break;
         case 'is-md':
-          classes.push(CssClasses.dropdownItemMd);
+          classes.push('leading-normal');
           break;
         case 'is-lg':
-          classes.push(CssClasses.dropdownItemLg);
+          classes.push('leading-relaxed');
           break;
         default:
-          classes.push(CssClasses.dropdownItemMd);
+          classes.push('leading-normal');
       }
       return classes;
-    },
-    /**
-     * dropdown item hover effect class object
-     */
-    dropdownItemHoverClassObject() {
-      return CssClasses.dropdownItemHover;
-    },
-    /**
-     * checkbox class object
-     */
-    checkboxClassObject() {
-      return CssClasses.checkbox;
-    },
-    /**
-     * select element class object
-     */
-    selectClassObject() {
-      return CssClasses.select;
-    },
-    /**
-     * clear icon class object
-     */
-    clearClassObject() {
-      return CssClasses.clear;
-    },
-    /**
-     * search clear icon class object
-     */
-    searchClearClassObject() {
-      return ['multi-select-search-clear', CssClasses.searchClear];
-    },
+    });
+
     /**
      * placeholder wrapper class object
      */
-    placeholderWrapperClassObject() {
-      let classes = ['placeholder-wrapper', CssClasses.placeholderWrapper];
-      switch (this.size) {
+    const placeholderWrapperClassObject = computed(() => {
+      let classes = ['placeholder-wrapper flex-1 outline-none flex flex-nowrap items-center'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.placeholderWrapperXs);
+          classes.push('text-xs');
           break;
         case 'is-sm':
-          classes.push(CssClasses.placeholderWrapperSm);
+          classes.push('text-sm');
           break;
         case 'is-md':
-          classes.push(CssClasses.placeholderWrapperMd);
+          classes.push('text-base');
           break;
         case 'is-lg':
-          classes.push(CssClasses.placeholderWrapperLg);
+          classes.push('text-lg');
           break;
         default:
-          classes.push(CssClasses.placeholderWrapperMd);
+          classes.push('text-base');
       }
       return classes;
-    },
-    /**
-     * placeholder class object
-     */
-    placeholderClassObject() {
-      return CssClasses.placeholder;
-    },
-    /**
-     * display value placeholder class object
-     */
-    displayValuePlaceholderClassObject() {
-      return CssClasses.displayValuePlaceholder;
-    },
-    /**
-     * remaining value placeholder class object
-     */
-    remainingValuePlaceholderClassObject() {
-      return CssClasses.remainingValuePlaceholder;
-    },
+    });
+
     /**
      * dropdown caret icon class object
      */
-    caretClassObject() {
-      let classes = ['caret', CssClasses.caret];
-      switch (this.size) {
+    const caretClassObject = computed(() => {
+      let classes = ['caret grow-0 border-l border-gray-300 h-full px-2 text-center'];
+      switch (props.size) {
         case 'is-xs':
-          classes.push(CssClasses.caretXs);
+          classes.push('py-0');
           break;
         case 'is-sm':
-          classes.push(CssClasses.caretSm);
+          classes.push('py-0');
           break;
         case 'is-md':
-          classes.push(CssClasses.caretMd);
+          classes.push('py-1');
           break;
         case 'is-lg':
-          classes.push(CssClasses.caretLg);
+          classes.push('py-2 w-10');
           break;
         default:
-          classes.push(CssClasses.caretMd);
+          classes.push('py-1');
       }
       return classes;
-    },
-    /**
-     * backdrop class object
-     */
-    backdropClassObject() {
-      return CssClasses.backdrop;
-    },
+    });
+
     /**
      * computed prop for item data
      */
-    items() {
-      return this.filteredItems.map((itemData) => {
-        let id = itemData[this.valueProperty];
-        let selected = (this.selectedItems.find((selectedItem) => {
+    const items = computed(() => {
+      return filteredItems.value.map((itemData) => {
+        let id = itemData[props.valueProperty];
+        let selected = (selectedItems.value.find((selectedItem: { id: string }) => {
           return selectedItem.id === id;
         })) !== undefined;
         return {
           id: id,
-          text: itemData[this.labelProperty],
-          groupLabel: itemData[this.groupByProperty],
+          text: itemData[props.labelProperty],
+          groupLabel: itemData[props.groupByProperty],
           selected: selected,
           feIndex: itemData['feIndex']
         };
       });
-    },
+    });
+
     /**
      * computed prop for grouped item
      */
-    groups() {
-      if (this.groupByProperty !== null) {
-        return this.items.reduce(function (group, item) {
+    const groups = computed(() => {
+      if (props.groupByProperty) {
+        return items.value.reduce(function (group: any, item) {
           if (group[item['groupLabel']] === undefined) {
             Object.assign(group, {
               [item['groupLabel']]: {}
@@ -392,144 +344,139 @@ export default {
         }, {});
       }
       return [];
-    },
+    });
+
     /**
      * collection of display text of all selected items
      */
-    selectTexts() {
-      return this.selectedItems.map((item) => {
+    const selectTexts = computed(() => {
+      return selectedItems.value.map((item: { text: string }) => {
         return item.text;
       });
-    },
+    });
+
     /**
      * collection of item identifier of all selected items
      */
-    selectValues() {
-      return this.selectedItems.map((item) => {
+    const selectValues = computed(() => {
+      return selectedItems.value.map((item: { id: string }) => {
         return item.id;
       });
-    },
+    });
+
     /**
      * collection of maximum allowed selected item texts
      */
-    selectValuesShort() {
-      if (this.selectTexts.join(', ').length > this.maxDisplayLength) {
+    const selectValuesShort = computed(() => {
+      if (selectTexts.value.join(', ').length > maxDisplayLength.value) {
         let currentLength = 0;
         let shortDisplayValues = [];
-        this.selectTexts.forEach((value) => {
+        selectTexts.value.forEach((value) => {
           currentLength += value.length + 1;
-          if (currentLength <= this.maxDisplayLength) {
+          if (currentLength <= maxDisplayLength.value) {
             shortDisplayValues.push(value);
           }
         });
         return shortDisplayValues;
       }
-      return this.selectTexts;
-    },
+      return selectTexts.value;
+    });
+
     /**
      * displayable text of comma separated selected items
      */
-    selectValueDislay() {
-      return (this.allItemSelected) ? this.allItemSelectedLabel : this.selectValuesShort.join(', ');
-    },
+    const selectValueDisplay = computed(() => {
+      return (allItemSelected.value) ? props.allItemSelectedLabel : selectValuesShort.value.join(', ');
+    });
+
     /**
      * if selected items are more than maximum then attach remaining item placeholder
      */
-    selectedValueDisplayRemaining() {
+    const selectedValueDisplayRemaining = computed(() => {
       let remainingDisplayValue = '';
-      if (this.selectTexts.length > this.selectValuesShort.length) {
-        let remainingCount = (this.selectTexts.length - this.selectValuesShort.length);
+      if (selectTexts.value.length > selectValuesShort.value.length) {
+        let remainingCount = (selectTexts.value.length - selectValuesShort.value.length);
         remainingDisplayValue = `+${remainingCount} more...`;
       }
       return remainingDisplayValue;
-    },
+    });
+
     /**
      * check if all items are selected
      */
-    allItemSelected() {
-      return this.dataSource.length === this.selectedItems.length;
-    },
-    selectAllValue: {
-      get() {
-        return this.allItemSelected;
-      },
-      set(value) {
-      }
-    }
-  },
-  watch: {
-    /**
-     * filter item list if multiselect is set to searchable
-     */
-    searchTerm(value) {
-      if (this.searchable) {
-        if (value !== '') {
-          this.filteredItems = this.indexedDataSource.filter((itemData) => {
-            return itemData[this.labelProperty].toLowerCase().includes(value.toLowerCase());
-          });
-        } else {
-          this.filteredItems = this.indexedDataSource;
-          if (this.sortSelected && this.selectedItems.length > 0 && !this.allItemSelected) {
-            //if selection has been made then on opening of the multi select sort items
-            this.sortFilteredItemsBySelected();
-          }
+    const allItemSelected = computed(() => {
+      return props.dataSource?.length === selectedItems.value.length;
+    });
+
+    onMounted(() => {
+      let mappedDataSource = props.dataSource?.map((item, key) => {
+        return Object.assign(item, {
+          feIndex: key
+        });
+      });
+
+      indexedDataSource.value = mappedDataSource.sort((current, next) => {
+        if (current.feIndex > next.feIndex) {
+          return 1;
         }
-      }
-    }
-  },
-  methods: {
+        if (next.feIndex > current.feIndex) {
+          return -1;
+        }
+        return 0;
+      });
+      filteredItems.value = indexedDataSource.value;
+    });
+
     /**
      * toggle opening of multiselect.
      * if opening multiselect and sortSelected is set then also sort selected items
      */
-    toggleTrigger() {
-      if (!this.opened) {
+    const toggleTrigger = () => {
+      if (!opened.value) {
         // if not opened, toggle after clickOutside event
         // this fixes toggling programmatic
-        this.searchTerm = '';
-        this.$nextTick(() => {
-          this.opened = true;
-          if (this.sortSelected && this.selectedItems.length > 0 && !this.allItemSelected) {
+        searchTerm.value = '';
+        nextTick(() => {
+          opened.value = true;
+          if (props.sortSelected && selectedItems.value.length > 0 && !allItemSelected.value) {
             //if selection has been made then on opening of the multi select sort items
-            this.sortFilteredItemsBySelected();
-          }
-          if (this.searchable) {
-            this.$nextTick(() => {
-              this.$refs.search.$refs.input.focus();
-            });
+            sortFilteredItemsBySelected();
           }
         });
       } else {
-        this.opened = false;
+        opened.value = false;
       }
-    },
+    };
+
     /**
      * Close dropdown if clicked outside.
      */
-    clickedOutside() {
-      this.opened = false;
-    },
+    const clickedOutside = () => {
+      opened.value = false;
+    };
+
     /**
      * check if supplied item is selected
      * @param item
      * @return {boolean}
      */
-    isItemSelected(item) {
-      let found = this.selectedItems.find((selectedItem) => {
+    const isItemSelected = (item) => {
+      let found = selectedItems.value.find((selectedItem) => {
         return selectedItem.id === item.id;
       });
       return found !== undefined;
-    },
+    };
+
     /**
      * select supplied item if checked
      * @param item
      * @param checked
      */
-    selectItem(item, checked) {
+    const selectItem = (item, checked) => {
       if (checked) {
-        if (!this.isItemSelected(item)) {
-          this.selectedItems.push(item);
-          this.selectedItems = this.selectedItems.sort((current, next) => {
+        if (!isItemSelected(item)) {
+          selectedItems.value.push(item);
+          selectedItems.value = selectedItems.value.sort((current, next) => {
             if (current.feIndex > next.feIndex) {
               return 1;
             }
@@ -540,81 +487,128 @@ export default {
           });
         }
       } else {
-        this.selectedItems = this.selectedItems.filter((selectedItem) => {
+        selectedItems.value = selectedItems.value.filter((selectedItem) => {
           return selectedItem.id !== item.id;
         });
       }
-      this.$emit('update:modelValue', this.selectValues);
-    },
+      emit('update:modelValue', selectValues.value);
+    };
+
     /**
      * select all items and emit an input even
      * @param checked
      */
-    selectAll(checked) {
-      this.items.forEach((item) => {
-        this.selectItem(item, checked);
+    const selectAll = (checked) => {
+      items.value.forEach((item) => {
+        selectItem(item, checked);
       });
-      this.$emit('update:modelValue', this.selectValues);
-    },
+      emit('update:modelValue', selectValues.value);
+    };
+
     /**
      * clear values
      */
-    clearValues() {
-      this.selectedItems = [];
-      this.$emit('update:modelValue', this.selectValues);
-    },
+    const clearValues = () => {
+      selectedItems.value = [];
+      emit('update:modelValue', selectValues.value);
+    };
+
     /**
      * select group items for supplied group name
      * @param groupName
      * @param checked
      */
-    selectGroup(groupName, checked) {
-      if (this.groups[groupName] !== undefined && this.groups[groupName].items !== undefined) {
-        this.groups[groupName].items.forEach((groupItem) => {
-          this.selectItem(groupItem, checked);
+    const selectGroup = (groupName, checked) => {
+      if (groups.value[groupName] !== undefined && groups.value[groupName].items !== undefined) {
+        groups.value[groupName].items.forEach((groupItem) => {
+          selectItem(groupItem, checked);
         });
       }
-    },
+    };
+
     /**
      * clear search term input
      */
-    clearSearch() {
-      this.searchTerm = '';
-    },
+    const clearSearch = () => {
+      searchTerm.value = '';
+    };
+
     /**
      * order selected items to the top on re-open
      */
-    sortFilteredItemsBySelected() {
-      this.filteredItems = this.filteredItems.map((itemData) => {
-        itemData.selected = (this.selectedItems.find((selectedItem) => {
+    const sortFilteredItemsBySelected = () => {
+      filteredItems.value = filteredItems.value.map((itemData) => {
+        itemData.selected = (selectedItems.value.find((selectedItem) => {
           return selectedItem.id === itemData.id;
         })) !== undefined ? 1 : 0;
         return itemData;
       });
-      this.filteredItems = this.filteredItems.sort((current, next) => {
+      filteredItems.value = filteredItems.value.sort((current, next) => {
         return next.selected - current.selected || current.feIndex - next.feIndex;
       });
-    },
-  },
-  mounted() {
-    let mappedDataSource = this.dataSource.map((item, key) => {
-      return Object.assign(item, {
-        feIndex: key
-      });
+    };
+
+    watch(() => searchTerm.value, (newValue) => {
+      if (props.searchable) {
+        if (newValue !== '') {
+          filteredItems.value = indexedDataSource.value.filter((itemData) => {
+            return itemData[props.labelProperty].toLowerCase().includes(newValue.toLowerCase());
+          });
+        } else {
+          filteredItems.value = indexedDataSource.value;
+          if (props.sortSelected && selectedItems.value.length > 0 && !allItemSelected.value) {
+            //if selection has been made then on opening of the multi select sort items
+            sortFilteredItemsBySelected();
+          }
+        }
+      }
     });
 
-    this.indexedDataSource = mappedDataSource.sort((current, next) => {
-      if (current.feIndex > next.feIndex) {
-        return 1;
+    watch(() => opened.value, (newValue) => {
+      if (newValue && props.searchable) {
+        nextTick(() => {
+          if (
+              document.getElementsByClassName('fe-input').length > 0 &&
+              document.getElementsByClassName('fe-input')[0]
+          ) {
+            document.getElementsByClassName('fe-input')[0]?.focus();
+          }
+        });
       }
-      if (next.feIndex > current.feIndex) {
-        return -1;
-      }
-      return 0;
     });
-    this.filteredItems = this.indexedDataSource;
-  }
-}
+
+    return {
+      indexedDataSource,
+      opened,
+      filteredItems,
+      selectedItems,
+      searchTerm,
+      maxDisplayLength,
+      classObject,
+      dropDownMenuClassObject,
+      dropdownItemClassObject,
+      placeholderWrapperClassObject,
+      caretClassObject,
+      items,
+      groups,
+      selectTexts,
+      selectValues,
+      selectValuesShort,
+      selectValueDisplay,
+      selectedValueDisplayRemaining,
+      allItemSelected,
+      toggleTrigger,
+      clickedOutside,
+      isItemSelected,
+      selectItem,
+      selectAll,
+      clearValues,
+      selectGroup,
+      clearSearch,
+      sortFilteredItemsBySelected,
+    }
+  },
+});
 </script>
 
 <style scoped>

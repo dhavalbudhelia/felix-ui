@@ -23,11 +23,11 @@
   </label>
 </template>
 
-<script>
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent, computed, inject} from "vue";
 
-export default {
-  name: 'fe-checkbox',
+export default defineComponent({
+  name: 'FeCheckbox',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -55,34 +55,33 @@ export default {
       default: null
     },
   },
-  computed: {
-    isChecked() {
-      return this.modelValue === this.trueValue;
-    },
+  setup(props, {emit}) {
+    const $theme = inject('$theme');
+    const isChecked = computed(() => props.modelValue === props.trueValue);
+
     /**
      * class names object
      * @return {[string, string]}
      */
-    classObject() {
-      let classes = ['fe-checkbox flex items-center', CssClasses.base];
-      if (this.isChecked) {
+    const classObject = computed(() => {
+      let classes = ['fe-checkbox flex items-center outline-none items-center align-middle select-none m-0'];
+      if (isChecked.value) {
         classes.push('checked');
       }
-      if (this.disabled) {
-        classes.push(CssClasses.disabled);
+      if (props.disabled) {
+        classes.push('opacity-50 inline-flex cursor-not-allowed');
       } else {
-        classes.push(CssClasses.general);
+        classes.push('cursor-pointer inline-flex');
       }
       return classes;
-    },
+    });
+
     /**
      * check class object
      * @return {string[]}
      */
-    checkClass() {
-      let color = this.color !== null ?
-          this.color :
-          `text-${this.$theme.color.primary} border-${this.$theme.color.primary}`;
+    const checkClass = computed(() => {
+      let color = props.color ?? `text-${$theme.color.primary} border-${$theme.color.primary}`;
       return [
         'check',
         color,
@@ -90,17 +89,23 @@ export default {
         'rounded-sm',
         `hover:${color}`,
       ];
-    },
-  },
-  methods: {
-    check() {
-      if (this.disabled) {
+    });
+
+    const check = () => {
+      if (props.disabled) {
         return;
       }
-      this.$emit('update:modelValue', this.isChecked ? this.falseValue : this.trueValue);
-    },
-  }
-}
+      emit('update:modelValue', isChecked.value ? props.falseValue : props.trueValue);
+    }
+
+    return {
+      isChecked,
+      classObject,
+      checkClass,
+      check
+    }
+  },
+})
 </script>
 
 <style scoped>

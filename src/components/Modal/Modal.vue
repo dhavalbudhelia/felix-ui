@@ -1,29 +1,29 @@
 <template>
   <div ref="modal"
-       :class="[classObject, 'fe-modal']"
+       :class="[classObject, sizeClass, 'fe-modal']"
        tabindex="0"
        role="dialog"
        @keydown.esc="onEscape"
   >
     <transition name="slidedown">
       <div v-if="modelValue" class="flex justify-center mt-12" :class="size">
-        <div :class="[modalClassObject, `lg:${size}`]">
-          <div :class="headerClassObject">
+        <div :class="['border rounded-lg shadow-lg overflow-auto relative z-50 w-full sm:is-lg', `lg:${size}`]">
+          <div class="fe-modal-header flex border-b border-gray-400 bg-gray-200 p-4">
             <div class="flex-grow">
               <slot name="header">
                 {{ header }}
               </slot>
             </div>
-            <div v-if="canClose" :class="closeClassObject" @click="close">
+            <div v-if="canClose" class="grow-0 cursor-pointer text-gray-500 hover:text-gray-600" @click="close">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </div>
           </div>
-          <div :class="bodyClassObject">
+          <div class="fe-modal-body border-b border-gray-400 bg-white p-4">
             <slot></slot>
           </div>
-          <div v-if="showFooter" :class="footerClassObject">
+          <div v-if="showFooter" class="fe-modal-footer bg-gray-100 p-4">
             <div class="flex items-end justify-end">
               <slot name="footer"></slot>
             </div>
@@ -32,18 +32,16 @@
       </div>
     </transition>
     <transition name="fade">
-      <div v-if="modelValue" :class="backdropClassObject"></div>
+      <div v-if="modelValue" class="fixed absolute inset-0 bg-black opacity-75"></div>
     </transition>
   </div>
 </template>
 
-<script>
-import SizeMixin from "../../mixins/SizeMixin.js";
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent, ref, computed, nextTick, watch} from "vue";
 
-export default {
-  name: 'fe-modal',
-  mixins: [SizeMixin],
+export default defineComponent({
+  name: 'FeModal',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -66,105 +64,83 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
-  computed: {
-    /**
-     * class names object
-     */
-    classObject() {
-      let classes = [CssClasses.base];
-      if (this.modelValue) {
-        classes.push(CssClasses.general);
-      } else {
-        classes.push('hidden');
-      }
-      classes.push(this.sizeClass);
-      return classes;
+    size: {
+      type: String,
+      default: 'is-md',
+      required: false,
+      validator: function (value: string) {
+        return ['is-xs', 'is-sm', 'is-md', 'is-lg'].includes(value);
+      },
     },
+  },
+  setup(props, {emit}) {
+    const modal = ref(null);
+
     /**
      * size class object
      */
-    sizeClass() {
-      switch (this.size) {
+    const sizeClass = computed(() => {
+      switch (props.size) {
         case 'is-xs':
-          return CssClasses.sizeXs;
+          return 'text-xs';
         case 'is-sm':
-          return CssClasses.sizeSm;
+          return 'text-sm';
         case 'is-md':
-          return CssClasses.sizeMd;
+          return 'text-base';
         case 'is-lg':
-          return CssClasses.sizeLg;
+          return 'text-lg';
         default:
-          return CssClasses.sizeMd;
+          return 'text-base';
       }
-    },
+    })
+
     /**
-     * class names object for modal content container
+     * class names object
      */
-    modalClassObject() {
-      return [CssClasses.container];
-    },
-    /**
-     * header class object
-     */
-    headerClassObject() {
-      return ['fe-modal-header', CssClasses.header];
-    },
-    /**
-     * body class object
-     */
-    bodyClassObject() {
-      return ['fe-modal-body', CssClasses.body];
-    },
-    /**
-     * footer class object
-     */
-    footerClassObject() {
-      return ['fe-modal-footer', CssClasses.footer];
-    },
-    /**
-     * close icon class object
-     */
-    closeClassObject() {
-      return CssClasses.close;
-    },
-    /**
-     * backdrop class object
-     */
-    backdropClassObject() {
-      return [CssClasses.backdrop];
-    },
-  },
-  watch: {
-    /**
-     * on open set the focus on the modal
-     * @param value
-     */
-    modelValue(value) {
-      if (value) {
-        this.$nextTick(() => {
-          this.$refs.modal.focus();
-        });
+    const classObject = computed(() => {
+      let classes = ['outline-none'];
+      if (props.modelValue) {
+        classes.push('inset-0 fixed w-screen h-screen flex flex-col items-center overflow-hidden z-40');
+      } else {
+        classes.push('hidden');
       }
-    }
-  },
-  methods: {
+      return classes;
+    });
+
     /**
      * on close emit close event
      */
-    close() {
-      this.$emit('update:modelValue', false);
-    },
+    const close = () => {
+      emit('update:modelValue', false);
+    };
+
     /**
      * if modal is set to closeOnEscape, call close method
      */
-    onEscape() {
-      if (this.closeOnEscape) {
-        this.close();
+    const onEscape = () => {
+      if (props.closeOnEscape) {
+        close();
       }
+    };
+
+    //on show focus the modal so we can close on escape
+    watch(() => props.modelValue, (newValue) => {
+      if (newValue) {
+        nextTick(() => {
+          modal?.value.focus();
+        });
+      }
+    });
+
+    return {
+      classObject,
+      sizeClass,
+      close,
+      onEscape,
+      modal,
     }
   },
-}
+})
 </script>
 
 <style scoped>

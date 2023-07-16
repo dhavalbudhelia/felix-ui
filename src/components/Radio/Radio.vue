@@ -9,18 +9,18 @@
   <label :class="[classObject, cssClass]"
          :disabled="disabled"
          :tabindex="disabled ? false : 0"
-         @click.prevent="emit"
+         @click.prevent="emitClicked"
   >
     <span :class="[checkClass, color]"></span>
     <span class="pl-2"><slot/></span>
   </label>
 </template>
 
-<script>
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent,computed, inject} from "vue";
 
-export default {
-  name: 'fe-radio',
+export default defineComponent({
+  name: 'FeRadio',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -48,45 +48,54 @@ export default {
       default: null
     },
   },
-  computed: {
-    isChecked() {
-      return this.modelValue === this.localValue;
-    },
+  setup(props, {emit}) {
+    const $theme = inject('$theme');
+
+    const isChecked = computed(() => {
+      return props.modelValue === props.localValue;
+    });
+
     /**
      * class names object
      */
-    classObject() {
-      let classes = ['flex items-center', CssClasses.base];
-      if (this.isChecked) {
+    const classObject = computed(() => {
+      let classes = ['flex items-center outline-none items-center align-middle select-none pr-4'];
+      if (isChecked.value) {
         classes.push('checked');
       }
-      if (this.disabled) {
-        classes.push(CssClasses.disabled);
+      if (props.disabled) {
+        classes.push('opacity-50 cursor-not-allowed');
       }
-      if (this.vertical) {
-        classes.push(CssClasses.vertical);
+      if (props.vertical) {
+        classes.push('cursor-pointer flex pb-2');
       } else {
-        classes.push(CssClasses.general);
+        classes.push('cursor-pointer inline-flex');
       }
       return classes;
-    },
+    });
+
     /**
      * check class object
      */
-    checkClass() {
-      let color = this.color !== null ? this.color : `border-${this.$theme.color.primary}`;
-      return ['check', CssClasses.check, color];
-    },
-  },
-  methods: {
-    emit() {
-      if (this.disabled || this.isChecked) {
-        return;
+    const checkClass = computed(() => {
+      let color = props.color !== null ? props.color : `border-${$theme.color.primary}`;
+      return ['check flex items-center justify-center flex-shrink-0 border-2 border-solid rounded-full', color];
+    });
+
+    const emitClicked = () => {
+      if (!props.disabled && !isChecked.value) {
+        emit('update:modelValue', props.localValue);
       }
-      this.$emit('update:modelValue', this.localValue);
-    },
+    }
+
+    return {
+      isChecked,
+      classObject,
+      checkClass,
+      emitClicked,
+    }
   },
-};
+});
 </script>
 
 

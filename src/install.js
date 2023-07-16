@@ -19,6 +19,7 @@ import ErDayjs from '@/plugins/dayjs';
 const install = ((app, opts) => {
     //merge options
     app.config.globalProperties.$theme = { ...options, ...opts || {} };
+    app.provide('$theme', { ...options, ...opts || {} });
 
     //dayjs
     app.use(ErDayjs, {

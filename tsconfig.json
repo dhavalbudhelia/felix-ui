@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "baseUrl": "./",
+        "strict": true,                 // Enable strict type-checking options
+        "skipLibCheck": true,           // Skip type checking of declaration files
+        "noImplicitAny": false,         // Bypass raising errors on `any` type
+        "sourceMap": true,
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        },
+        "types": ["vite/client"],
+    },
+    "include": ["src/**/*"],  // Frontend paths pattern
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

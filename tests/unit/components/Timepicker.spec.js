@@ -2,7 +2,7 @@ import {config, shallowMount} from '@vue/test-utils';
 import Timepicker from '@/components/Timepicker/Timepicker.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 
@@ -12,7 +12,7 @@ describe('Timepicker.vue', () => {
         expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(false);
-        wrapper.setData({opened: true});
+        wrapper.vm.triggerFocused();
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
@@ -79,7 +79,8 @@ describe('Timepicker.vue', () => {
         expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(false);
-        await wrapper.setData({opened: true});
+        wrapper.vm.triggerFocused();
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(true);
@@ -122,7 +123,8 @@ describe('Timepicker.vue', () => {
         expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(false);
-        await wrapper.setData({opened: true});
+        wrapper.vm.triggerFocused();
+        await wrapper.vm.$nextTick();
         expect(wrapper.find('div.fe-timepicker').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker-placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.fe-timepicker div.timepicker').exists()).toBe(true);

@@ -1,9 +1,10 @@
 <template>
-  <div :class="['fe-autocomplete']">
-    <fe-input :placeholder="placeholder"
-              v-model="searchTerm"
-              :id="id"
-              :name="name"
+  <div class="fe-autocomplete">
+    <FeInput
+        :placeholder="placeholder"
+        v-model="searchTerm"
+        :id="id"
+        :name="name"
     >
       <template #iconBefore>
         <slot name="iconBefore"/>
@@ -11,11 +12,11 @@
       <template #iconAfter>
         <slot name="iconAfter"/>
       </template>
-    </fe-input>
+    </FeInput>
     <div :class="[dropdownClassObject]">
       <transition name="fade">
         <div :class="dropDownMenuClassObject">
-          <div :class="contentClassObject">
+          <div class="dropdown-content bg-white rounded border border-gray-400 shadow py-2">
             <slot name="items" :items="computedItems" :selectItem="selectItem" v-if="!isEmpty">
               <a v-for="(item, itemKey) in computedItems"
                  :key="itemKey"
@@ -36,12 +37,12 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import {defineComponent, ref, computed, watch} from "vue";
 import FeInput from '@/components/Input/Input.vue';
-import CssClasses from "./CssClasses";
 
-export default {
-  name: 'fe-autocomplete',
+export default defineComponent({
+  name: 'FeAutocomplete',
   emits: ['searching', 'update:modelValue'],
   components: {
     FeInput,
@@ -70,117 +71,100 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      localInputElement: null,
-      opened: false,
-      filteredItems: [],
-      searchTerm: '',
-    }
-  },
-  watch: {
-    /**
-     * watch search term value change
-     */
-    searchTerm(value) {
-      this.opened = true;
-      if (this.async) {
-        if (value.trim() !== '') {
-          this.$emit('searching', value);
-        } else {
-          this.opened = false;
-        }
-      } else if (value.trim() === '') {
-        this.filteredItems = [];
-        this.opened = false;
-      } else {
-        this.filterItems(value);
-      }
-    }
-  },
-  methods: {
-    /**
-     * Close dropdown if clicked outside.
-     */
-    clickedOutside() {
-      this.opened = false;
-    },
-    /**
-     * filter items by given value
-     * @param value
-     */
-    filterItems(value) {
-      if (this.items.length > 0) {
-        this.filteredItems = this.items.filter((item) => {
-          return item.toLowerCase().includes(value.toLowerCase());
-        });
-      } else {
-        this.filteredItems = [];
-      }
-    },
-    /**
-     * emit input when item was selected and close dropdown
-     * @param item
-     */
-    selectItem(item) {
-      this.$emit('update:modelValue', item);
-      this.searchTerm = '';
-      this.filteredItems = [];
-      this.opened = false;
-    },
-  },
-  computed: {
-    /**
-     * dropdown class names object
-     */
-    dropdownClassObject() {
-      let classes = ['fe-dropdown', CssClasses.base];
-      if (this.opened) {
+  setup (props, {emit}) {
+    const localInputElement = ref(null);
+    const opened = ref(false);
+    const filteredItems = ref<Array<string>>([]);
+    const searchTerm = ref('');
+
+    const dropdownClassObject = computed(() => {
+      let classes = ['fe-dropdown block align-top'];
+      if (opened.value) {
         classes.push('opened')
       }
       return classes;
-    },
-    /**
-     * class names object for dropdown menu
-     */
-    dropDownMenuClassObject() {
+    });
+
+    const dropDownMenuClassObject = computed(() => {
       let classes = ['dropdown-menu'];
-      if (this.opened) {
-        classes.push(CssClasses.menu);
-        classes.push(CssClasses.position);
+      if (opened.value) {
+        classes.push('block z-20 pt-1');
+        classes.push('inset-auto absolute transform-none');
       } else {
         classes.push('hidden');
       }
       return classes;
-    },
-    /**
-     * content class object
-     */
-    contentClassObject() {
-      return ['dropdown-content', CssClasses.content];
-    },
-    /**
-     * item class object
-     */
-    itemClassObject() {
-      return ['dropdown-item', CssClasses.item];
-    },
-    /**
-     * compute if there are any filtered items
-     * @return {boolean}
-     */
-    isEmpty() {
-      return this.computedItems.length === 0;
-    },
-    /**
-     * compute items
-     * @return {*}
-     */
-    computedItems() {
-      return this.async ? this.items : this.filteredItems;
-    },
+    });
+
+    const itemClassObject = ['dropdown-item text-gray-800 block leading-normal py-1 px-4 relative hover:bg-gray-200 hover:cursor-pointer'];
+
+    const computedItems = computed(() => {
+      return props.async ? props.items : filteredItems.value;
+    });
+
+    const isEmpty = computed(() => {
+      return computedItems.value.length === 0;
+    });
+
+    //Close dropdown if clicked outside.
+    const clickedOutside = () => {
+      opened.value = false;
+    };
+
+    //filter items by given value
+    const filterItems = (value: string) => {
+      if (props.items.length > 0) {
+        filteredItems.value = props.items.filter((item: any) => {
+          return item.toLowerCase().includes(value.toLowerCase());
+        }).map((item: any) => {
+          return item.toString();
+        });
+      } else {
+        filteredItems.value = [];
+      }
+    };
+
+    // watch search term value change
+    watch(searchTerm, async (newValue) => {
+      opened.value = true;
+      if (props.async) {
+        if (newValue.trim() !== '') {
+          emit('searching', newValue);
+        } else {
+          opened.value = false;
+        }
+      } else if (newValue.trim() === '') {
+        filteredItems.value = [];
+        opened.value = false;
+      } else {
+        filterItems(newValue);
+      }
+    });
+
+    //emit input when item was selected and close dropdown
+    const selectItem = (item) => {
+      emit('update:modelValue', item);
+      searchTerm.value = '';
+      filteredItems.value = [];
+      opened.value = false;
+    };
+
+    return {
+      localInputElement,
+      opened,
+      filteredItems,
+      searchTerm,
+      dropdownClassObject,
+      dropDownMenuClassObject,
+      itemClassObject,
+      computedItems,
+      isEmpty,
+      clickedOutside,
+      filterItems,
+      selectItem
+    }
   },
-}
+})
 </script>
 
 <style scoped>

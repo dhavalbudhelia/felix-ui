@@ -18,11 +18,11 @@
   </transition>
 </template>
 
-<script>
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent,ref, computed, nextTick, onMounted, watch} from "vue";
 
-export default {
-  name: 'fe-spinner',
+export default defineComponent({
+  name: 'FeSpinner',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -34,65 +34,71 @@ export default {
       default: 0,
     },
   },
-  data() {
-    return {
-      spinning: false,
-    }
-  },
-  watch: {
-    modelValue(value) {
-      if (value) {
-        this.startSpinning();
-      } else {
-        this.stopSpinning();
-      }
-    },
-  },
-  computed: {
+  setup(props, {emit}) {
+    const spinning = ref(false);
+
     /**
      * backdrop class object
      */
-    backdropClassObject() {
-      return CssClasses.backdrop;
-    },
+    const backdropClassObject = computed(() => {
+      return 'fixed w-screen h-screen overflow-x-auto flex justify-center z-10 bg-gray-600 bg-opacity-25';
+    });
+
     /**
      * spinner container class object
      */
-    spinnerContainerClassObject() {
-      return CssClasses.spinnerContainer;
-    },
-  },
-  methods: {
+    const spinnerContainerClassObject = computed(() => {
+      return 'fe-spinner animate-spin self-center items-center z-20';
+    });
+
     /**
      * start spinner animation
      */
-    startSpinning() {
-      this.spinning = true;
-      this.$nextTick(() => {
-        if (this.duration > 0) {
+    const startSpinning = () => {
+      spinning.value = true;
+      nextTick(() => {
+        if (props.duration > 0) {
           setTimeout(()=>{
-            this.stopSpinning();
-          },this.duration);
+            stopSpinning();
+          },props.duration);
         }
       });
-    },
+    };
+
     /**
      * stop spinner animation
      */
-    stopSpinning() {
-      if (this.spinning) {
-        this.spinning = false;
-        this.$emit('update:modelValue', false);
+    const stopSpinning = () => {
+      if (spinning.value) {
+        spinning.value = false;
+        emit('update:modelValue', false);
       }
-    },
-  },
-  mounted() {
-    if (this.modelValue) {
-      this.$nextTick(() => {
-        this.startSpinning();
-      });
+    };
+
+    onMounted(() => {
+      if (props.modelValue) {
+        nextTick(() => {
+          startSpinning();
+        });
+      }
+    });
+
+    watch(() => props.modelValue, (newValue) => {
+      if (newValue) {
+        startSpinning();
+      } else {
+        stopSpinning();
+      }
+    });
+
+    return {
+      spinning,
+      backdropClassObject,
+      spinnerContainerClassObject,
+      startSpinning,
+      stopSpinning,
     }
   },
-}
+})
 </script>
 

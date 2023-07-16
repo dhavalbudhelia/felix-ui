@@ -2,7 +2,7 @@ import {config, mount} from '@vue/test-utils';
 import ToggleSwitch from '@/components/ToggleSwitch/ToggleSwitch.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 

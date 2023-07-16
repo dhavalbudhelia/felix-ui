@@ -2,7 +2,7 @@ import {config, mount} from '@vue/test-utils';
 import Spinner from '@/components/Spinner/Spinner.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 
@@ -13,7 +13,8 @@ describe('Spinner.vue', () => {
                 modelValue: true,
             },
         });
-        await wrapper.setData({spinning: true});
+        wrapper.vm.startSpinning();
+        await wrapper.vm.$nextTick();
         let spinnerWrapper = wrapper.find('div.fe-spinner');
         expect(spinnerWrapper.isVisible()).toBe(true);
     });
@@ -24,7 +25,8 @@ describe('Spinner.vue', () => {
                 modelValue: true,
             },
         });
-        await wrapper.setData({spinning: true});
+        wrapper.vm.startSpinning();
+        await wrapper.vm.$nextTick();
         let spinnerWrapper = wrapper.find('div.fe-spinner');
         expect(spinnerWrapper.isVisible()).toBe(true);
         await wrapper.setProps({ modelValue: false });
@@ -40,7 +42,8 @@ describe('Spinner.vue', () => {
                 default: '<i class="custom-spinner fas fa-4x fa-spinner text-red-500 opacity-100"></i>'
             },
         });
-        await wrapper.setData({spinning: true});
+        wrapper.vm.startSpinning();
+        await wrapper.vm.$nextTick();
         let spinnerWrapper = wrapper.find('div.fe-spinner');
         expect(spinnerWrapper.isVisible()).toBe(true);
         expect(wrapper.find('.custom-spinner').exists()).toBe(true);

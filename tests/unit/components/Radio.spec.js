@@ -1,14 +1,14 @@
-import {config, shallowMount} from '@vue/test-utils';
+import {config, mount} from '@vue/test-utils';
 import Radio from '@/components/Radio/Radio.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 
 describe('Radio.vue', () => {
     it('render selected radio element', () => {
-        let wrapper = shallowMount(Radio, {
+        let wrapper = mount(Radio, {
             propsData: {
                 modelValue: 'Foo',
                 localValue: 'Foo',
@@ -22,7 +22,7 @@ describe('Radio.vue', () => {
     });
 
     it('render unselected radio element', () => {
-        let wrapper = shallowMount(Radio, {
+        let wrapper = mount(Radio, {
             propsData: {
                 modelValue: 'Bar',
                 localValue: 'Foo'
@@ -36,7 +36,7 @@ describe('Radio.vue', () => {
     });
 
     it('render disabled radio element', () => {
-        let wrapper = shallowMount(Radio, {
+        let wrapper = mount(Radio, {
             propsData: {
                 modelValue: 'Foo',
                 localValue: 'Foo',
@@ -53,7 +53,7 @@ describe('Radio.vue', () => {
 
     it('changes the radio value on selection', async () => {
         let checkboxName = 'FooBar';
-        let wrapperBar = shallowMount(Radio, {
+        let wrapperBar = mount(Radio, {
             propsData: {
                 modelValue: 'Foo',
                 localValue: 'Bar',
@@ -63,7 +63,7 @@ describe('Radio.vue', () => {
                 default: 'Bar'
             }
         });
-        let wrapperFoo = shallowMount(Radio, {
+        let wrapperFoo = mount(Radio, {
             propsData: {
                 modelValue: 'Foo',
                 localValue: 'Foo',

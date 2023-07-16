@@ -2,11 +2,17 @@ import {config, mount} from '@vue/test-utils';
 import MultiSelect from '@/components/MultiSelect/MultiSelect.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 
+
 describe('MultiSelect.vue', () => {
+    const transitionStub = () => ({
+        render: function (h) {
+            return this.$options._renderChildren
+        }
+    });
     it('render simple multi select', async () => {
         const wrapper = mount(MultiSelect, {
             propsData: {
@@ -18,11 +24,16 @@ describe('MultiSelect.vue', () => {
                 valueProperty: 'id',
                 labelProperty: 'name',
             },
+            stubs: {
+                transition: transitionStub()
+            },
         });
         expect(wrapper.find('div').classes()).toContain('fe-multi-select');
         expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
-        wrapper.setData({opened: true});
+        wrapper.vm.toggleTrigger();
+        //need to call nextTick twice for emit event to propagate and dropdown menu to finish rendering
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
@@ -115,7 +126,9 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div').classes()).toContain('fe-multi-select');
         expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
-        wrapper.setData({opened: true});
+        wrapper.vm.toggleTrigger();
+        //need to call nextTick twice for emit event to propagate and dropdown menu to finish rendering
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
@@ -174,7 +187,9 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div').classes()).toContain('fe-multi-select');
         expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
-        wrapper.setData({opened: true});
+        wrapper.vm.toggleTrigger();
+        //need to call nextTick twice for emit event to propagate and dropdown menu to finish rendering
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
@@ -355,7 +370,9 @@ describe('MultiSelect.vue', () => {
         expect(wrapper.find('div').classes()).toContain('fe-multi-select');
         expect(wrapper.find('div.placeholder-wrapper').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(false);
-        wrapper.setData({opened: true});
+        wrapper.vm.toggleTrigger();
+        //need to call nextTick twice for emit event to propagate and dropdown menu to finish rendering
+        await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
         expect(wrapper.find('div.dropdown-menu').exists()).toBe(true);
         expect(wrapper.find('div.dropdown-menu').find('div.dropdown-content').exists()).toBe(true);
@@ -398,11 +415,8 @@ describe('MultiSelect.vue', () => {
         ).toEqual('Fake');
 
         //search for 'ake' and expect 'Cake' and 'Fake' to be in the system
-        wrapper.setData({
-            searchTerm: 'ake'
-        });
+        await searchInput.setValue('ake');
         await wrapper.vm.$nextTick();
-
         expect(wrapper.find('div.dropdown-menu')
             .find('div.dropdown-content')
             .findAll('div.dropdown-item').length
@@ -420,9 +434,7 @@ describe('MultiSelect.vue', () => {
         ).toEqual('Fake');
 
         //search for 'Boop' and expect 'No Records Found'
-        wrapper.setData({
-            searchTerm: 'Boop'
-        });
+        await searchInput.setValue('Boop');
         await wrapper.vm.$nextTick();
 
         expect(wrapper.find('div.dropdown-menu')

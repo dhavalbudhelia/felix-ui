@@ -1,13 +1,29 @@
-import {config, shallowMount, mount} from '@vue/test-utils';
+import {config, mount} from '@vue/test-utils';
 import Tooltip from '@/components/Tooltip/Tooltip.vue';
-import Button from '@/components/Button/Button.vue';
 import options from "@/utils/options";
+import {afterEach, beforeEach, vi} from 'vitest';
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 
 describe('Tooltip.vue', () => {
+    const transitionStub = () => ({
+        render: function (h) {
+            return this.$options._renderChildren
+        }
+    });
+
+    beforeEach(() => {
+        // tell vitest we use mocked time
+        vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+        // restoring date after each test run
+        vi.useRealTimers()
+    });
+
     it('shows on left side', async () => {
         const wrapper = mount(Tooltip, {
             propsData: {
@@ -17,7 +33,7 @@ describe('Tooltip.vue', () => {
             },
             slots: {
                 default: '<button type="button">Show Tooltip</button>'
-            }
+            },
         });
         await wrapper.vm.$nextTick();
 
@@ -98,12 +114,17 @@ describe('Tooltip.vue', () => {
             },
             slots: {
                 default: '<button type="button">Show Tooltip</button>'
-            }
+            },
+            stubs: {
+                transition: transitionStub()
+            },
         });
         let triggerButton = wrapper.find('button');
         await triggerButton.trigger('click');
-        await wrapper.setData({opened: true});
-
+        wrapper.vm.hovered(true);
+        wrapper.vm.onTrigger();
+        vi.runAllTimers()
+        await wrapper.vm.$nextTick();
         let tooltipWrapper = wrapper.find('div.fe-tooltip');
         expect(tooltipWrapper.isVisible()).toBe(true);
         expect(tooltipWrapper.text()).toEqual('Tooltip');

@@ -2,7 +2,7 @@ import {config, mount} from '@vue/test-utils';
 import Toast from '@/components/Toast/Toast.vue';
 import options from "@/utils/options";
 
-config.global.mocks = {
+config.global.provide = {
     $theme: options,
 }
 

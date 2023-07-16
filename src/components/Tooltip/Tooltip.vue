@@ -19,11 +19,11 @@
   </div>
 </template>
 
-<script>
-import CssClasses from "./CssClasses";
+<script lang="ts">
+import {defineComponent, ref, computed, nextTick, onMounted} from "vue";
 
-export default {
-  name: 'fe-tooltip',
+export default defineComponent({
+  name: 'FeTooltip',
   emits: ['opened-change'],
   props: {
     active: {
@@ -37,7 +37,7 @@ export default {
     position: {
       type: String,
       default: 'is-right',
-      validator: function (value) {
+      validator: function (value: string) {
         return ['is-left', 'is-top', 'is-right', 'is-bottom'].includes(value);
       },
     },
@@ -54,139 +54,158 @@ export default {
       default: 0,
     },
   },
-  data() {
-    return {
-      opened: false,
-      tooltipPosition: {
-        left: 0,
-        top: 0,
-      },
-      isHovered: false,
-    }
-  },
-  watch: {
-    /**
-     * Emit event when opened value is changed.
-     */
-    opened(value) {
-      this.$emit('opened-change', value);
-    }
-  },
-  computed: {
+  setup(props, {emit}) {
+    const opened = ref(false);
+    const tooltipPosition = ref({
+      left: 0,
+      top: 0,
+    });
+    const isHovered = ref(false);
+    const fetooltip_trigger = ref(null);
+    const fetooltip = ref(null);
+
     /**
      * tooltip wrapper class
      */
-    wrapperClassObject() {
-      return CssClasses.container;
-    },
+    const wrapperClassObject = computed(() => {
+      return 'inline-flex';
+    });
+
     /**
      * content class object
      */
-    contentClassObject() {
-      let classes = ['fe-tooltip', CssClasses.base];
-      if (!this.wrap) {
-        classes.push(CssClasses.general);
+    const contentClassObject = computed(() => {
+      let classes = ['fe-tooltip absolute block bg-black text-white text-center shadow px-2 py-1 rounded w-auto z-20 whitespace-normal opacity-75'];
+      if (!props.wrap) {
+        classes.push('whitespace-nowrap');
       }
       return classes;
-    },
+    });
+
     /**
      * style object for ref tooltip
      */
-    style() {
+    const style = computed(() => {
       return {
-        left: `${this.tooltipPosition.left}px`,
-        top: `${this.tooltipPosition.top}px`,
+        left: `${tooltipPosition.value.left}px`,
+        top: `${tooltipPosition.value.top}px`,
       };
-    },
-  },
-  methods: {
+    });
+
     /**
      * on show tooltip insert the body of the tooltip and position it
      */
-    showTooltip() {
+    const showTooltip = () => {
       setTimeout(() => {
-        if (this.isHovered) {
-          this.opened = true;
-          this.$nextTick(() => {
-            this.positionTooltip();
+        if (isHovered.value) {
+          opened.value = true;
+          emit('opened-change', true);
+          nextTick(() => {
+            positionTooltip();
           });
         }
-      },this.delay);
-    },
+      }, props.delay);
+    };
+
     /**
      * on hide tooltip remove tooltip ref from the body
      */
-    hideTooltip() {
-      this.opened = false;
-    },
+    const hideTooltip = () => {
+      opened.value = false;
+      emit('opened-change', false);
+    };
+
     /**
      * show tooltip on hover if tooltip is not set to trigger on click
      */
-    hovered(enter) {
-      this.isHovered = enter;
-      if (!this.triggerOnClick) {
-        if (enter && !this.opened) {
-          this.showTooltip();
-        } else if (!enter && this.opened) {
-          this.hideTooltip();
+    const hovered = (enter) => {
+      isHovered.value = enter;
+      if (!props.triggerOnClick) {
+        if (enter && !opened.value) {
+          showTooltip();
+        } else if (!enter && opened.value) {
+          hideTooltip();
         }
       }
-    },
+    };
+
     /**
      * toggle tooltip on click if tooltip is set to trigger on click
      */
-    onTrigger() {
-      if (this.triggerOnClick) {
-        if (!this.opened) {
-          this.showTooltip();
+    const onTrigger = () => {
+      if (props.triggerOnClick) {
+        if (!opened.value) {
+          showTooltip();
         } else {
-          this.hideTooltip();
+          hideTooltip();
         }
       }
-    },
+    };
+
     /**
      * after adding tooltip to the dom position it as per the property
      */
-    positionTooltip() {
-      let triggerDomRect = this.$refs.fetooltip_trigger.getBoundingClientRect();
-      let triggerElementHeight = triggerDomRect.height;
-      let triggerElementWidth = triggerDomRect.width;
-      let tooltipDomRect = this.$refs.fetooltip.getBoundingClientRect();
-      let tooltipHeight = tooltipDomRect.height;
-      let tooltipWidth = tooltipDomRect.width;
-
-      if (this.position === 'is-left') {
-        this.tooltipPosition.left = triggerDomRect.left - (tooltipWidth + 5);
-        this.tooltipPosition.top = triggerDomRect.top + (triggerElementHeight / 2) - (tooltipHeight / 2);
-      } else if (this.position === 'is-right') {
-        this.tooltipPosition.left = triggerDomRect.left + (triggerElementWidth + 5);
-        this.tooltipPosition.top = triggerDomRect.top + (triggerElementHeight / 2) - (tooltipHeight / 2);
-      } else if (this.position === 'is-bottom') {
-        this.tooltipPosition.left = triggerDomRect.left + (triggerElementWidth / 2) - (tooltipWidth / 2);
-        this.tooltipPosition.top = triggerDomRect.top + (triggerElementHeight + 5);
-      } else if (this.position === 'is-top') {
-        this.tooltipPosition.left = triggerDomRect.left + (triggerElementWidth / 2) - (tooltipWidth / 2);
-        this.tooltipPosition.top = triggerDomRect.top - (tooltipHeight + 5);
+    const positionTooltip = () => {
+      if (fetooltip_trigger.value && fetooltip.value) {
+        let triggerDomRect = fetooltip_trigger.value?.getBoundingClientRect();
+        let triggerElementHeight = triggerDomRect.height;
+        let triggerElementWidth = triggerDomRect.width;
+        let tooltipDomRect = fetooltip.value?.getBoundingClientRect();
+        let tooltipHeight = tooltipDomRect.height;
+        let tooltipWidth = tooltipDomRect.width;
+        if (props.position === 'is-left') {
+          tooltipPosition.value.left = triggerDomRect.left - (tooltipWidth + 5);
+          tooltipPosition.value.top = triggerDomRect.top + (triggerElementHeight / 2) - (tooltipHeight / 2);
+        } else if (props.position === 'is-right') {
+          tooltipPosition.value.left = triggerDomRect.left + (triggerElementWidth + 5);
+          tooltipPosition.value.top = triggerDomRect.top + (triggerElementHeight / 2) - (tooltipHeight / 2);
+        } else if (props.position === 'is-bottom') {
+          tooltipPosition.value.left = triggerDomRect.left + (triggerElementWidth / 2) - (tooltipWidth / 2);
+          tooltipPosition.value.top = triggerDomRect.top + (triggerElementHeight + 5);
+        } else if (props.position === 'is-top') {
+          tooltipPosition.value.left = triggerDomRect.left + (triggerElementWidth / 2) - (tooltipWidth / 2);
+          tooltipPosition.value.top = triggerDomRect.top - (tooltipHeight + 5);
+        }
       }
-    },
+    };
+
     /**
      * Close dropdown if clicked outside.
      */
-    clickedOutside() {
-      if (this.triggerOnClick) {
-        this.hideTooltip();
+    const clickedOutside = () => {
+      if (props.triggerOnClick) {
+        hideTooltip();
       }
-    },
-  },
-  mounted() {
-    this.opened = this.active;
-    if (this.opened) {
-      this.$nextTick(() => {
-        this.positionTooltip();
-      });
+    };
+
+    onMounted(() => {
+      opened.value = props.active;
+      emit('opened-change', props.active);
+      if (opened.value) {
+        nextTick(() => {
+          positionTooltip();
+        });
+      }
+    });
+
+    return {
+      opened,
+      tooltipPosition,
+      isHovered,
+      fetooltip_trigger,
+      fetooltip,
+      wrapperClassObject,
+      contentClassObject,
+      style,
+      showTooltip,
+      hideTooltip,
+      hovered,
+      onTrigger,
+      positionTooltip,
+      clickedOutside,
     }
-  }
-}
+  },
+})
 </script>
 
 <style scoped>
@@ -240,6 +259,5 @@ export default {
   top: calc(100%);
   left: 50%;
 }
-
 
 </style>

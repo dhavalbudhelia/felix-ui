@@ -17,11 +17,11 @@
   </transition>
 </template>
 
-<script>
-import CssClasses from "@/components/Toast/CssClasses";
+<script lang="ts">
+import {defineComponent,ref, computed, onMounted, watch} from "vue";
 
-export default {
-  name: 'fe-toast',
+export default defineComponent({
+  name: 'FeToast',
   emits: ['update:modelValue'],
   props: {
     modelValue: {
@@ -35,14 +35,14 @@ export default {
     type: {
       type: String,
       default: 'success',
-      validator: function (value) {
+      validator: function (value: string) {
         return ['success', 'warning', 'error'].includes(value);
       },
     },
     position: {
       type: String,
       default: 'top-center',
-      validator: function (value) {
+      validator: function (value: string) {
         return ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'].includes(value);
       },
     },
@@ -59,78 +59,87 @@ export default {
       default: true,
     },
   },
-  data() {
-    return {
-      timer: null,
-    }
-  },
-  watch: {
-    modelValue(value) {
-      if (value) {
-        this.showToast();
-      }
-    },
-  },
-  computed: {
+  setup (props, {emit}) {
+    const timer = ref<number|null>(null);
+
     /**
      * spinner container class object
      */
-    toastContainerClassObject() {
-      return ['fe-toast-wrapper', CssClasses.toastContainer, this.position];
-    },
+    const toastContainerClassObject = computed(() => {
+      return ['fe-toast-wrapper absolute flex flex-col items-center justify-center z-20', props.position];
+    });
+
     /**
      * toast class object
      */
-    toastClassObject() {
-      let classes = ['fe-toast', CssClasses.toast];
-      switch (this.type) {
+    const toastClassObject = computed(() => {
+      let classes = ['fe-toast flex flex-row justify-between items-center p-3 rounded-md shadow-md'];
+      switch (props.type) {
         case 'warning':
-          classes.push(CssClasses.warning);
+          classes.push('bg-orange-200 text-orange-700 border border-orange-300 border-opacity-25');
           break;
         case 'error':
-          classes.push(CssClasses.error);
+          classes.push('bg-red-200 text-red-700 border border-red-300 border-opacity-25');
           break;
         case 'success':
         default:
-          classes.push(CssClasses.success);
+          classes.push('bg-green-200 text-green-700 border border-green-300 border-opacity-25');
 
       }
       return classes;
-    },
+    });
+
     /**
      * close button class object
      */
-    closeClassObject() {
-      return CssClasses.close;
-    },
-  },
-  methods: {
+    const closeClassObject = computed(() => {
+      return 'ml-2 active:outline-none focus:outline-none grow-0 cursor-pointer text-gray-500 hover:text-gray-600';
+    });
+
     /**
      * start spinner animation
      */
-    showToast() {
+    const showToast = () => {
       //if fading automatically time out for the input event for given duration
-      if (this.fadeAutomatic) {
-        this.timer = setTimeout(() => {
-          this.$emit('update:modelValue', false);
-        }, this.duration);
+      if (props.fadeAutomatic) {
+        timer.value = setTimeout(() => {
+          emit('update:modelValue', false);
+        }, props.duration);
       }
-    },
+    };
+
     /**
      * close toast
      */
-    closeToast() {
-      clearTimeout(this.timer);
-      this.$emit('update:modelValue', false);
-    },
-  },
-  mounted() {
-    //if activated on mount force show the toast
-    if (this.modelValue) {
-      this.showToast();
+    const closeToast = () => {
+      if (timer.value) {
+        clearTimeout(timer.value);
+      }
+      emit('update:modelValue', false);
+    };
+
+    onMounted(() => {
+      if (props.modelValue) {
+        showToast();
+      }
+    });
+
+    watch(() => props.modelValue, (newValue) => {
+      if (newValue) {
+        showToast();
+      }
+    });
+
+    return {
+      timer,
+      toastContainerClassObject,
+      toastClassObject,
+      closeClassObject,
+      showToast,
+      closeToast,
     }
   },
-}
+})
 </script>
 
 <style scoped>
